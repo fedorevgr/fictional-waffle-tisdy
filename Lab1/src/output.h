@@ -1,7 +1,7 @@
 #ifndef LAB1_SRC_OUTPUT_H
 #define LAB1_SRC_OUTPUT_H
 
-#include "types.h"
+#include "Types.h"
 
 void print(String);
 

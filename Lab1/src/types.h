@@ -12,13 +12,22 @@ typedef struct NumberStruct {
     char sign;
     int exponent;
     char value[NUM_LENGTH];
+    int valueLength;
 } Number;
+
+void setSign(Number* number, char sign);
+
+void setValue(Number* number, char* value, const char* valueEnd);
+
+void setExponent(Number* number, int exponent);
+
 
 typedef enum ExitCode {
     OK,
     ERROR,
     ERROR_VALIDATION
 } ExitCode;
+
 
 #define AND &&
 #define OR ||

@@ -3,7 +3,7 @@
 #include <ctype.h>
 #include <string.h>
 #include <ctype.h>
-#include "utils/StringUtils.h"
+#include "Validation//StringUtils.h"
 #include <stdlib.h>
 
 ExitCode
@@ -26,62 +26,53 @@ enter(char *buffer)
 }
 
 int
-getExponent(char* expPointer)
+getExponent(char *expPointer)
 {
     expPointer++;
-    char* checkPointer;
+    char *checkPointer;
     return (int) strtol(expPointer, &checkPointer, 10);
 }
 
-
 int
-countExponent(String string)
+utilCountExponent(String string)
 {
     int exponent = 0;
     for (; isdigit(*string); string++, exponent++);
     return exponent;
 }
 
-// TODO: remove prints
+
+int
+countExponent();
+
 
 ExitCode
-convert(String rawNumber, Number* number)
+convert(String rawNumber, Number *number)
 {
-    char* valuePointer;
-    char* valueEndPointer;
-    int pointPosition = 0;
-    int exponent;
-    String exponentPart = "";
+    char *numberEndPointer = rawNumber + strlen(rawNumber);
+
     char sign = 0;
-    char* numberEndPointer = rawNumber + strlen(rawNumber);
-
-    printf("%s\n", rawNumber);
-
     if (*rawNumber == '-')
         sign = 1, shiftLeft(rawNumber, 1);
     else if (*rawNumber == '+')
         shiftLeft(rawNumber, 1);
-
     stripLeft(rawNumber, '0');
 
-    exponent = countExponent(rawNumber);
-
-    printf("%s %d\n", rawNumber, exponent);
-
-    char* pointPointer = strchr(rawNumber, '.');
+    char *pointPointer = strchr(rawNumber, '.');
     if (pointPointer != NULL)
         delete(rawNumber, (int) (pointPointer - rawNumber));
 
-    char* exponentPointer = strpbrk(rawNumber, "eE");
+    int exponent = utilCountExponent(rawNumber);
+    char *exponentPointer = strpbrk(rawNumber, "eE");
     if (exponentPointer != NULL)
+    {
         exponent += getExponent(exponentPointer);
-    else
-        valuePart = (char *) rawNumber;
+        numberEndPointer = exponentPointer;
+    }
 
-
-    printf("%s %d\n", rawNumber, exponent);
-
-    number->sign = sign;
+    setSign(number, sign);
+    setValue(number, rawNumber, numberEndPointer);
+    setExponent(number, exponent);
 
     return OK;
 }

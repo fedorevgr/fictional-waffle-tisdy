@@ -3,7 +3,7 @@
 
 #include "graphics.h"
 #include "mathing.h"
-#include "types.h"
+#include "Types.h"
 
 ExitCode
 enter(char* buffer);

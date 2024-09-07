@@ -10,13 +10,14 @@ add_executable(Lab1 main.c
         src/input.h
         src/mathing.c
         src/mathing.h
-        src/types.h
+        src/Types.h
         src/output.c
         src/output.h
-        src/utils/validation.c
-        src/utils/validation.h
-        src/utils/StringUtils.c
-        src/utils/StringUtils.h)
+        src/Validation/Validation.c
+        src/Validation/Validation.h
+        src/Validation/StringUtils.c
+        src/Validation/StringUtils.h
+        src/Types.c)
 
 add_executable(tests test/InputTests.c
         test/InputTests.h
@@ -26,12 +27,12 @@ add_executable(tests test/InputTests.c
         src/input.h
         src/mathing.c
         src/mathing.h
-        src/types.h
+        src/Types.h
         test/utils/ValidationTests.c
         test/utils/ValidationTests.h
-        src/utils/StringUtils.c
-        src/utils/StringUtils.h
-        src/utils/validation.c
-        src/utils/validation.h
+        src/Validation/StringUtils.c
+        src/Validation/StringUtils.h
+        src/Validation/Validation.c
+        src/Validation/Validation.h
         RunTests.c
 )
