@@ -1,7 +1,7 @@
 #ifndef LAB1_TEST_INPUTTESTS_H
 #define LAB1_TEST_INPUTTESTS_H
 
-#include "../src/input.h"
+#include "../src/IO/input.h"
 
 //ExitCode
 //enterNumber(String);

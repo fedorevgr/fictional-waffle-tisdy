@@ -2,13 +2,13 @@
 #define LAB1_SRC_INPUT_H
 
 #include "graphics.h"
-#include "mathing.h"
-#include "Types.h"
+#include "../mathing.h"
+#include "../Types.h"
 
 ExitCode
-enter(char* buffer);
+enter_(char *buffer);
 
 ExitCode
-convert(String rawNumber, Number* number);
+convert_(String rawNumber, Number *number);
 
 #endif //LAB1_SRC_INPUT_H

@@ -21,3 +21,11 @@ setExponent(Number *number, int exponent)
 {
     number->exponent = exponent;
 }
+
+char *
+valueToStr(Number number, char *buffer)
+{
+    for (int i = 0; i < number.valueLength; i++)
+        buffer[i] = number.value[i] + '0';
+    return buffer;
+}

@@ -1,19 +1,31 @@
-#include "src/graphics.h"
 #include "src/mathing.h"
 #include "src/Types.h"
-#include "src/input.h"
-#include <limits.h>
-#include <string.h>
-#include "src/Validation/Validation.h"
+#include "src/IO/IO.h"
 
-// 11111222223333344444
-int main(void)
+ExitCode
+enterNumbers_(Number *, Number *);
+
+int
+main(void)
 {
     ExitCode exitCode;
 
-    String test = "+71.7e1";
+    Number number1 = {0}, number2 = {0};
 
-    exitCode = convert(test, NULL);
+    exitCode = input(&number1);
+
+    print(number1);
 
     return exitCode;
+}
+
+ExitCode
+enterNumbers_(Number *num1, Number *num2)
+{
+    ExitCode ec = input(num1);
+
+    if (ec == OK)
+        ec = input(num2);
+
+    return ec;
 }
