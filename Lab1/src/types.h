@@ -3,15 +3,19 @@
 
 #include "mathing.h"
 
-#define MAX_STRING_LENGTH 60 // TODO: switch to 60
+#define MAX_STRING_LENGTH   60
+#define VALUE_LENGTH_LIMIT  40
+#define EXPONENT_LIMIT      99999
+
+#define ABS(number)  ((number < 0) ? -number : number)
 
 typedef char String[MAX_STRING_LENGTH + 1];
 
 typedef struct NumberStruct
 {
-    char sign;
+    bool sign;
     int exponent;
-    char value[NUM_LENGTH];
+    int value[VALUE_LENGTH_LIMIT + 1];
     int valueLength;
 } Number;
 
@@ -31,7 +35,8 @@ typedef enum ExitCode
 {
     OK,
     ERROR,
-    ERROR_VALIDATION
+    ERROR_VALIDATION,
+    ERROR_RESULT
 } ExitCode;
 
 #define AND &&

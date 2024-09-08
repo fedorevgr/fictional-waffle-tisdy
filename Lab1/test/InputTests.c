@@ -1,11 +1,18 @@
 #include "InputTests.h"
 
-
+#define TESTS 10
 ExitCode
-testNumberInput(void)
+testInputPos(void)
 {
-    String testNumber = { 0 };
-    // enterNumber(testNumber);
-    printf("%s\n", testNumber);
     return OK;
 }
+#undef TESTS
+
+
+#define TESTS 10
+ExitCode
+testInputNeg(void)
+{
+    return OK;
+}
+#undef TESTS

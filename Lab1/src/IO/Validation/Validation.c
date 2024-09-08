@@ -95,3 +95,16 @@ validateReal(String string)
     }
     return exitCode;
 }
+
+
+ExitCode
+validateNumber(Number number)
+{
+    if (number.valueLength > VALUE_LENGTH_LIMIT)
+        return ERROR_VALIDATION;
+
+    if (ABS(number.exponent) > EXPONENT_LIMIT)
+        return ERROR_VALIDATION;
+
+    return OK;
+}

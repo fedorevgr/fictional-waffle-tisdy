@@ -69,6 +69,8 @@ convert_(String rawNumber, Number *number)
     setValue(number, rawNumber, numberEndPointer);
     setExponent(number, exponent);
 
+
+
     return OK;
 }
 
