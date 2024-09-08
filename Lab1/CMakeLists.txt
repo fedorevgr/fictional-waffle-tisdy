@@ -18,7 +18,9 @@ add_executable(Lab1 main.c
         src/IO/Validation/StringUtils.c
         src/IO/Validation/StringUtils.h
         src/Types.c
-        src/IO/IO.h)
+        src/IO/IO.h
+        src
+)
 
 add_executable(tests test/InputTests.c
         test/InputTests.h
@@ -36,4 +38,20 @@ add_executable(tests test/InputTests.c
         src/IO/Validation/Validation.c
         src/IO/Validation/Validation.h
         RunTests.c
+        test/MathingTest.c
+        test/MathingTest.h
+        src/Types.c
+        test/Tests.h
 )
+
+target_compile_definitions(
+        Lab1
+        PRIVATE
+        EXP_PRINT
+)
+
+#
+#target_compile_definitions(tests
+#        PRIVATE
+#        TO_START=6
+#)

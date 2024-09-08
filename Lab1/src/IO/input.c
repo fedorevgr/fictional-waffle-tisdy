@@ -43,8 +43,6 @@ utilCountExponent(String string)
 ExitCode
 convert_(String rawNumber, Number *number)
 {
-    char *numberEndPointer = rawNumber + strlen(rawNumber);
-
     char sign = 0;
     if (*rawNumber == '-')
         sign = 1, shiftLeft(rawNumber, 1);
@@ -57,6 +55,9 @@ convert_(String rawNumber, Number *number)
     char *pointPointer = strchr(rawNumber, '.');
     if (pointPointer != NULL)
         delete(rawNumber, (int) (pointPointer - rawNumber));
+    exponent -= stripLeft(rawNumber, '0');
+
+    const char *numberEndPointer = rawNumber + strlen(rawNumber);
 
     char *exponentPointer = strpbrk(rawNumber, "eE");
     if (exponentPointer != NULL)
@@ -65,11 +66,12 @@ convert_(String rawNumber, Number *number)
         numberEndPointer = exponentPointer;
     }
 
+    if (rawNumber == numberEndPointer)
+        *rawNumber = '0', numberEndPointer++;
+
     setSign(number, sign);
     setValue(number, rawNumber, numberEndPointer);
     setExponent(number, exponent);
-
-
 
     return OK;
 }

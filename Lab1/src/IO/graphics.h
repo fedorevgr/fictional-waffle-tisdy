@@ -5,6 +5,8 @@
 
 #define PROMPT "Enter big number: "
 
+#define printSepLine() printf("---------------------------------------------------------\n")
+
 void
 renderRuler(void);
 

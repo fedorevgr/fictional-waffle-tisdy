@@ -10,11 +10,21 @@ main(void)
 {
     ExitCode exitCode;
 
-    Number number1 = {0}, number2 = {0};
+    Number number1 = {0}, number2 = {0}, result = { 0 };
 
-    exitCode = input(&number1);
+    exitCode = enterNumbers_(&number1, &number2);
 
-    print(number1);
+    if (exitCode == OK)
+    {
+        print(number1);
+        printSepLine();
+        print(number2);
+        printSepLine();
+        exitCode = multiply(number1, number2, &result);
+        if (exitCode == OK)
+            print(result);
+    }
+
 
     return exitCode;
 }

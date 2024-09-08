@@ -1,11 +1,12 @@
 #include "ValidationTests.h"
 #include <stdio.h>
+#include "../Tests.h"
 
 #define TESTS  10
 int
 validationTestPos(void)
 {
-    printf("TESTS: %s\n", __func__ );
+    PrintInfo();
     char *testNumber[TESTS] = {
         "0.1",
         "0000.01",
@@ -43,7 +44,7 @@ validationTestPos(void)
 #define TESTS  12
 int
 validationTestNeg(void) {
-    printf("TESTS: %s\n", __func__ );
+    PrintInfo();
 
     char *testNumber[TESTS] = {
         "a.1",

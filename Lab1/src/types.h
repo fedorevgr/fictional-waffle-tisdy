@@ -1,8 +1,6 @@
 #ifndef LAB1_SRC_TYPES_H
 #define LAB1_SRC_TYPES_H
 
-#include "mathing.h"
-
 #define MAX_STRING_LENGTH   60
 #define VALUE_LENGTH_LIMIT  40
 #define EXPONENT_LIMIT      99999

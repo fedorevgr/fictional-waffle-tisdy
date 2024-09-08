@@ -3,7 +3,11 @@
 
 #include "../src/IO/input.h"
 
-//ExitCode
-//enterNumber(String);
+ExitCode
+runInputTest(void);
+
+#ifndef TO_START
+    #define TO_START 0
+#endif
 
 #endif //LAB1_TEST_INPUTTESTS_H

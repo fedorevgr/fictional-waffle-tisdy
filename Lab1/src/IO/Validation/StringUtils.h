@@ -10,7 +10,7 @@ shiftLeft(String string, int shift);
 ExitCode
 delete(String string, int position);
 
-ExitCode
+int
 stripLeft(String string, char);
 
 #endif //LAB1_SRC_UTILS_STRINGUTILS_H

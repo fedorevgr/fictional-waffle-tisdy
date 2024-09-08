@@ -6,10 +6,11 @@
         a ^= b; \
 } while(0)
 
+
 void
 reverseArray_(int *array, int length)
 {
-    for (int i = 0; i * 2 < length; i++)
+    for (int i = 0; i < length / 2; i++)
         SWAP(array[i], array[length - i - 1]);
 }
 

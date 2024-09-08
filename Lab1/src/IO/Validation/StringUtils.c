@@ -25,12 +25,13 @@ delete(String string, int position)
     return OK;
 }
 
-ExitCode
+int
 stripLeft(String string, char c)
 {
     char* startString = string;
+    int passedCounter = 0;
 
-    for (; *string == c; string++);
+    for (; *string == c; string++, passedCounter++);
 
     for (; *string; startString++, string++)
         *startString = *string;
@@ -38,6 +39,6 @@ stripLeft(String string, char c)
     for (; *startString; startString++)
         *startString = '\0';
 
-    return OK;
+    return passedCounter;
 }
 
