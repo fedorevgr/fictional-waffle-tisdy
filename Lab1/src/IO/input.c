@@ -23,12 +23,14 @@ enter_(char *buffer)
     return OK;
 }
 
+#define EXP_ERROR (-10000000)
 int
 getExponent(char *expPointer)
 {
     expPointer++;
     char *checkPointer;
-    return (int) strtol(expPointer, &checkPointer, 10);
+    int result = (int) strtol(expPointer, &checkPointer, 10);
+    return (checkPointer == expPointer + strlen(expPointer)) ? result : EXP_ERROR;
 }
 
 int
@@ -53,21 +55,44 @@ convert_(String rawNumber, Number *number)
     int exponent = utilCountExponent(rawNumber);
 
     char *pointPointer = strchr(rawNumber, '.');
+    char *exponentPointer = strpbrk(rawNumber, "eE");
+
+    char *forCounterLeft = pointPointer;
+    char *forCounterRight = (exponentPointer != NULL) ? exponentPointer : (rawNumber + strlen(rawNumber));
+
     if (pointPointer != NULL)
         delete(rawNumber, (int) (pointPointer - rawNumber));
     exponent -= stripLeft(rawNumber, '0');
 
-    const char *numberEndPointer = rawNumber + strlen(rawNumber);
+    char *numberEndPointer = rawNumber + strlen(rawNumber);
 
-    char *exponentPointer = strpbrk(rawNumber, "eE");
+
     if (exponentPointer != NULL)
     {
-        exponent += getExponent(exponentPointer);
+        int readExp = getExponent(exponentPointer);
+
+        if (readExp == EXP_ERROR)
+            return ERROR_VALIDATION;
+
+        exponent += readExp;
         numberEndPointer = exponentPointer;
     }
 
+    int lengthShortening = stripRight(rawNumber, numberEndPointer, '0'); // 10000000000000000000000000000000001
+
+    if (pointPointer != NULL AND forCounterLeft + LENGTH_LIMIT((*number)) + 1 < forCounterRight)
+        return ERROR_LIMITS;
+
+    numberEndPointer -= lengthShortening;
+
     if (rawNumber == numberEndPointer)
         *rawNumber = '0', numberEndPointer++;
+
+    if (rawNumber + LENGTH_LIMIT((*number)) < numberEndPointer)
+        return ERROR_LIMITS;
+
+    if (exponent > EXPONENT_LIMIT)
+        return ERROR_LIMITS;
 
     setSign(number, sign);
     setValue(number, rawNumber, numberEndPointer);

@@ -25,7 +25,14 @@ setExponent(Number *number, int exponent)
 char *
 valueToStr(Number number, char *buffer)
 {
-    for (int i = 0; i < number.valueLength; i++)
-        buffer[i] = number.value[i] + '0';
+    int i = 0;
+    if (number.value[i] == 0)
+        buffer[i++] = '0';
+    else
+        for (; i < number.valueLength; i++)
+            buffer[i] = number.value[i] + '0';
+
+    buffer[i] = '\0';
+
     return buffer;
 }

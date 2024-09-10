@@ -1,6 +1,5 @@
 #include "StringUtils.h"
 
-
 ExitCode
 shiftLeft(String string, int shift)
 {
@@ -28,7 +27,7 @@ delete(String string, int position)
 int
 stripLeft(String string, char c)
 {
-    char* startString = string;
+    char *startString = string;
     int passedCounter = 0;
 
     for (; *string == c; string++, passedCounter++);
@@ -40,5 +39,15 @@ stripLeft(String string, char c)
         *startString = '\0';
 
     return passedCounter;
+}
+
+int
+stripRight( const char *stringStart, char *stringEnd, char c)
+{
+    int i = 0;
+    stringEnd--;
+    for (; stringStart <= stringEnd AND *stringEnd == c; i++, stringEnd--)
+        *stringEnd = '\0';
+    return i;
 }
 

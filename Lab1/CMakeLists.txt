@@ -19,7 +19,6 @@ add_executable(Lab1 main.c
         src/IO/Validation/StringUtils.h
         src/Types.c
         src/IO/IO.h
-        src
 )
 
 add_executable(tests test/InputTests.c

@@ -4,6 +4,8 @@
 #include "../Types.h"
 #include "graphics.h"
 
+void showResult(ExitCode code, Number number);
+
 ExitCode
 input(Number *);
 

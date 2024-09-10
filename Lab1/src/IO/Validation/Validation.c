@@ -100,7 +100,7 @@ validateReal(String string)
 ExitCode
 validateNumber(Number number)
 {
-    if (number.valueLength > VALUE_LENGTH_LIMIT)
+    if (number.valueLength > LENGTH_LIMIT(number))
         return ERROR_VALIDATION;
 
     if (ABS(number.exponent) > EXPONENT_LIMIT)

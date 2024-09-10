@@ -13,8 +13,12 @@
         "-.08", \
         "-.1e1", \
         "6E-2", \
-        "1.0e1" \
+        "1.0e1"
 
+// 41 digits
+#define NEG_TEST_STRINGS \
+        "10101010011010010101010010101010101010011", \
+        "1e100000"
 
 typedef enum errors
 {
@@ -63,7 +67,7 @@ testInputPos(void)
         {.sign = 1, .value = {8}, .valueLength = 1, .exponent = -1},
         {.sign = 1, .value = {1}, .valueLength = 1, .exponent = 1},
         {.sign = 0, .value = {6}, .valueLength = 1, .exponent = -1},
-        {.sign = 0, .value = {1, 0}, .valueLength = 2, .exponent = 2},
+        {.sign = 0, .value = {1}, .valueLength = 1, .exponent = 2},
     };
 
     int counter = 0;
@@ -81,10 +85,34 @@ testInputPos(void)
 }
 #undef TESTS
 
+#define TESTS 2
+ExitCode
+testInputNeg(void)
+{
+    PrintInfo();
+
+    char *untouchables[TESTS] = {NEG_TEST_STRINGS};
+    char testStrings[TESTS][42] = {NEG_TEST_STRINGS};
+
+    Number realResults[TESTS] = {0};
+
+    int counter = 0;
+    for (int i = TO_START; i < TESTS; i++)
+    {
+        if (convert_(testStrings[i], realResults + i) != OK)
+            printf("%d / %d: %s : %s\n", i + 1, TESTS, "PASS", untouchables[i]), counter++;
+        else
+            printf("%d / %d: %s : %s\n", i + 1, TESTS, "FAIL", untouchables[i]);
+    }
+    printf("Status: %d / %d\n", counter, TESTS);
+    return counter == TESTS ? OK : ERROR;
+}
+#undef TESTS
 
 ExitCode
 runInputTest(void)
 {
-    ExitCode code = testInputPos();
-    return code;
+    ExitCode code = testInputPos(), code2 = testInputNeg();
+
+    return code == OK AND code2 == OK ? OK : ERROR;
 }

@@ -6,7 +6,6 @@
         a ^= b; \
 } while(0)
 
-
 void
 reverseArray_(int *array, int length)
 {
@@ -14,38 +13,83 @@ reverseArray_(int *array, int length)
         SWAP(array[i], array[length - i - 1]);
 }
 
-ExitCode
+MErrors
 checkResult(Number a, Number b)
 {
-    if (a.valueLength + b.valueLength - (a.value[0] * b.value[0] < 10) > VALUE_LENGTH_LIMIT)
-        return ERROR_RESULT;
+    if (a.exponent + b.exponent - (a.value[0] * b.value[0] < 10) > EXPONENT_LIMIT)
+        return M_ERR_INF;
 
-    if (ABS(a.exponent + b.exponent) > EXPONENT_LIMIT)
-        return ERROR_RESULT;
+    if (a.exponent + b.exponent - (a.value[0] * b.value[0] < 10) < -EXPONENT_LIMIT)
+        return M_ERR_ZERO;
 
-    return OK;
+    return M_OK;
+}
+
+void
+alise(int *buffer, int length) // in reversed array
+{
+    int tmp;
+    for (int i = 0; i < length; i++)
+    {
+        tmp = buffer[i];
+        if (tmp > 9)
+            buffer[i + 1] += tmp / 10, buffer[i] = tmp % 10;
+    }
+}
+
+int *cutAndRoundValue(int *buffer, int *newLength) // in reversed array
+{
+    if (*newLength > VALUE_LENGTH_LIMIT)
+    {
+        buffer += (*newLength - VALUE_LENGTH_LIMIT);
+        *newLength =VALUE_LENGTH_LIMIT;
+        if (*(buffer - 1) >= 5)
+        {
+            *buffer += 1;
+            alise(buffer, VALUE_LENGTH_LIMIT);
+            *newLength += (buffer[VALUE_LENGTH_LIMIT] != 0);
+        }
+    }
+    for (; *buffer == 0; buffer++, *newLength -= 1);
+    return buffer;
+}
+
+void copy(Number *number, const int *buffer, const int length)
+{
+    for (int i = 0; i < length; i++)
+        number->value[i] = buffer[i];
 }
 
 ExitCode
 multiplyValues_(Number number1, Number number2, Number *buffer)
 {
+    int newNumber[VALUE_LENGTH_LIMIT * 2 + 1] = { 0 };
+    int newNumberLength = VALUE_LENGTH_LIMIT * 2;
+
     reverseArray_(number1.value, number1.valueLength);
     reverseArray_(number2.value, number2.valueLength);
 
     int remainder = 0, temp;
     for (int lowerDigit = 0; lowerDigit < number2.valueLength; lowerDigit++)
     {
+        remainder = 0;
         for (int upperDigit = 0; upperDigit < number1.valueLength; upperDigit++)
         {
             temp = number1.value[upperDigit] * number2.value[lowerDigit];
-            buffer->value[lowerDigit + upperDigit] += temp % 10 + remainder; // TODO: think
+            newNumber[lowerDigit + upperDigit] += temp % 10 + remainder;
             remainder = temp / 10;
+            alise(newNumber, newNumberLength);
         }
 
-        buffer->value[lowerDigit + number1.valueLength] += remainder;
+        newNumber[lowerDigit + number1.valueLength] += remainder;
+        alise(newNumber, newNumberLength);
     }
+    newNumberLength = number2.valueLength + number1.valueLength - (remainder == 0);
+    int *number = cutAndRoundValue(newNumber, &newNumberLength);
 
-    buffer->valueLength = number2.valueLength + number1.valueLength - (remainder == 0);
+    copy(buffer, number, newNumberLength);
+    buffer->valueLength = newNumberLength;
+    buffer->exponent -= (remainder == 0);
 
     reverseArray_(buffer->value, buffer->valueLength);
 
@@ -55,7 +99,7 @@ multiplyValues_(Number number1, Number number2, Number *buffer)
 ExitCode
 multiplyExponents_(Number num1, Number num2, Number *buffer)
 {
-    buffer->exponent = num1.exponent + num2.exponent;
+    buffer->exponent += num1.exponent + num2.exponent;
     return OK;
 }
 ExitCode
@@ -68,12 +112,14 @@ multiplySigns_(Number num1, Number num2, Number *buffer)
 ExitCode
 multiply(Number numberA, Number numberB, Number *result)
 {
-    if (checkResult(numberA, numberB) != OK)
-        return ERROR_RESULT;
+    result->mathStatus = checkResult(numberA, numberB);
 
-    multiplyValues_(numberA, numberB, result);
-    multiplyExponents_(numberA, numberB, result);
-    multiplySigns_(numberA, numberB, result);
+    if (result->mathStatus == M_OK)
+    {
+        multiplyValues_(numberA, numberB, result);
+        multiplyExponents_(numberA, numberB, result);
+        multiplySigns_(numberA, numberB, result);
+    }
 
     return OK;
 }

@@ -13,4 +13,7 @@ delete(String string, int position);
 int
 stripLeft(String string, char);
 
+int
+stripRight(const char *, char *stringEnd, char c);
+
 #endif //LAB1_SRC_UTILS_STRINGUTILS_H

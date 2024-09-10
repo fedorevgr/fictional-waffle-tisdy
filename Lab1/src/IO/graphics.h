@@ -10,6 +10,6 @@
 void
 renderRuler(void);
 
-#define renderPrompt() printf(PROMPT)
+#define renderPrompt() renderRuler(), printf(PROMPT)
 
 #endif //LAB1_GRAPHICS_H

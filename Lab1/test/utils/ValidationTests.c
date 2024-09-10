@@ -41,7 +41,7 @@ validationTestPos(void)
 }
 #undef TESTS
 
-#define TESTS  12
+#define TESTS  13
 int
 validationTestNeg(void) {
     PrintInfo();
@@ -55,10 +55,11 @@ validationTestNeg(void) {
         "1.0e+",
         "-1.0e-",
         "1.0e++3",
-        "12e3.4",
+        "1.2e3.4",
         "1324a",
         "Math",
-        "1ee2"
+        "1ee2",
+        "Meth"
     };
     int counter = 0;
     ExitCode code;
