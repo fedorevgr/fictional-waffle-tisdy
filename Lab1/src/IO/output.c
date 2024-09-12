@@ -25,7 +25,7 @@ void print(Number number)
             break;
         case M_ERR_ZERO: printf("ZERO\n");
             break;
-        case: printf("OVERFLOW\n");
+        default: printf("OVERFLOW\n");
             assert(number.mathStatus != M_ERR_LENGTH);
             break;
     }

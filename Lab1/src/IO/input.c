@@ -1,7 +1,8 @@
 #include "input.h"
 #include <ctype.h>
 #include <string.h>
-#include "Validation//StringUtils.h"
+#include "Validation/StringUtils.h"
+#include "Validation/Validation.h"
 #include <stdlib.h>
 
 ExitCode
@@ -91,7 +92,7 @@ convert_(String rawNumber, Number *number)
     if (rawNumber + LENGTH_LIMIT((*number)) < numberEndPointer)
         return ERROR_LIMITS;
 
-    if (exponent > EXPONENT_LIMIT)
+    if (ABS(exponent) > EXPONENT_LIMIT)
         return ERROR_LIMITS;
 
     setSign(number, sign);
@@ -110,6 +111,9 @@ input(Number *number)
 
     if (exitCode != OK)
         return exitCode;
+
+    if (validateReal(bufferString) != OK)
+        return ERROR_VALIDATION;
 
     return convert_(bufferString, number);
 }

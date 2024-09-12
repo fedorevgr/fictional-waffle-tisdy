@@ -2,11 +2,6 @@
 #include "src/Types.h"
 #include "src/IO/IO.h"
 
-/*
- * TODO
- *  value rounding
- */
-
 ExitCode
 enterNumbers_(Number *, Number *);
 

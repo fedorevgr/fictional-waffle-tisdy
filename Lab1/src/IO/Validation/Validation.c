@@ -40,6 +40,7 @@ specialFloat(String string, const char *numberEnd)
         return ERROR_VALIDATION;
 }
 
+
 ExitCode
 validateReal(String string)
 {
