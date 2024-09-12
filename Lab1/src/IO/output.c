@@ -2,6 +2,10 @@
 #include "output.h"
 #include "stdio.h"
 #include "../mathing.h"
+#include <assert.h>
+
+#define EXP(num) (num.value[0] == 0) ? 0 : num.exponent
+#define SIGN(n) (number.sign == 0 ? '+' : '-')
 
 void print(Number number)
 {
@@ -15,13 +19,14 @@ void print(Number number)
     switch ((MErrors) number.mathStatus)
     {
         case M_OK:
-            printf("%c0.%se%d\n", number.sign == 0 ? '+' : '-', valueToStr(number, buffer), number.exponent);
+            printf("%c0.%se%d\n", SIGN(number), valueToStr(number, buffer), EXP(number));
             break;
-        case M_ERR_INF: printf("INF\n");
+        case M_ERR_INF: printf("%cINF\n", SIGN(number));
             break;
         case M_ERR_ZERO: printf("ZERO\n");
             break;
-        case M_ERR_LENGTH: printf("OVERFLOW\n");
+        case: printf("OVERFLOW\n");
+            assert(number.mathStatus != M_ERR_LENGTH);
             break;
     }
 

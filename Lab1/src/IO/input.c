@@ -66,7 +66,7 @@ convert_(String rawNumber, Number *number)
 
     char *numberEndPointer = rawNumber + strlen(rawNumber);
 
-
+    exponentPointer = strpbrk(rawNumber, "eE");
     if (exponentPointer != NULL)
     {
         int readExp = getExponent(exponentPointer);
@@ -78,7 +78,7 @@ convert_(String rawNumber, Number *number)
         numberEndPointer = exponentPointer;
     }
 
-    int lengthShortening = stripRight(rawNumber, numberEndPointer, '0'); // 10000000000000000000000000000000001
+    int lengthShortening = stripRight(rawNumber, numberEndPointer, '0'); // 10000000000000000000000000000000000999999
 
     if (pointPointer != NULL AND forCounterLeft + LENGTH_LIMIT((*number)) + 1 < forCounterRight)
         return ERROR_LIMITS;
