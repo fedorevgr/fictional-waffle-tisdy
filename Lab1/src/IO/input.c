@@ -24,14 +24,21 @@ enter_(char *buffer)
     return OK;
 }
 
-#define EXP_ERROR (-10000000)
+#define EXP_ERROR (-100000000)
 int
 getExponent(char *expPointer)
 {
     expPointer++;
     char *checkPointer;
     int result = (int) strtol(expPointer, &checkPointer, 10);
-    return (checkPointer == expPointer + strlen(expPointer)) ? result : EXP_ERROR;
+
+    if (checkPointer != expPointer + strlen(expPointer))
+        return EXP_ERROR;
+
+    if (ABS(result) > EXPONENT_LIMIT)
+        return EXP_ERROR;
+
+    return result;
 }
 
 int
@@ -92,11 +99,15 @@ convert_(String rawNumber, Number *number)
     if (rawNumber + LENGTH_LIMIT((*number)) < numberEndPointer)
         return ERROR_LIMITS;
 
-    if (ABS(exponent) > EXPONENT_LIMIT)
-        return ERROR_LIMITS;
+    // if (ABS(exponent) > EXPONENT_LIMIT)
+    //     return ERROR_LIMITS;
 
     setSign(number, sign);
     setValue(number, rawNumber, numberEndPointer);
+
+    if (number->value[0] == 0)
+        exponent = 0;
+
     setExponent(number, exponent);
 
     return OK;

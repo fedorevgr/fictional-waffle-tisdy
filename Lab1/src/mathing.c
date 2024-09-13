@@ -47,11 +47,30 @@ int *cutAndRoundValue(int *buffer, int *newLength) // in reversed array
         {
             *buffer += 1;
             alise(buffer, VALUE_LENGTH_LIMIT);
-            *newLength += (buffer[VALUE_LENGTH_LIMIT] != 0);
         }
+
+        *newLength += (buffer[VALUE_LENGTH_LIMIT] != 0);
+        if (*newLength > VALUE_LENGTH_LIMIT)
+        {
+            buffer++, *newLength = VALUE_LENGTH_LIMIT;
+
+            if (*(buffer - 1) >= 5)
+            {
+                *buffer += 1;
+                alise(buffer, VALUE_LENGTH_LIMIT);
+            }
+        }
+
     }
     for (; *buffer == 0; buffer++, *newLength -= 1);
     return buffer;
+}
+
+int reversedNumberLength(const int *value)
+{
+    int length = VALUE_LENGTH_LIMIT;
+    for (int i = 0; i < VALUE_LENGTH_LIMIT AND value[VALUE_LENGTH_LIMIT - i - 1] == 0; i++, length--);
+    return length;
 }
 
 void copy(Number *number, const int *buffer, const int length)
@@ -85,6 +104,10 @@ multiplyValues_(Number number1, Number number2, Number *buffer)
         alise(newNumber, newNumberLength);
     }
     newNumberLength = number2.valueLength + number1.valueLength - (remainder == 0);
+
+    if (newNumber[newNumberLength] != 0)
+        newNumberLength++, buffer->exponent++;
+
     int *number = cutAndRoundValue(newNumber, &newNumberLength);
 
     copy(buffer, number, newNumberLength);
@@ -118,8 +141,9 @@ multiply(Number numberA, Number numberB, Number *result)
     {
         multiplyValues_(numberA, numberB, result);
         multiplyExponents_(numberA, numberB, result);
-        multiplySigns_(numberA, numberB, result);
     }
+
+    multiplySigns_(numberA, numberB, result);
 
     return OK;
 }

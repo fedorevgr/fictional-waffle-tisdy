@@ -40,6 +40,14 @@ specialFloat(String string, const char *numberEnd)
         return ERROR_VALIDATION;
 }
 
+ExitCode
+specialAfterFloat(const char *point, const char *numberEnd)
+{
+    if (point + 1 == numberEnd)
+        return OK;
+    return ERROR_VALIDATION;
+}
+
 
 ExitCode
 validateReal(String string)
@@ -69,28 +77,50 @@ validateReal(String string)
     {
         if (expPointer == NULL)
         {
+            int specialFloatVar = specialFloat(string, pointPointer) == OK;
+            int specialAfterFloatVar = specialAfterFloat(pointPointer, numberEnd) == OK;
             exitCode = (
                 (
                     validateInt(string, pointPointer, true) == OK
                         OR
-                        specialFloat(string, pointPointer) == OK
+                        specialFloatVar
+                        OR
+                        specialAfterFloatVar
                 )
                     AND
-                    validateInt(pointPointer + 1, numberEnd, false) == OK
+                    (
+                        validateInt(pointPointer + 1, numberEnd, false) == OK
+                        OR
+                            specialAfterFloatVar
+                    )
+                    AND
+                    NOT (specialFloatVar
+                        AND
+                        specialAfterFloatVar)
             ) ? OK : ERROR_VALIDATION;
         }
         else
         {
+            int specialFloatVar = specialFloat(string, pointPointer) == OK;
+            int specialAfterFloatVar = specialAfterFloat(pointPointer, expPointer) == OK;
             exitCode = (
                 (
                     validateInt(string, pointPointer, true) == OK
                         OR
-                        specialFloat(string, pointPointer) == OK
+                        specialFloatVar
                 )
                     AND
-                    validateInt(pointPointer + 1, expPointer, false) == OK
+                    (
+                        validateInt(pointPointer + 1, expPointer, false) == OK
+                        OR
+                            specialAfterFloatVar
+                        )
                     AND
                     validateInt(expPointer + 1, numberEnd, true) == OK
+                    AND
+                    NOT (specialFloatVar
+                        AND
+                        specialAfterFloatVar)
             ) ? OK : ERROR_VALIDATION;
         }
     }
