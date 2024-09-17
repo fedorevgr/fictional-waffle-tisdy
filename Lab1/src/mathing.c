@@ -66,12 +66,6 @@ int *cutAndRoundValue(int *buffer, int *newLength) // in reversed array
     return buffer;
 }
 
-int reversedNumberLength(const int *value)
-{
-    int length = VALUE_LENGTH_LIMIT;
-    for (int i = 0; i < VALUE_LENGTH_LIMIT AND value[VALUE_LENGTH_LIMIT - i - 1] == 0; i++, length--);
-    return length;
-}
 
 void copy(Number *number, const int *buffer, const int length)
 {
