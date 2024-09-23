@@ -18,9 +18,33 @@
 #define WIDTH_RPS    5
 
 #define TABLE_HEADER \
-"| #  | Name                 |Cntr-Ser| Price      | Color  | Grt/Yprod | -/Run    | -/Own | -/Fix |\n" \
+"| #  | Name                 |Cntr-Ser| Price      | Color  | Grt/Yprod |-/Mileage | -/Own | -/Fix |\n" \
 "|----|----------------------|--------|------------|--------|-----------|----------|-------|-------|\n"
 
-#define INFO "" // TODO: info
+#define INFO "" \
+"Входные данные"\
+                \
+
+// TODO: info
+
+#define FIND_INFO \
+"Searching field - Mileage \n" \
+"Searching description - less or equal\n"
+
+#define SORT_INFO \
+"Sort key - price\n"               \
+"1. Sort type - selection sort\n" \
+"2. Sort type - comb sort\n"
+
+#define MENU \
+"1 - print table\n" \
+"2 - add car to table\n" \
+"3 - delete car\n"   \
+"4 - sort table\n" \
+"5 - find in table\n"    \
+"r - read file\n" \
+"s - save to file\n"              \
+"i - info\n" \
+"q - exit\n" \
 
 #endif //LAB2_OUTPUT_H

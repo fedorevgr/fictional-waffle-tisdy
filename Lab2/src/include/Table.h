@@ -6,6 +6,8 @@
 
 #include "Car.h"
 #include "common/ExitCodes.h"
+#include "common/Macros.h"
+
 #define MAX_TABLE_LENGTH 100
 
 typedef struct
@@ -18,6 +20,7 @@ Table *tableGet(void);
 ExitCode tableAddCar(Car);
 ExitCode tableDeleteCar(int);
 ExitCode tableSort(int);
-ExitCode tableFindCars(char *);
+ExitCode tableFindCars(int);
+void tablePrint(Table *);
 
 #endif //LAB2_TABLE_H

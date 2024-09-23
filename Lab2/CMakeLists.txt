@@ -15,4 +15,6 @@ add_executable(Lab2 src/main.c
         src/c/Table.c
         src/include/Table.h
         src/c/Sorting.c
-        src/include/Sorting.h)
+        src/include/Sorting.h
+        src/c/utils.c
+        src/include/IO/CarPrompts.h)

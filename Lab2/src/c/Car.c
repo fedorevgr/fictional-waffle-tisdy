@@ -1,24 +1,187 @@
 #include "../include/Car.h"
+#include "ctype.h"
 
-const char *getSpaces(char *str, int amount)
+ExitCode
+inputColour__(char *buffer)
 {
-    for (int i = 0; i < amount; i++)
-        str[i] = ' ';
-    return str;
-}
+    ExitCode code = inputString(buffer, WIDTH_CLR);
 
-int getIntLength(unsigned long number)
-{
-    int length = 0;
-    while (number)
+    for (int i = 0; i < WIDTH_CLR AND code == OK; i++)
     {
-        number %= 10;
-        length++;
+        if (NOT(
+            ('a' <= buffer[i] AND buffer[i] <= 'f')
+                OR
+                ('0' <= buffer[i] AND buffer[i] <= '9')
+        )
+            )
+            code = ERR_INPUT;
     }
-    return length;
+
+    return code;
 }
 
-void carPrint(Car car)
+void
+inputBoolean(bool *buffer)
+{
+    ExitCode code;
+    char tmp[2];
+
+    do
+    {
+        code = inputString(tmp, 1);
+
+        if (code == OK)
+        {
+            if (tmp[0] == 'y')
+                *buffer = 1;
+            else if (tmp[0] == 'n')
+                *buffer = 0;
+            else
+                code = ERR_INPUT;
+        }
+        else
+            printf("AGAIN\n");
+    }
+    while (code != OK);
+}
+
+void
+inputNew(Car *car)
+{
+    unsigned long buffer;
+    ExitCode code;
+    do
+    {
+        printf(PROMPT_NEW_GUARANTEE);
+        code = inputUnsignedLong(&buffer);
+    }
+    while (code != OK);
+
+    car->state.new.guarantee = buffer;
+}
+
+void
+inputOld(Car *car)
+{
+    long buffer;
+    ExitCode code;
+    do
+    {
+        printf(PROMPT_OLD_YEAR);
+        code = inputLong(&buffer);
+    }
+    while (code != OK);
+
+    car->state.old.yearProd = (int) buffer;
+
+    unsigned long ulBuffer;
+    do
+    {
+        printf(PROMPT_OLD_MILEAGE);
+        code = inputUnsignedLong(&ulBuffer);
+    }
+    while (code != OK);
+
+    car->state.old.mileage = ulBuffer;
+
+    do
+    {
+        printf(PROMPT_OLD_OWNERS);
+        code = inputUnsignedLong(&ulBuffer);
+    }
+    while (code != OK);
+
+    car->state.old.owners = ulBuffer;
+
+    do
+    {
+        printf(PROMPT_OLD_REPAIR);
+        code = inputUnsignedLong(&ulBuffer);
+    }
+    while (code != OK);
+
+    car->state.old.repairs = ulBuffer;
+}
+
+ExitCode
+inputCar(void)
+{
+    ExitCode code;
+    Car newCar = NULL_CAR;
+
+    do
+    {
+        printf(PROMPT_MANUFACTURER);
+        code = inputString(newCar.manufacturer, MAX_STRING_LENGTH);
+    }
+    while (code != OK);
+
+    do
+    {
+        printf(PROMPT_PRICE);
+        code = inputUnsignedLong(&(newCar.price));
+    }
+    while (code != OK);
+
+    do
+    {
+        printf(PROMPT_COUNTRY);
+        code = inputString(newCar.country, 2);
+
+        if (code)
+        {
+            if (NOT
+                (
+                    (
+                        ('a' <= newCar.country[0] AND newCar.country[0] <= 'z')
+                            OR
+                            ('A' <= newCar.country[0] AND newCar.country[0] <= 'Z')
+                    )
+                        AND
+                        (
+                            ('a' <= newCar.country[1] AND newCar.country[1] <= 'z')
+                                OR
+                                ('A' <= newCar.country[1] AND newCar.country[1] <= 'Z')
+                        )
+                )
+                )
+                code = ERR_INPUT;
+        }
+    }
+    while (code != OK);
+
+    newCar.country[0] = (char) tolower(newCar.country[0]);
+    newCar.country[1] = (char) tolower(newCar.country[1]);
+
+    if (strncmp(newCar.country, "ru", 2) == 0)
+    {
+        printf(PROMPT_SERVICE);
+        inputBoolean(&(newCar.dealerService));
+    }
+
+    do
+    {
+        printf(PROMPT_COLOUR);
+        code = inputColour__(newCar.colour);
+    }
+    while (code != OK);
+
+    printf(PROMPT_NEW);
+    inputBoolean(&(newCar.new));
+
+    if (newCar.new)
+        inputNew(&newCar);
+    else
+        inputOld(&newCar);
+
+    return OK;
+}
+
+const char *
+getSpaces(char *str, int amount);
+
+void
+carPrint(Car car)
 {
     char tmp[WIDTH_NAME + 1] = "";
     printf("| %s%s |", car.manufacturer, getSpaces(tmp, WIDTH_NAME - strlen(car.manufacturer)));
@@ -37,7 +200,7 @@ void carPrint(Car car)
     else
     {
         printf(" %9d |", car.state.old.yearProd);
-        printf(" %8lu |", car.state.old.run);
+        printf(" %8lu |", car.state.old.mileage);
         printf(" %4du |", car.state.old.owners);
         printf(" %4du |", car.state.old.repairs);
     }

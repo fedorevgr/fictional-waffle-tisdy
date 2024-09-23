@@ -6,8 +6,12 @@
 #define LAB2_CAR_H
 
 #include "common/ExitCodes.h"
+#include "common/Macros.h"
 #include "IO/input.h"
 #include "IO/output.h"
+#include "IO/CarPrompts.h"
+
+
 
 typedef struct {
 	unsigned int guarantee;
@@ -15,7 +19,7 @@ typedef struct {
 
 typedef struct {
 	int yearProd;
-	unsigned long run;
+	unsigned long mileage;
 	unsigned int owners;
 	unsigned int repairs;
 } StateOld;
@@ -41,10 +45,11 @@ typedef struct
 Car;
 
 #define SORT_FIELD price
-#define FIND_FIELD manufacturer
+#define FIND_FIELD state.old.mileage
 
 #define NULL_CAR  (Car) { 0 }
 
 void carPrint(Car);
+ExitCode inputCar(void);
 
 #endif //LAB2_CAR_H

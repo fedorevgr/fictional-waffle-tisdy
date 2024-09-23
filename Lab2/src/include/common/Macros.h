@@ -6,7 +6,9 @@
 #define LAB2_MACROS_H
 
 #define OR ||
+
 #define AND &&
+
 #define NOT !
 
 #endif //LAB2_MACROS_H

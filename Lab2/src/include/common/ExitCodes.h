@@ -15,7 +15,8 @@ typedef enum {
 	OK,
 	ERR_INPUT,
 	ERR_ARGS,
-	ERR_TABLE
+	ERR_TABLE,
+    ERR_FILE
 } ExitCode;
 
 #endif //LAB2_EXITCODES_H
