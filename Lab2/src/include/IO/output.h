@@ -46,5 +46,13 @@
 "s - save to file\n"              \
 "i - info\n" \
 "q - exit\n" \
+"S - run sorting statistics\n"
+
+#define SPACES \
+"\n\n\n\n\n\n" \
+
+
+#define SPLITTER \
+"-----------------------------------------\n"               \
 
 #endif //LAB2_OUTPUT_H

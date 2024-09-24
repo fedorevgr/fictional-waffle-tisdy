@@ -104,7 +104,7 @@ inputOld(Car *car)
 }
 
 ExitCode
-inputCar(void)
+carInput(Car *car)
 {
     ExitCode code;
     Car newCar = NULL_CAR;
@@ -153,7 +153,7 @@ inputCar(void)
     newCar.country[0] = (char) tolower(newCar.country[0]);
     newCar.country[1] = (char) tolower(newCar.country[1]);
 
-    if (strncmp(newCar.country, "ru", 2) == 0)
+    if (strncmp(newCar.country, "ru", 2) != 0)
     {
         printf(PROMPT_SERVICE);
         inputBoolean(&(newCar.dealerService));
@@ -173,6 +173,8 @@ inputCar(void)
         inputNew(&newCar);
     else
         inputOld(&newCar);
+
+    *car = newCar;
 
     return OK;
 }
@@ -194,7 +196,7 @@ carPrint(Car car)
 
     if (car.new)
     {
-        printf(" %9du |", car.state.new.guarantee);
+        printf(" %9u |", car.state.new.guarantee);
         printf("          |       |       |");
     }
     else

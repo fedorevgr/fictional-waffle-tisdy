@@ -7,15 +7,34 @@
 ExitCode
 inputString(char *buffer, int limit)
 {
-    char *tmp = fgets(buffer, limit + 1, stdin);
+    char *input_buffer = malloc(limit + 2);
+    char *tmp = fgets(input_buffer, limit + 2, stdin);
 
-    tmp[limit] = '\0';
+    if (tmp[limit] != '\n' && tmp[limit] != '\0')
+    {
+        free(input_buffer);
+        return ERR_INPUT;
+    }
+
     char *c = strrchr(tmp, '\n');
 
     if (c == NULL)
+    {
+        free(input_buffer);
+        printf("E: String out of bounds\n");
         return ERR_INPUT;
+    }
     else
-        *c = '\n';
+        *c = '\0';
+
+    strcpy(buffer, input_buffer);
+    free(input_buffer);
+
+    if (strlen(buffer) == 0)
+    {
+        printf("E: Zero length string\n");
+        return ERR_INPUT;
+    }
 
     return OK;
 }

@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.28)
 project(Lab2 C)
 
 set(CMAKE_C_STANDARD 23)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 
 add_executable(Lab2 src/main.c
         src/include/common/ExitCodes.h
@@ -17,4 +18,13 @@ add_executable(Lab2 src/main.c
         src/c/Sorting.c
         src/include/Sorting.h
         src/c/utils.c
-        src/include/IO/CarPrompts.h)
+        src/include/IO/CarPrompts.h
+        src/c/Service.c
+        src/include/Service.h
+)
+
+set_target_properties(Lab2
+        PROPERTIES OUTPUT_NAME "app.exe"
+)
+
+

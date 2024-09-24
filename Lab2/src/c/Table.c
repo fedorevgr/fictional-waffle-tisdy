@@ -42,7 +42,7 @@ tableReadFile(char *path)
     else
         read = fread(&table.values, sizeof(Car), table.length, file);
 
-    if (read != sizeof(Car) * table.length)
+    if (read != table.length)
         code = ERR_FILE;
 
     fclose(file);
@@ -60,7 +60,7 @@ tableSave(char *path)
 
     size_t written = fwrite(&table.values, sizeof(Car), table.length, file);
 
-    if (written != sizeof(Car) * table.length)
+    if (written != table.length)
         code = ERR_FILE;
 
     fclose(file);
@@ -79,7 +79,7 @@ tableAddCar(Car car)
 }
 
 ExitCode
-tableDeleteCar(int index)
+tableDeleteCar(size_t index)
 {
     assert(index >= 0);
     assert(index < table.length);
@@ -87,7 +87,7 @@ tableDeleteCar(int index)
     if (table.length < 1)
         return ERR_TABLE;
 
-    for (int i = index; index < table.length - 1; i++)
+    for (size_t i = index; index < table.length - 1; i++)
         table.values[i] = table.values[i + 1];
 
     table.length -= 1;
@@ -99,7 +99,7 @@ tableDeleteCar(int index)
 //  ExitCode sort(int sortType);
 
 ExitCode
-tableFindCars(int mileageParam)
+tableFindCars(unsigned long mileageParam)
 {
     Table newTable = {0};
     for (unsigned long i = 0; i < table.length; i++)

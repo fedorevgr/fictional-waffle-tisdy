@@ -12,15 +12,25 @@
 
 typedef struct
 {
-	Car values[MAX_TABLE_LENGTH];
-	int length;
+    Car values[MAX_TABLE_LENGTH];
+    int length;
 } Table;
 
-Table *tableGet(void);
-ExitCode tableAddCar(Car);
-ExitCode tableDeleteCar(int);
-ExitCode tableSort(int);
-ExitCode tableFindCars(int);
-void tablePrint(Table *);
+Table *
+tableGet(void);
+ExitCode
+tableAddCar(Car);
+ExitCode
+tableDeleteCar(size_t);
+ExitCode
+tableSort(int);
+ExitCode
+tableFindCars(unsigned long);
+void
+tablePrint(Table *);
+ExitCode
+tableReadFile(char *path);
+ExitCode
+tableSave(char *path);
 
 #endif //LAB2_TABLE_H
