@@ -26,8 +26,8 @@ tableReadFile(char *path)
         for (int i = 0; i < table.length; i++)
             tableDeleteCar(0);
         // TODO: check if won't work
-        table.length = 0;
     }
+    table.length = 0;
 
     FILE *file = fopen(path, "rb");
 
@@ -81,13 +81,13 @@ tableAddCar(Car car)
 ExitCode
 tableDeleteCar(size_t index)
 {
-    assert(index >= 0);
-    assert(index < table.length);
+    if (index >= table.length)
+        return ERR_ARGS;
 
     if (table.length < 1)
         return ERR_TABLE;
 
-    for (size_t i = index; index < table.length - 1; i++)
+    for (size_t i = index; i < table.length - 1; i++)
         table.values[i] = table.values[i + 1];
 
     table.length -= 1;
@@ -95,8 +95,46 @@ tableDeleteCar(size_t index)
     return OK;
 }
 
-// TODO:
-//  ExitCode sort(int sortType);
+int
+key(const void *p1, const void *p2)
+{
+    const Car car1 = *((Car *) p1);
+    const Car car2 = *((Car *) p2);
+
+    if (car1.price < car2.price)
+        return -1;
+    else if (car1.price > car2.price)
+        return 1;
+    else
+        return 0;
+}
+
+#include <time.h>
+
+#define NANO_SEC(time) (time.tv_sec * 1000000000ULL + time.tv_nsec)
+
+ExitCode
+tableSort(long sortType, unsigned long *time)
+{
+    struct timespec start, end;
+
+    SortFunc sort = getSort(sortType);
+    if (sort == NULL)
+        return ERR_ARGS;
+
+    if (table.length)
+    {
+        clock_gettime(CLOCK_REALTIME, &start);
+        sort(table.values, table.length, sizeof(Car), key);
+        clock_gettime(CLOCK_REALTIME, &end);
+
+        *time = NANO_SEC(end) - NANO_SEC(start);
+    }
+    else
+        return ERR_TABLE;
+
+    return OK;
+}
 
 ExitCode
 tableFindCars(unsigned long mileageParam)

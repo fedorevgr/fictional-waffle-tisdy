@@ -14,7 +14,7 @@
                 } while (0)
 
 SortFunc
-getSort(int pos)
+getSort(long pos)
 {
     if (pos == 0)
     {

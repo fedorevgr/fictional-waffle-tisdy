@@ -37,7 +37,12 @@ iDeleteCar(void)
 
     code = tableDeleteCar(index);
 
-    if (code)
+    if (code == ERR_ARGS)
+    {
+        printf("Index out of range\n");
+        return;
+    }
+    else if (code)
     {
         printf("Unable to delete\n");
         return;
@@ -48,24 +53,23 @@ iDeleteCar(void)
 void
 iSortTable(void)
 {
-    unsigned long algorithm;
+    long algorithm;
     printf(SORT_INFO);
     printf("Enter enter sort algorithm: ");
-    ExitCode code = inputUnsignedLong(&algorithm);
+    ExitCode code = inputLong(&algorithm);
 
     if (code)
     {
         printf("Illegal input\n");
         return;
     }
+    unsigned long time;
+    code = tableSort(algorithm, &time);
 
-    if (algorithm == 1)
-        // Todo: sort selection
-        assert(0);
-    else if (algorithm == 2)
-        assert(0);
-    else
-        printf("Illegal option\n");
+    if (code == ERR_TABLE)
+        printf("Can not sort empty table\n");
+    else if (code == ERR_ARGS)
+        printf("Illegal sort option\n");
 }
 
 void

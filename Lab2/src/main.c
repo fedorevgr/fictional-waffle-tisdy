@@ -45,7 +45,7 @@ pooling(void)
                 break;
             case '3':iDeleteCar();
                 break;
-            case '4':assert(0); // not implemented
+            case '4':iSortTable();
                 break;
             case '5':iFindFields();
                 break;

@@ -158,6 +158,8 @@ carInput(Car *car)
         printf(PROMPT_SERVICE);
         inputBoolean(&(newCar.dealerService));
     }
+    else
+        newCar.dealerService = true;
 
     do
     {
@@ -203,7 +205,7 @@ carPrint(Car car)
     {
         printf(" %9d |", car.state.old.yearProd);
         printf(" %8lu |", car.state.old.mileage);
-        printf(" %4du |", car.state.old.owners);
-        printf(" %4du |", car.state.old.repairs);
+        printf(" %5u |", car.state.old.owners);
+        printf(" %5u |", car.state.old.repairs);
     }
 }

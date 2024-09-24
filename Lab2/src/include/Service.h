@@ -30,6 +30,6 @@ void
 iSave(void);
 
 void
-iStats(void)
+iStats(void);
 
 #endif //LAB2_SRC_C_SERVICE_H

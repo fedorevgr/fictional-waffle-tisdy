@@ -7,6 +7,7 @@
 #include "Car.h"
 #include "common/ExitCodes.h"
 #include "common/Macros.h"
+#include "Sorting.h"
 
 #define MAX_TABLE_LENGTH 100
 
@@ -18,18 +19,25 @@ typedef struct
 
 Table *
 tableGet(void);
+
 ExitCode
 tableAddCar(Car);
+
 ExitCode
 tableDeleteCar(size_t);
+
 ExitCode
-tableSort(int);
+tableSort(long , unsigned long *);
+
 ExitCode
 tableFindCars(unsigned long);
+
 void
 tablePrint(Table *);
+
 ExitCode
 tableReadFile(char *path);
+
 ExitCode
 tableSave(char *path);
 
