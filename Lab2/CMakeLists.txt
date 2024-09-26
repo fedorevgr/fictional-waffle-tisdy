@@ -21,6 +21,8 @@ add_executable(Lab2 src/main.c
         src/include/IO/CarPrompts.h
         src/c/Service.c
         src/include/Service.h
+        src/c/KeyTable.c
+        src/include/KeyTable.h
 )
 
 set_target_properties(Lab2

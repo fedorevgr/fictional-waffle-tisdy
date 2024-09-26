@@ -11,4 +11,6 @@
 
 #define NOT !
 
+#define NANO_SEC(time) (time.tv_sec * 1000000000ULL + time.tv_nsec)
+
 #endif //LAB2_MACROS_H

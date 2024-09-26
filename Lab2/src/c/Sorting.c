@@ -16,11 +16,11 @@
 SortFunc
 getSort(long pos)
 {
-    if (pos == 0)
+    if (pos == 1)
     {
         return choose_sort;
     }
-    else if (pos == 1)
+    else if (pos == 2)
     {
         return comb_sort;
     }
@@ -80,7 +80,7 @@ comb_sort(void *ptr, unsigned long count, unsigned long size, CompFunc comp)
 
         for (unsigned long i = 0; i + gap < count; ++i)
         {
-            if (comp(array + i * size, array + (i + gap) * size) > 0)
+            if (comp(array + i * size, array + (i + gap) * size) < 0)
             {
                 swap_(array + i * size, array + (i + gap) * size, size);
                 swaps = 1;
@@ -90,4 +90,13 @@ comb_sort(void *ptr, unsigned long count, unsigned long size, CompFunc comp)
 }
 #undef FACTOR
 
+#include <time.h>
 
+void shuffle(void *array, const unsigned long el_size, const unsigned long array_size)
+{
+    for (int i = 0; i < array_size; ++i)
+    {
+        const int swap_idx = rand() % array_size;
+        swap_(array + i * el_size, array + swap_idx * el_size, el_size);
+    }
+}

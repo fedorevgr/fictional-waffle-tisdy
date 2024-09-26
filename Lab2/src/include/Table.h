@@ -30,7 +30,7 @@ ExitCode
 tableSort(long , unsigned long *);
 
 ExitCode
-tableFindCars(unsigned long);
+tableFindCars(char *, unsigned long, unsigned long);
 
 void
 tablePrint(Table *);

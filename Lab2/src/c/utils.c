@@ -8,3 +8,6 @@ const char *getSpaces(char *str, int amount)
         str[i] = ' ';
     return str;
 }
+
+
+

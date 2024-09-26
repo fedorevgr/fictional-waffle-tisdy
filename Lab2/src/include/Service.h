@@ -6,7 +6,9 @@
 #define LAB2_SRC_C_SERVICE_H
 
 #include "Table.h"
+#include "KeyTable.h"
 #include "Car.h"
+#include "Sorting.h"
 
 
 void iPrintTable(void);
@@ -31,5 +33,11 @@ iSave(void);
 
 void
 iStats(void);
+
+void
+iKeyTablePrint(void);
+
+void
+iFindByMileage(void);
 
 #endif //LAB2_SRC_C_SERVICE_H

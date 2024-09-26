@@ -13,4 +13,6 @@ void comb_sort(void *ptr, unsigned long count, unsigned long size, CompFunc);
 
 SortFunc getSort(long pos);
 
+void shuffle(void *array, unsigned long el_size, unsigned long array_size);
+
 #endif //LAB2_SORTING_H

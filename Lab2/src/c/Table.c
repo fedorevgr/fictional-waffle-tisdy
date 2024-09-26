@@ -102,16 +102,14 @@ key(const void *p1, const void *p2)
     const Car car2 = *((Car *) p2);
 
     if (car1.price < car2.price)
-        return -1;
-    else if (car1.price > car2.price)
         return 1;
+    else if (car1.price > car2.price)
+        return -1;
     else
         return 0;
 }
 
 #include <time.h>
-
-#define NANO_SEC(time) (time.tv_sec * 1000000000ULL + time.tv_nsec)
 
 ExitCode
 tableSort(long sortType, unsigned long *time)
@@ -136,20 +134,61 @@ tableSort(long sortType, unsigned long *time)
     return OK;
 }
 
+
+#define OWNERS  1
+#define REPAIRS 0
+#define NEW     false
+
 ExitCode
-tableFindCars(unsigned long mileageParam)
+tableFindCars(char *man, unsigned long lowerLimit, unsigned long upperLimit)
 {
     Table newTable = {0};
     for (unsigned long i = 0; i < table.length; i++)
     {
-        if (NOT table.values[i].new AND table.values[i].FIND_FIELD <= mileageParam)
+        if (
+            strcmp(man, table.values[i].manufacturer) == 0
+            AND
+            table.values[i].price >= lowerLimit
+            AND
+            table.values[i].price <= upperLimit
+            AND
+            NOT table.values[i].new
+            AND
+            table.values[i].state.old.owners == OWNERS
+            AND
+            table.values[i].state.old.repairs == REPAIRS
+            )
         {
             newTable.values[newTable.length] = table.values[i];
             newTable.length++;
         }
     }
 
+    printf("Table of old cars, with the factory of your choice, \n"
+           "with 1 owner, with 0 repairs and between the price range\n");
     tablePrint(&newTable);
+
+    printf("\n"
+           "List of import cars with dealer maintain\n"
+    );
+    int length = 0;
+    for (size_t i = 0; i < newTable.length; i++)
+    {
+        if (
+            strncmp(newTable.values[i].country, "ru", 2) != 0
+            AND
+            newTable.values[i].dealerService
+            )
+        {
+            printf("|%5lu", i);
+            carPrint(newTable.values[i]);
+            printf("\n");
+            length++;
+        }
+    }
+
+    if (NOT length)
+        printf("No such cars\n");
 
     return OK;
 }

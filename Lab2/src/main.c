@@ -58,7 +58,11 @@ pooling(void)
             case 'i':printf(FIND_INFO);
                 printf(SORT_INFO);
                 break;
-            case 'S':assert(0); // not implemented
+            case 'S':iStats();
+                break;
+            case 'k':iKeyTablePrint();
+                break;
+            case '6':iFindByMileage();
                 break;
             default:printf("Illegal option\n");
         }
