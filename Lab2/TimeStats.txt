@@ -1,0 +1,205 @@
+
+-----------------------------------------
+|                               | Time (ns)          |
+| Table selection sort          |               1000 |
+| Table comb sort               |               1000 |
+| Key table selection sort      |               1000 |
+| Key table comb sort           |               1000 |
+-----------------------------------------
+-----------------------------------------
+|                               | Time (ns)          |
+| Table selection sort          |               1000 |
+| Table comb sort               |                  0 |
+| Key table selection sort      |               1000 |
+| Key table comb sort           |                  0 |
+-----------------------------------------
+-----------------------------------------
+|                               | Time (ns)          |
+| Table selection sort          |               1000 |
+| Table comb sort               |               1000 |
+| Key table selection sort      |                  0 |
+| Key table comb sort           |                  0 |
+-----------------------------------------
+
+-----------------------------------------
+|                               | Time (ns)          |
+| Table selection sort          |               1000 |
+| Table comb sort               |                  0 |
+| Key table selection sort      |                  0 |
+| Key table comb sort           |                  0 |
+-----------------------------------------
+-----------------------------------------
+|                               | Time (ns)          |
+| Table selection sort          |               1000 |
+| Table comb sort               |               1000 |
+| Key table selection sort      |               1000 |
+| Key table comb sort           |                  0 |
+-----------------------------------------
+
+
+
+
+
+
+-----------------------------------------
+|                               | Time (ns)          |
+| Table selection sort          |              57000 |
+| Table comb sort               |              72000 |
+| Key table selection sort      |              22000 |
+| Key table comb sort           |              26000 |
+-----------------------------------------
+-----------------------------------------
+|                               | Time (ns)          |
+| Table selection sort          |              61000 |
+| Table comb sort               |              62000 |
+| Key table selection sort      |              16000 |
+| Key table comb sort           |              23000 |
+-----------------------------------------
+-----------------------------------------
+|                               | Time (ns)          |
+| Table selection sort          |              53000 |
+| Table comb sort               |              76000 |
+| Key table selection sort      |              21000 |
+| Key table comb sort           |              26000 |
+-----------------------------------------
+-----------------------------------------
+|                               | Time (ns)          |
+| Table selection sort          |              57000 |
+| Table comb sort               |              71000 |
+| Key table selection sort      |              23000 |
+| Key table comb sort           |              25000 |
+-----------------------------------------
+-----------------------------------------
+|                               | Time (ns)          |
+| Table selection sort          |              40000 |
+| Table comb sort               |              51000 |
+| Key table selection sort      |              21000 |
+| Key table comb sort           |              25000 |
+-----------------------------------------
+
+
+
+
+
+
+
+-----------------------------------------
+|                               | Time (ns)          |
+| Table selection sort          |             337000 |
+| Table comb sort               |             263000 |
+| Key table selection sort      |             143000 |
+| Key table comb sort           |              46000 |
+-----------------------------------------
+-----------------------------------------
+|                               | Time (ns)          |
+| Table selection sort          |             332000 |
+| Table comb sort               |             200000 |
+| Key table selection sort      |             141000 |
+| Key table comb sort           |             101000 |
+-----------------------------------------
+
+-----------------------------------------
+|                               | Time (ns)          |
+| Table selection sort          |             337000 |
+| Table comb sort               |             264000 |
+| Key table selection sort      |             137000 |
+| Key table comb sort           |              98000 |
+-----------------------------------------
+-----------------------------------------
+|                               | Time (ns)          |
+| Table selection sort          |             335000 |
+| Table comb sort               |             263000 |
+| Key table selection sort      |             142000 |
+| Key table comb sort           |              98000 |
+-----------------------------------------
+-----------------------------------------
+|                               | Time (ns)          |
+| Table selection sort          |             335000 |
+| Table comb sort               |             256000 |
+| Key table selection sort      |             141000 |
+| Key table comb sort           |              96000 |
+-----------------------------------------
+-----------------------------------------
+|                               | Time (ns)          |
+| Table selection sort          |             340000 |
+| Table comb sort               |             315000 |
+| Key table selection sort      |             141000 |
+| Key table comb sort           |             102000 |
+-----------------------------------------
+
+
+
+
+
+-----------------------------------------
+|                               | Time (ns)          |
+| Table selection sort          |             122000 |
+| Table comb sort               |             117000 |
+| Key table selection sort      |              48000 |
+| Key table comb sort           |              43000 |
+-----------------------------------------
+-----------------------------------------
+|                               | Time (ns)          |
+| Table selection sort          |             119000 |
+| Table comb sort               |             134000 |
+| Key table selection sort      |              48000 |
+| Key table comb sort           |              48000 |
+-----------------------------------------
+-----------------------------------------
+|                               | Time (ns)          |
+| Table selection sort          |             120000 |
+| Table comb sort               |             143000 |
+| Key table selection sort      |              47000 |
+| Key table comb sort           |              51000 |
+-----------------------------------------
+-----------------------------------------
+|                               | Time (ns)          |
+| Table selection sort          |             129000 |
+| Table comb sort               |             127000 |
+| Key table selection sort      |              49000 |
+| Key table comb sort           |              45000 |
+-----------------------------------------
+-----------------------------------------
+|                               | Time (ns)          |
+| Table selection sort          |             123000 |
+| Table comb sort               |             131000 |
+| Key table selection sort      |              47000 |
+| Key table comb sort           |              46000 |
+-----------------------------------------
+
+
+-----------------------------------------
+|                               | Time (ns)          |
+| Table selection sort          |             192000 |
+| Table comb sort               |             164000 |
+| Key table selection sort      |              76000 |
+| Key table comb sort           |              61000 |
+-----------------------------------------
+-----------------------------------------
+|                               | Time (ns)          |
+| Table selection sort          |             191000 |
+| Table comb sort               |             127000 |
+| Key table selection sort      |              76000 |
+| Key table comb sort           |              67000 |
+-----------------------------------------
+-----------------------------------------
+|                               | Time (ns)          |
+| Table selection sort          |             191000 |
+| Table comb sort               |             186000 |
+| Key table selection sort      |              77000 |
+| Key table comb sort           |              49000 |
+-----------------------------------------
+-----------------------------------------
+|                               | Time (ns)          |
+| Table selection sort          |             193000 |
+| Table comb sort               |             188000 |
+| Key table selection sort      |              75000 |
+| Key table comb sort           |              69000 |
+-----------------------------------------
+-----------------------------------------
+|                               | Time (ns)          |
+| Table selection sort          |             192000 |
+| Table comb sort               |             189000 |
+| Key table selection sort      |              76000 |
+| Key table comb sort           |              68000 |
+-----------------------------------------
