@@ -13,6 +13,8 @@ inputString(char *buffer, int limit)
     if (tmp[limit] != '\n' && tmp[limit] != '\0')
     {
         free(input_buffer);
+        printf("E: String out of bounds\n");
+        fflush(stdin);
         return ERR_INPUT;
     }
 
@@ -22,6 +24,7 @@ inputString(char *buffer, int limit)
     {
         free(input_buffer);
         printf("E: String out of bounds\n");
+        fflush(stdin);
         return ERR_INPUT;
     }
     else
@@ -33,6 +36,7 @@ inputString(char *buffer, int limit)
     if (strlen(buffer) == 0)
     {
         printf("E: Zero length string\n");
+        fflush(stdin);
         return ERR_INPUT;
     }
 

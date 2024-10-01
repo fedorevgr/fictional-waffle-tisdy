@@ -8,8 +8,8 @@ pooling(void);
 int
 main(void)
 {
-
     pooling();
+    printf("GG\n");
     return 0;
 }
 

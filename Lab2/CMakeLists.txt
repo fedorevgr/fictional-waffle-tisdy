@@ -1,6 +1,15 @@
 cmake_minimum_required(VERSION 3.28)
 project(Lab2 C)
 
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    message(STATUS "Building in Debug mode")
+    add_definitions(-g -O0)
+else()
+    message(STATUS "Building in Release mode")
+    add_definitions(-O3)
+endif()
+
+
 set(CMAKE_C_STANDARD 23)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 
@@ -28,5 +37,7 @@ add_executable(Lab2 src/main.c
 set_target_properties(Lab2
         PROPERTIES OUTPUT_NAME "app.exe"
 )
+
+
 
 

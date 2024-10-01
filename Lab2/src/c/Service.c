@@ -66,6 +66,7 @@ realisationSortTable(long algorithm)
         printf("Illegal sort option\n");
         return;
     }
+    printf("Table sorted, option 1 to show\n");
     printf("Sorting time: %lu\n", time);
 }
 
@@ -146,7 +147,7 @@ iFindFields(void)
 
     char name[MAX_STRING_LENGTH + 1] = "";
 
-    printf("Enter manufacturer:\n");
+    printf("Enter manufacturer (<= 20 symbols):\n");
     code = inputString(name, MAX_STRING_LENGTH);
     if (code)
     {
@@ -180,7 +181,7 @@ iRead(void)
 {
     char filename[MAX_STRING_LENGTH] = "";
 
-    printf("Enter table filename: ");
+    printf("Enter table filename (<= 20 symbols): ");
     ExitCode code = inputString(filename, MAX_STRING_LENGTH);
 
     if (code)
@@ -198,7 +199,7 @@ iSave(void)
 {
     char filename[MAX_STRING_LENGTH] = "";
 
-    printf("Enter filename: ");
+    printf("Enter filename (<= 20 symbols): ");
     ExitCode code = inputString(filename, MAX_STRING_LENGTH);
 
     if (code)
@@ -212,19 +213,25 @@ iSave(void)
 }
 
 #include <time.h>
+#include <unistd.h>
+#define SLEEP_TIME 50
 
 #define SELECTION 0
 #define COMB      1
 #define SELECTION_KEY 2
 #define COMB_KEY      3
 
+#define RUNS 5
 void
 iStats(void)
 {
+    Table tmpTable = *tableGet();
+
     if (tableGet() -> length == 0)
     {
         ExitCode code = tableReadFile("big.foo");
 
+        printf("Starting statistics with big.foo file\n100 cars\n");
         if (code != OK)
         {
             printf("Unable to run stats...\nFile big.foo error\n");
@@ -233,29 +240,56 @@ iStats(void)
     }
     keyTableCreate();
 
-    unsigned long results[4];
+    unsigned long results[4] = { 0 };
+    unsigned long temp;
     const time_t seed = time(NULL);
 
-    srand(seed);
-    shuffle(tableGet()->values, sizeof(Car), tableGet()->length);
+    for (int i = 0; i < RUNS; i++)
+    {
+        usleep(SLEEP_TIME);
+        srand(seed);
+        shuffle(tableGet()->values, sizeof(Car), tableGet()->length);
 
-    tableSort(1, results + SELECTION);
+        tableSort(1, &temp);
+        results[SELECTION] += temp;
+    }
+    results[SELECTION] /= RUNS;
 
-    srand(seed);
-    shuffle(tableGet()->values, sizeof(Car), tableGet()->length);
+    for (int i = 0; i < RUNS; i++)
+    {
+        usleep(SLEEP_TIME);
+        srand(seed);
+        shuffle(tableGet()->values, sizeof(Car), tableGet()->length);
 
-    tableSort(2, results + COMB);
+        tableSort(2, &temp);
+        results[COMB] += temp;
+    }
+    results[COMB] /= RUNS;
 
-    srand(seed);
-    shuffle(keyTableGet()->keys, sizeof(Key), keyTableGet()->length);
+    for (int i = 0; i < RUNS; i++)
+    {
+        usleep(SLEEP_TIME);
+        srand(seed);
+        shuffle(keyTableGet()->keys, sizeof(Key), keyTableGet()->length);
 
-    keyTableSort(1, results + SELECTION_KEY);
+        keyTableSort(1, &temp);
+        results[SELECTION_KEY] += temp;
+    }
+    results[SELECTION_KEY] /= RUNS;
 
-    srand(seed);
-    shuffle(keyTableGet()->keys, sizeof(Key), keyTableGet()->length);
 
-    keyTableSort(2, results + COMB_KEY);
+    for (int i = 0; i < RUNS; i++)
+    {
+        usleep(SLEEP_TIME);
+        srand(seed);
+        shuffle(keyTableGet()->keys, sizeof(Key), keyTableGet()->length);
 
+        keyTableSort(2, &temp);
+        results[COMB_KEY] += temp;
+    }
+    results[COMB_KEY] /= RUNS;
+
+    usleep(SLEEP_TIME);
     printf(
         "|                               | Time (ns)          |\n"
         "| Table selection sort          | %18lu |\n"
@@ -264,6 +298,8 @@ iStats(void)
         "| Key table comb sort           | %18lu |\n",
         results[SELECTION], results[COMB], results[SELECTION_KEY], results[COMB_KEY]
     );
+
+    *tableGet() = tmpTable;
 }
 
 void

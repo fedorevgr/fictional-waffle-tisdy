@@ -96,7 +96,7 @@ void shuffle(void *array, const unsigned long el_size, const unsigned long array
 {
     for (int i = 0; i < array_size; ++i)
     {
-        const int swap_idx = rand() % array_size;
+        const size_t swap_idx = rand() % array_size;
         swap_(array + i * el_size, array + swap_idx * el_size, el_size);
     }
 }
