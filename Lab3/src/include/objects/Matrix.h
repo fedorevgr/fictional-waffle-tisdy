@@ -45,5 +45,10 @@ rareMatrixGet(RareMatrix matrix, Dimensions position, double *result);
 ErrorCode
 matrixAddElement(RareMatrix *matrix, Element element);
 
+void
+basicMatrixFree(BasicMatrix *matrix);
+
+ErrorCode
+basicMatrixCreate(BasicMatrix *matrix, Dimensions dims);
 
 #endif //LAB3_SRC_C_MATRIX_H

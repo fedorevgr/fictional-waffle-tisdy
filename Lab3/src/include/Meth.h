@@ -12,4 +12,7 @@
 ErrorCode
 multiply(RareMatrix, RareVector, RareVector *);
 
+ErrorCode
+multiplyBasic(BasicMatrix, BasicVector, BasicVector *);
+
 #endif //LAB3_SRC_C_METH_H

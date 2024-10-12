@@ -13,7 +13,7 @@ arrayInsert(void *array, size_t *length, const size_t size, const void *element,
 
     for (size_t i = *length; i > 0 && index != i; i--)
     {
-        memcpy(array + *length * size, array + (*length - 1) * size, size);
+        memcpy((char *) array + (i * size), (char *) array + (i - 1) * size, size);
     }
 
     memcpy(array + index * size, element, size);

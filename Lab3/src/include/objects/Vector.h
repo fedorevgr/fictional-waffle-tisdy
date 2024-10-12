@@ -23,18 +23,21 @@ typedef struct
 } BasicVector;
 
 ErrorCode
-vectorFill(RareVector *rareVector);
-ErrorCode
 vectorAddElement(RareVector *, double value, size_t);
+double
+rareVectorGet(RareVector, size_t);
 
 ErrorCode
 vectorCreate(RareVector *, size_t size);
 void
 vectorFree(RareVector);
 
-RareVector *
-vectorBasicToRare(BasicVector);
-BasicVector *
-vectorRareToBasic(RareVector);
+void
+vectorBasicToRare(RareVector *rv, BasicVector bv);
+
+ErrorCode
+basicVectorCreate(BasicVector *vector, size_t length);
+void
+basicVectorFree(BasicVector *vector);
 
 #endif //LAB3_SRC_C_VECTOR_H

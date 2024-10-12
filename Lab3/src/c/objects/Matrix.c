@@ -3,7 +3,7 @@
 //
 
 #include "objects/Matrix.h"
-#include "Input.h"
+#include "simple/PrimitiveInput.h"
 #include "Arrays.h"
 
 #include <stdlib.h>
@@ -13,34 +13,6 @@
 
 #include <assert.h>
 
-InputError
-inputPosition(Dimensions *posBuf)
-{
-    printf("Input column: ");
-    InputError ec = inputUnsigned(&posBuf->columns);
-    if (ec == INPUT_OK)
-    {
-        printf("Input row: ");
-        ec = inputUnsigned(&posBuf->rows);
-    }
-    if (ec == INPUT_OK)
-        printf("Position: %lu x %lu", posBuf->columns, posBuf->rows);
-
-    return ec;
-}
-
-InputError
-inputElement(Element *newElementBuffer)
-{
-    printf("Input element value: ");
-    InputError ec = inputDouble(&newElementBuffer->value);
-    if (ec == INPUT_OK)
-    {
-        ec = inputPosition(&newElementBuffer->position);
-    }
-    return ec;
-}
-
 ErrorCode
 matrixAddElement(RareMatrix *matrix, const Element element)
 {
@@ -48,11 +20,9 @@ matrixAddElement(RareMatrix *matrix, const Element element)
     assert(bufMatrix.values != NULL);
     assert(bufMatrix.colStart != NULL);
     assert(bufMatrix.rowIndexes != NULL);
-    assert(bufMatrix.dims.rows != 0 && bufMatrix.dims.columns != 0);
-    assert(element.position.rows < bufMatrix.dims.rows && element.position.columns < bufMatrix.dims.columns);
 
-    void *buf = realloc(bufMatrix.values, bufMatrix.elemAmount * sizeof(*bufMatrix.values));
-    void *buf2 = realloc(bufMatrix.rowIndexes, bufMatrix.elemAmount * sizeof(*bufMatrix.rowIndexes));
+    void *buf = realloc(bufMatrix.values, (bufMatrix.elemAmount + 1) * sizeof(*bufMatrix.values));
+    void *buf2 = realloc(bufMatrix.rowIndexes, (bufMatrix.elemAmount + 1) * sizeof(*bufMatrix.rowIndexes));
     if (buf && buf2)
         bufMatrix.values = buf, bufMatrix.rowIndexes = buf2;
     else
@@ -66,12 +36,13 @@ matrixAddElement(RareMatrix *matrix, const Element element)
     size_t rowI = bufMatrix.colStart[i];
     for (; element.position.rows < bufMatrix.rowIndexes[rowI]; rowI++);
 
+    size_t decoy = bufMatrix.elemAmount;
     arrayInsert(
         bufMatrix.values, &bufMatrix.elemAmount,
         sizeof(*bufMatrix.values),
         &element.value, rowI
     );
-    size_t decoy = bufMatrix.elemAmount;
+
     arrayInsert(
         bufMatrix.rowIndexes, &decoy,
         sizeof(*bufMatrix.rowIndexes),
@@ -87,9 +58,8 @@ matrixAddElement(RareMatrix *matrix, const Element element)
 ErrorCode
 rareMatrixGet(const RareMatrix matrix, const Dimensions position, double *result)
 {
-//    assert(matrix.values != NULL);
     assert(matrix.colStart != NULL);
-//    assert(matrix.rowIndexes != NULL);
+    assert(matrix.dims.columns > position.columns && matrix.dims.rows > position.rows);
 
     *result = 0;
 
@@ -109,36 +79,12 @@ rareMatrixGet(const RareMatrix matrix, const Dimensions position, double *result
     return OK;
 }
 
-ErrorCode
-rareMatrixFill(RareMatrix *rareMatrix)
-{
-    assert(rareMatrix->dims.rows != 0 && rareMatrix->dims.columns);
-
-    bool inputEnd = false;
-    InputError code;
-    Element newElement = {0};
-
-    while (!inputEnd)
-    {
-        code = inputElement(&newElement);
-
-        if (code == INPUT_OK)
-        {
-            break;
-        }
-        else
-            inputEnd = true;
-    }
-    return OK;
-}
-
 #define ARRAY_INIT_SIZE 1
 
 ErrorCode
 matrixCreate(RareMatrix *nullMatrix, const Dimensions size)
 {
     assert(memcmp(nullMatrix, &(RareMatrix) {0}, sizeof(RareMatrix)) == 0);
-    assert(size.rows > 0 && size.columns > 0);
 
     nullMatrix->values = calloc(ARRAY_INIT_SIZE, sizeof(double));
     nullMatrix->rowIndexes = calloc(ARRAY_INIT_SIZE, sizeof(size_t));
@@ -166,12 +112,61 @@ matrixFree(RareMatrix matrix)
 ErrorCode
 matrixRareToBasic(BasicMatrix *basicMatrix, RareMatrix rareMatrix)
 {
-    return ERROR;
+    return OK;
 }
 
 ErrorCode
-matrixBasicToRare(RareMatrix *rareMatrix, BasicMatrix )
+matrixBasicToRare(RareMatrix *rareMatrix, BasicMatrix m)
 {
+    assert(rareMatrix->dims.columns == m.dimensions.columns);
+    assert(rareMatrix->dims.rows == m.dimensions.rows);
 
+    for (size_t row = 0; row < m.dimensions.rows; ++row)
+    {
+        for (size_t col = 0; col < m.dimensions.columns; ++col)
+        {
+            matrixAddElement(rareMatrix,
+                             (Element) {
+                                 .value = m.values[row][col],
+                                 .position =
+                                 (Dimensions) {
+                                     .rows = row,
+                                     .columns = col
+                                 }
+                             });
+        }
+    }
     return OK;
+}
+
+ErrorCode
+basicMatrixCreate(BasicMatrix *matrix, Dimensions dims)
+{
+    matrix->dimensions = dims;
+    matrix->values = calloc(dims.rows, sizeof(double *));
+    if (!matrix->values)
+        return ERROR_MEMORY;
+
+    for (size_t i = 0; i < dims.columns; ++i)
+    {
+        matrix->values[i] = calloc(dims.columns, sizeof(double));
+        if (!matrix->values[i])
+        {
+            basicMatrixFree(matrix);
+            return ERROR_MEMORY;
+        }
+    }
+    return OK;
+}
+
+void
+basicMatrixFree(BasicMatrix *matrix)
+{
+    if (matrix->values)
+    {
+        for (size_t i = 0; i < matrix->dimensions.rows; ++i)
+            free(matrix->values[i]);
+        free(matrix->values);
+    }
+    matrix->dimensions = (Dimensions) {0};
 }

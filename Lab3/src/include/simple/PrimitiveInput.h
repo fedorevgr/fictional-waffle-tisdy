@@ -1,6 +1,3 @@
-//
-// Created by Fedor Evgr on 05/10/2024.
-//
 
 #ifndef LAB3_SRC_C_INPUT_H
 #define LAB3_SRC_C_INPUT_H
@@ -9,6 +6,7 @@
 #include <assert.h>
 
 #define MAX_BUFFER_LENGTH 20
+
 typedef enum
 {
     INPUT_OK,
@@ -16,11 +14,16 @@ typedef enum
     INPUT_E_READ,
     INPUT_E_EMPTY,
     INPUT_E
-} InputError;
+}
+    InputError;
 
-InputError inputDouble(double *);
-InputError inputUnsigned(unsigned long *n);
-InputError inputSigned(long *n);
-
+InputError
+inputDouble(double *);
+InputError
+inputUnsigned(unsigned long *n);
+InputError
+inputSigned(long *n);
+InputError
+inputString(char *buffer);
 
 #endif //LAB3_SRC_C_INPUT_H

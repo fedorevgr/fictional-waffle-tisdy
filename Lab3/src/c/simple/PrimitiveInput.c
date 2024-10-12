@@ -2,7 +2,7 @@
 // Created by Fedor Evgr on 05/10/2024.
 //
 
-#include "Input.h"
+#include "simple/PrimitiveInput.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -23,7 +23,7 @@ inputString(char *buffer)
 
     *c = '\0';
 
-    if (c - buffer == 1)
+    if (c - buffer == 0)
         return INPUT_E_EMPTY;
 
     return INPUT_OK;
