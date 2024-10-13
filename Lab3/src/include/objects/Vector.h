@@ -40,4 +40,7 @@ basicVectorCreate(BasicVector *vector, size_t length);
 void
 basicVectorFree(BasicVector *vector);
 
+void
+fillRandomBasicVector(BasicVector vector, size_t percentile);
+
 #endif //LAB3_SRC_C_VECTOR_H

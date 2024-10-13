@@ -14,7 +14,7 @@ main(void)
     return 0;
 }
 
-#define POOL  "\n\n\n" \
+#define POOL  "\n\n" \
     "q - quit\n" \
     "m - multiply\n" \
     "s - run time measurements\n" \

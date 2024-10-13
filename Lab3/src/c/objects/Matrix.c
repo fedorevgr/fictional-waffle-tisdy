@@ -3,12 +3,9 @@
 //
 
 #include "objects/Matrix.h"
-#include "simple/PrimitiveInput.h"
 #include "Arrays.h"
 
 #include <stdlib.h>
-#include <stdbool.h>
-#include <stdio.h>
 #include <string.h>
 
 #include <assert.h>
@@ -110,12 +107,6 @@ matrixFree(RareMatrix matrix)
 }
 
 ErrorCode
-matrixRareToBasic(BasicMatrix *basicMatrix, RareMatrix rareMatrix)
-{
-    return OK;
-}
-
-ErrorCode
 matrixBasicToRare(RareMatrix *rareMatrix, BasicMatrix m)
 {
     assert(rareMatrix->dims.columns == m.dimensions.columns);
@@ -125,15 +116,18 @@ matrixBasicToRare(RareMatrix *rareMatrix, BasicMatrix m)
     {
         for (size_t col = 0; col < m.dimensions.columns; ++col)
         {
-            matrixAddElement(rareMatrix,
-                             (Element) {
-                                 .value = m.values[row][col],
-                                 .position =
-                                 (Dimensions) {
-                                     .rows = row,
-                                     .columns = col
-                                 }
-                             });
+            if (m.values[row][col] != 0)
+            {
+                matrixAddElement(rareMatrix,
+                                 (Element) {
+                                     .value = m.values[row][col],
+                                     .position =
+                                     (Dimensions) {
+                                         .rows = row,
+                                         .columns = col
+                                     }
+                                 });
+            }
         }
     }
     return OK;
@@ -169,4 +163,29 @@ basicMatrixFree(BasicMatrix *matrix)
         free(matrix->values);
     }
     matrix->dimensions = (Dimensions) {0};
+}
+
+ErrorCode
+fillRandomBasicMatrix(BasicMatrix *matrix, size_t percentile)
+{
+    assert(matrix->values != NULL);
+
+    size_t length = matrix->dimensions.rows * matrix->dimensions.columns;
+    size_t elementAmount = length * percentile / 100;
+    double *array = calloc(length, sizeof(double));
+
+    if (!array)
+        return ERROR_MEMORY;
+
+    for (size_t i = 0; i < elementAmount; ++i)
+        array[i] = 1;
+
+    randomizeArrayOfDoubles(array, length);
+
+    for (size_t row = 0; row < matrix->dimensions.rows; ++row)
+        memcpy(matrix->values[row], array + matrix->dimensions.columns * row, sizeof(double) * matrix->dimensions.columns);
+
+
+    free(array);
+    return OK;
 }

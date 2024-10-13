@@ -7,44 +7,26 @@
 
 int main(void)
 {
-    RareVector vector = { 0 };
-    vectorCreate(&vector, 5);
-    vectorAddElement(&vector, 1.1, 0);
-    vectorAddElement(&vector, 4, 4);
-    vectorAddElement(&vector, 2, 2);
-    vectorAddElement(&vector, 1.5, 1);
-    printRareVector(vector);
+    BasicMatrix basicMatrix = { 0 };
+    Dimensions dimensions = {.rows = 3, .columns = 3};
+    basicMatrixCreate(&basicMatrix, dimensions);
 
-    RareMatrix matrix = {0};
+    basicMatrix.values[0][2] = 1;
+    basicMatrix.values[1][0] = 1;
+    basicMatrix.values[1][1] = 1;
+    basicMatrix.values[2][2] = 1;
 
-    matrixCreate(&matrix, (Dimensions) {.rows = 5, .columns = 5});
-    for (int i = 0; i < matrix.dims.rows; ++i)
-    {
-        matrixAddElement(
-            &matrix,
-            (Element) {
-                .value = 1,
-                .position = {
-                    .rows = i,
-                    .columns = i
-                }
-            });
+    printNormalMatrix(basicMatrix);
 
-    }
-    matrixAddElement(&matrix, (Element) {
-        .value = 1,
-        .position = {
-            .rows = 0,
-            .columns = 4
-        }
-        });
-    printRareMatrix(matrix);
+    RareMatrix rareMatrix = { 0 };
+    matrixCreate(&rareMatrix, dimensions);
 
-    RareVector result = { 0 };
-    vectorCreate(&result, 5);
+    matrixBasicToRare(&rareMatrix, basicMatrix);
 
-    multiply(matrix, vector, &result);
-    printRareVector(result);
+    printRareMatrix(rareMatrix);
+
+    matrixFree(rareMatrix);
+    basicMatrixFree(&basicMatrix);
 
     return OK;
 }

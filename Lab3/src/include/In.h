@@ -26,9 +26,6 @@ inputDimensions(size_t *vectorLength, size_t *matrixCols);
 void
 inputMultiply(bool *rare);
 
-bool
-inputSimple(void);
-
 void
 normalMatrixFill(BasicMatrix matrix);
 
@@ -38,5 +35,7 @@ normalMatrixFillByElements(BasicMatrix matrix);
 void
 normalVectorFillByElements(BasicVector vector);
 
+size_t
+inputPercentile(void);
 
 #endif //LAB3_SRC_C_IN_H

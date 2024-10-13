@@ -37,3 +37,19 @@ arrayFind(const void *array, const size_t length, const size_t size, const void 
     }
     return ec;
 }
+
+#include <time.h>
+
+void randomizeArrayOfDoubles(double *array, size_t length)
+{
+    srand(time(NULL));
+    double tmp;
+    size_t J;
+    for (size_t I = 0; I < length; ++I)
+    {
+        J = rand() % length;
+        tmp = array[J];
+        array[J] = array[I];
+        array[I] = tmp;
+    }
+}

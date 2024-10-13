@@ -14,4 +14,6 @@ arrayInsert(void *array, size_t *length, size_t size, const void *element, size_
 ErrorCode
 arrayFind(const void *array, size_t length, size_t size, const void *element, size_t *result);
 
+void randomizeArrayOfDoubles(double *array, size_t length);
+
 #endif //LAB3_SRC_C_ARRAYS_H

@@ -24,6 +24,8 @@ add_executable(Lab3
         src/include/In.h
         src/c/Service.c
         src/include/Service.h
+        src/c/FileManager.c
+        src/c/FileManager.h
 )
 
 add_executable(HandTest

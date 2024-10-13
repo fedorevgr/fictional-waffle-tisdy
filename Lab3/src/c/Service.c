@@ -10,28 +10,73 @@
 #include "objects/Vector.h"
 #include "Meth.h"
 #include "Output.h"
+#include <string.h>
 
 // todo print result before gap
 
-void
-serviceStats(void)
-{}
+#define GAP "\n\n\n\n\n\n\n"
 
+typedef enum
+{
+    WHOLE,
+    PARTIAL,
+    AUTO,
+    READ
+} Mode;
+
+Mode
+inputModeOption(void)
+{
+    printf("Input fill mode:\n"
+           " - fill entire: E\n"
+           " - fill only nonnull: N\n"
+           " - auto fill: A\n"
+           " - from file: F\n"
+           "Option -> ");
+    char buffer[MAX_BUFFER_LENGTH + 1] = "";
+
+    InputError iErr;
+    do
+    {
+        iErr = inputString(buffer);
+        if (iErr == INPUT_OK && strpbrk(buffer, "ENAF") != buffer)
+            iErr = INPUT_E;
+    }
+    while (iErr != INPUT_OK);
+
+    Mode option;
+    switch (buffer[0])
+    {
+        case 'E':option = WHOLE;
+            break;
+        case 'N':option = PARTIAL;
+            break;
+        case 'A':option = AUTO;
+            break;
+        case 'F':option = READ;
+            break;
+    }
+    return option;
+}
+
+void
+serviceStats(void) {}
 
 ErrorCode
 serviceMultiplyRare(void)
 {
     ErrorCode code = 0;
-    bool simpleInput = inputSimple();
+    Mode inputMode = inputModeOption();
 
-    RareVector vector = { 0 };
-    RareMatrix matrix = { 0 };
-    RareVector vectorResult = { 0 };
+    RareVector vector = {0};
+    RareMatrix matrix = {0};
+    RareVector vectorResult = {0};
 
     size_t vectorLength = 0;
     size_t matrixColumns = 0;
 
     inputDimensions(&vectorLength, &matrixColumns);
+    printf(GAP);
 
     code += vectorCreate(&vector, vectorLength);
     code += matrixCreate(&matrix, (Dimensions) {.rows = vectorLength, .columns = matrixColumns});
@@ -43,15 +88,24 @@ serviceMultiplyRare(void)
         return ERROR_MEMORY;
     }
 
-    if (simpleInput)
+    if (inputMode == WHOLE || inputMode == AUTO)
     {
-        BasicVector bv = { 0 };
-        BasicMatrix bm = { 0 };
+        BasicVector bv = {0};
+        BasicMatrix bm = {0};
         basicVectorCreate(&bv, vectorLength);
         basicMatrixCreate(&bm, (Dimensions) {.rows = vectorLength, .columns = matrixColumns});
 
-        normalVectorFill(bv);
-        normalMatrixFill(bm);
+        if (inputMode == WHOLE)
+        {
+            normalVectorFill(bv);
+            normalMatrixFill(bm);
+        }
+        else
+        {
+            size_t percentile = inputPercentile();
+            fillRandomBasicVector(bv, percentile);
+            fillRandomBasicMatrix(&bm, percentile);
+        }
 
         matrixBasicToRare(&matrix, bm);
         vectorBasicToRare(&vector, bv);
@@ -59,15 +113,23 @@ serviceMultiplyRare(void)
         basicMatrixFree(&bm);
         basicVectorFree(&bv);
     }
-    else
+    else if (inputMode == PARTIAL)
     {
         vectorFill(&vector);
         rareMatrixFill(&matrix);
     }
+    else if (inputMode == READ)
+        assert(0); // not implemented
+    else
+        assert(0); // option should not be here
+
+    printf(GAP);
+    printRareVector(vector);
+    printf("*\n");
+    printRareMatrix(matrix);
 
     multiply(matrix, vector, &vectorResult);
     printRareVector(vectorResult);
-
 
     vectorFree(vector);
     matrixFree(matrix);
@@ -79,16 +141,17 @@ serviceMultiplyRare(void)
 ErrorCode
 serviceMultiplyBasic(void)
 {
-    bool simpleInput = inputSimple();
+    Mode inputMode = inputModeOption();
 
-    BasicVector vector = { 0 };
-    BasicMatrix matrix = { 0 };
-    BasicVector vectorResult = { 0 };
+    BasicVector vector = {0};
+    BasicMatrix matrix = {0};
+    BasicVector vectorResult = {0};
 
     size_t vectorLength = 0;
     size_t matrixColumns = 0;
 
     inputDimensions(&vectorLength, &matrixColumns);
+    printf(GAP);
 
     ErrorCode code = OK;
     code += basicVectorCreate(&vector, vectorLength);
@@ -97,17 +160,32 @@ serviceMultiplyBasic(void)
 
     if (!code)
     {
-        if (simpleInput)
+        if (inputMode == WHOLE)
         {
             normalVectorFill(vector);
             normalMatrixFill(matrix);
         }
-        else
+        else if (inputMode == PARTIAL)
         {
             normalVectorFillByElements(vector);
             normalMatrixFillByElements(matrix);
         }
+        else if (inputMode == AUTO)
+        {
+            size_t percentile = inputPercentile();
+            fillRandomBasicVector(vector, percentile);
+            fillRandomBasicMatrix(&matrix, percentile);
+        }
+        else if (inputMode == READ)
+            assert(0); // not implemented
+        else
+            assert(0); // option should not be here
     }
+    printf(GAP);
+    printNormalVector(vector);
+    printf("*\n");
+    printNormalMatrix(matrix);
+    printf("=\n");
 
     if (code)
     {

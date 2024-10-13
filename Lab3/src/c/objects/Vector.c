@@ -96,6 +96,16 @@ vectorBasicToRare(RareVector *rv, BasicVector bv)
         vectorAddElement(rv, bv.values[i], i);
 }
 
+#include <time.h>
+void
+fillRandomBasicVector(BasicVector vector, size_t percentile)
+{
+    size_t amount = vector.length * percentile / 100;
+    for (size_t i = 0; i < amount; ++i)
+        vector.values[i] = 1;
+
+    randomizeArrayOfDoubles(vector.values, vector.length);
+}
 
 void
 basicVectorFree(BasicVector *vector)

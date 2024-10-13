@@ -77,7 +77,7 @@ inputParameters(double *value, size_t *index)
     {
         code = inputDouble(value);
         if (code == INPUT_E_EMPTY)
-            return INPUT_E_LENGTH;
+            return code;
         if (code)
             printf("Error, try again...\n");
     }
@@ -141,28 +141,6 @@ normalVectorFill(BasicVector vector)
     normalVectorGetElements(vector);
 
     return OK;
-}
-
-bool
-inputSimple(void)
-{
-    bool result = true;
-    unsigned long in = 0;
-
-    printf("Use input of the whole vector and matrix (1-y|0-n): ");
-    InputError er;
-    do
-    {
-        er = inputUnsigned(&in);
-        if (!(in == 1 || in == 0))
-            er = 1;
-        if (er)
-            printf("Try Again\n");
-    }
-    while (er);
-    if (in == 0)
-        result = false;
-    return result;
 }
 
 void
@@ -273,5 +251,36 @@ normalMatrixFillByElements(BasicMatrix matrix)
 void
 normalVectorFillByElements(BasicVector vector)
 {
+    double value;
+    size_t index;
+    InputError inErr;
 
+    do
+    {
+        inErr = inputParameters(&value, &index);
+        if (inErr == INPUT_OK)
+        {
+            vector.values[index] = value;
+        }
+    }
+    while (inErr != INPUT_E_EMPTY);
+}
+
+size_t
+inputPercentile(void)
+{
+    printf("Enter fill percentile: ");
+    size_t result;
+    InputError iErr;
+    do
+    {
+        iErr = inputUnsigned(&result);
+        if (result > 100)
+        {
+            printf("Invalid percentile, try again\n");
+            iErr = INPUT_E;
+        }
+    }
+    while (iErr);
+    return result;
 }
