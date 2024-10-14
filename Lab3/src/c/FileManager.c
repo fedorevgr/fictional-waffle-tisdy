@@ -9,24 +9,20 @@
 ErrorCode
 readVector__(RareVector *vector, FILE *file)
 {
-    assert(vector->values == NULL);
-    assert(vector->indexes == NULL);
-
     fread(&vector->valueAmount, sizeof(size_t), 1, file);
     fread(&vector->length, sizeof(size_t), 1, file);
 
-    double *values = calloc(vector->valueAmount, sizeof(double));
+    double *values = realloc(vector->values, vector->valueAmount * sizeof(double));
     if (!values)
         return ERROR_MEMORY;
 
     vector->values = values;
     fread(vector->values, sizeof(double), vector->valueAmount, file);
 
-    size_t *indexes = calloc(vector->valueAmount, sizeof(size_t));
+    size_t *indexes = realloc(vector->indexes, vector->valueAmount * sizeof(size_t));
     if (!indexes)
-    {
         return ERROR_MEMORY;
-    }
+
     vector->indexes = indexes;
     fread(vector->indexes, vector->valueAmount, sizeof(size_t), file);
 
@@ -52,26 +48,26 @@ readVectorFromFile(RareVector *vector, char *filename)
 ErrorCode
 readMatrix__(RareMatrix *matrix, FILE *file)
 {
-    assert(matrix->rowIndexes == NULL);
-    assert(matrix->values == NULL);
-    assert(matrix->colStart == NULL);
-
     fread(&matrix->dims, sizeof(Dimensions), 1, file);
     fread(&matrix->elemAmount, sizeof(size_t), 1, file);
 
-    matrix->colStart = calloc(sizeof(size_t), matrix->dims.columns);
-    if (!matrix->colStart)
+    void *buffer = realloc(matrix->colStart, sizeof(size_t) * matrix->dims.columns);
+    if (!buffer)
         return ERROR_MEMORY;
-    fread(matrix->colStart, sizeof(size_t), matrix->dims.columns, file);
+    matrix->colStart = buffer;
+    fread(matrix->colStart, sizeof(size_t), matrix->dims.columns + 1, file);
+    matrix->colStart[matrix->dims.columns] = matrix->dims.columns;
 
-    matrix->values = calloc(sizeof(double), matrix->elemAmount);
-    if (!matrix->values)
+    void *buffer2 = realloc(matrix->values, sizeof(double) * matrix->elemAmount);
+    if (!buffer2)
         return ERROR_MEMORY;
+    matrix->values = buffer2;
     fread(matrix->values, sizeof(double), matrix->elemAmount, file);
 
-    matrix->rowIndexes = calloc(sizeof(size_t), matrix->elemAmount);
-    if (!matrix->rowIndexes)
+    void *buffer3 = realloc(matrix->rowIndexes, sizeof(size_t) * matrix->elemAmount);
+    if (!buffer3)
         return ERROR_MEMORY;
+    matrix->rowIndexes = buffer3;
     fread(matrix->rowIndexes, sizeof(size_t), matrix->elemAmount, file);
     return OK;
 }
@@ -103,7 +99,7 @@ saveVector__(RareVector vector, FILE *file)
 ErrorCode
 saveVector(RareVector vector, char *filename)
 {
-    FILE *file = fopen(filename, "wb+");
+    FILE *file = fopen(filename, "wb");
     if (file)
     {
         saveVector__(vector, file);
@@ -127,7 +123,7 @@ saveMatrix__(RareMatrix matrix, FILE *file)
 ErrorCode
 saveMatrix(RareMatrix matrix, char *filename)
 {
-    FILE *file = fopen(filename, "wb+");
+    FILE *file = fopen(filename, "wb");
     if (file)
     {
         saveMatrix__(matrix, file);
@@ -136,4 +132,20 @@ saveMatrix(RareMatrix matrix, char *filename)
     else
         return ERROR;
     return OK;
+}
+
+#include <time.h>
+char *
+getFileName(char *buffer, char *start)
+{
+    time_t current_time = time(NULL);
+
+    struct tm* local_time = localtime(&current_time);
+
+    sprintf(buffer, "%s_%02d_%02d_%02d.bin",
+            start,
+            local_time->tm_hour,
+            local_time->tm_min,
+            local_time->tm_sec);
+    return buffer;
 }

@@ -21,4 +21,7 @@ saveVector(RareVector, char *filename);
 ErrorCode
 saveMatrix(RareMatrix, char *filename);
 
+char *
+getFileName(char *buffer, char *start);
+
 #endif //LAB3_SRC_C_FILEMANAGER_H

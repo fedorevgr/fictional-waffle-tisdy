@@ -40,6 +40,8 @@ inputPool(void)
     if (code == INPUT_OK)
         res = (Pool) buffer[0];
 
+    printf("\n\n\n\n\n\n\n\n\n\n\n");
+
     return res;
 }
 

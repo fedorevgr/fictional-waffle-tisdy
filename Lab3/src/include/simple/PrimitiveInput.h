@@ -5,7 +5,7 @@
 #include "Codes.h"
 #include <assert.h>
 
-#define MAX_BUFFER_LENGTH 20
+#define MAX_BUFFER_LENGTH 50
 
 typedef enum
 {

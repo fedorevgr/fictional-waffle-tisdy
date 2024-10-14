@@ -18,6 +18,8 @@ multiply(const RareMatrix matrix, const RareVector vector, RareVector *result)
     {
         rowStartI = matrix.colStart[colI];
         rowLength = matrix.colStart[colI + 1] - rowStartI;
+
+
         if ( rowLength != 0)
         {
             sum = 0;

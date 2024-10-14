@@ -5,6 +5,8 @@ set(CMAKE_C_STANDARD 11)
 
 include_directories(src/include)
 
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+
 add_executable(Lab3
         src/main.c
         src/c/objects/Matrix.c
@@ -25,8 +27,12 @@ add_executable(Lab3
         src/c/Service.c
         src/include/Service.h
         src/c/FileManager.c
-        src/c/FileManager.h
+        src/include/FileManager.h
+        src/c/Stats.c
+        src/include/Stats.h
 )
+
+
 
 add_executable(HandTest
         src/c/objects/Matrix.c

@@ -284,3 +284,15 @@ inputPercentile(void)
     while (iErr);
     return result;
 }
+
+bool
+getSaveOption(void)
+{
+    printf("Save input and result (y|n): ");
+
+    char buffer[MAX_BUFFER_LENGTH + 1] = "";
+    InputError ie = inputString(buffer);
+    if (ie == INPUT_OK && buffer[0] == 'y')
+        return true;
+    return false;
+}
