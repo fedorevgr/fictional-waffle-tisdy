@@ -51,12 +51,12 @@ readMatrix__(RareMatrix *matrix, FILE *file)
     fread(&matrix->dims, sizeof(Dimensions), 1, file);
     fread(&matrix->elemAmount, sizeof(size_t), 1, file);
 
-    void *buffer = realloc(matrix->colStart, sizeof(size_t) * matrix->dims.columns);
+    void *buffer = realloc(matrix->colStart, sizeof(size_t) * (matrix->dims.columns + 1));
     if (!buffer)
         return ERROR_MEMORY;
     matrix->colStart = buffer;
-    fread(matrix->colStart, sizeof(size_t), matrix->dims.columns + 1, file);
-    matrix->colStart[matrix->dims.columns] = matrix->dims.columns;
+    fread(matrix->colStart, sizeof(size_t), matrix->dims.columns, file);
+    matrix->colStart[matrix->dims.columns] = matrix->elemAmount;
 
     void *buffer2 = realloc(matrix->values, sizeof(double) * matrix->elemAmount);
     if (!buffer2)

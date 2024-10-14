@@ -11,16 +11,6 @@
 #include <unistd.h>
 #include "Meth.h"
 
-#define SIZE_START 10
-#define SIZE_STEP  100
-#define SIZE_MARK  1000
-#define SIZE_STEP2 1000
-#define SIZE_LIMIT 10000
-
-#define FILL_START 10
-#define FILL_STEP  10
-#define FILL_END   100
-
 #define RUNS 3
 
 #define CACHE "cache"
@@ -178,6 +168,14 @@ ErrorCode createSourceDir(void)
 }
 
 
+#define SIZE_START 10
+#define SIZE_STEP  500
+#define SIZE_LIMIT 1010
+
+#define FILL_START 10
+#define FILL_STEP  10
+#define FILL_END   100
+
 ErrorCode
 runStats(void)
 {
@@ -188,6 +186,19 @@ runStats(void)
 
     char buffer[51] = "";
 
+    for (size_t percentile = 1; percentile <= 9; percentile += 1)
+    {
+        printf("Stats: %lu%%/%d\n", percentile, FILL_END);
+        sprintf(buffer, CACHE "/%lu", percentile);
+        if (mkdir(buffer, 0755))
+            continue;
+
+        for (size_t objSize = SIZE_START; objSize <= SIZE_LIMIT; objSize += SIZE_STEP)
+        {
+            printf("Stats: %lu%%/%d -- %lu/%d\n", percentile, FILL_END, objSize, SIZE_LIMIT);
+            run(objSize, percentile);
+        }
+    }
     for (size_t percentile = FILL_START; percentile <= FILL_END; percentile += FILL_STEP)
     {
         printf("Stats: %lu%%/%d\n", percentile, FILL_END);
@@ -195,12 +206,7 @@ runStats(void)
         if (mkdir(buffer, 0755))
             continue;
 
-        for (size_t objSize = SIZE_START; objSize <= SIZE_MARK; objSize += SIZE_STEP)
-        {
-            printf("Stats: %lu%%/%d -- %lu/%d\n", percentile, FILL_END, objSize, SIZE_LIMIT);
-            run(objSize, percentile);
-        }
-        for (size_t objSize = SIZE_MARK; objSize <= SIZE_LIMIT; objSize += SIZE_STEP2)
+        for (size_t objSize = SIZE_START; objSize <= SIZE_LIMIT; objSize += SIZE_STEP)
         {
             printf("Stats: %lu%%/%d -- %lu/%d\n", percentile, FILL_END, objSize, SIZE_LIMIT);
             run(objSize, percentile);

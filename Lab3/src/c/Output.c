@@ -10,16 +10,18 @@
 void
 printRareMatrixInZip(RareMatrix matrix)
 {
+    printf("Spare representation\n");
+    printf("V: ");
     for (size_t valI = 0; valI < matrix.elemAmount; ++valI)
         printf("%6G ", matrix.values[valI]);
-    printf("\n");
+    printf("\nR: ");
 
     for (size_t valI = 0; valI < matrix.elemAmount; ++valI)
-        printf("%lu ", matrix.rowIndexes[valI]);
-    printf("\n");
+        printf("%6lu ", matrix.rowIndexes[valI]);
+    printf("\nC: ");
 
     for (size_t colI = 0; colI < matrix.dims.columns; ++colI)
-        printf("%lu ", matrix.colStart[colI]);
+        printf("%6lu ", matrix.colStart[colI]);
     printf("\n");
 }
 
@@ -53,13 +55,27 @@ void
 printNormalMatrix(BasicMatrix matrix)
 {
     printf("Matrix\n");
-    for (size_t row = 0; row < matrix.dimensions.rows; row++)
+    if (matrix.dimensions.rows <= 30 && matrix.dimensions.columns <= 30)
     {
-        for (size_t col = 0; col < matrix.dimensions.columns; col++)
+        for (size_t row = 0; row < matrix.dimensions.rows; row++)
         {
-            printf("%6G ", matrix.values[row][col]);
+            for (size_t col = 0; col < matrix.dimensions.columns; col++)
+            {
+                printf("%6G ", matrix.values[row][col]);
+            }
+            printf("\n");
         }
-        printf("\n");
+    }
+    else
+    {
+        for (size_t row = 0; row < matrix.dimensions.rows; row++)
+        {
+            for (size_t col = 0; col < matrix.dimensions.columns; col++)
+            {
+                if (matrix.values[row][col] != 0.0)
+                    printf("%6G [%lu, %lu]\n", matrix.values[row][col], row, col);
+            }
+        }
     }
     printf("\n");
 }
@@ -70,11 +86,12 @@ printRareVector(RareVector vector)
     printf("Vector\n");
     if (vector.length <= PRINT_AMOUNT)
     {
+        printf("Indx: ");
         for (size_t I = 0; I < vector.length; ++I)
         {
             printf("%6lu\t", I);
         }
-        printf("\n");
+        printf("\nVals: ");
         for (size_t col = 0; col < vector.length; col++)
         {
             printf("%6G\t", rareVectorGet(vector, col));
@@ -83,9 +100,10 @@ printRareVector(RareVector vector)
     }
     else
     {
+        printf("Indx: ");
         for (size_t I = 0; I < vector.valueAmount; ++I)
             printf("%6lu\t", vector.indexes[I]);
-        printf("\n");
+        printf("\nVals: ");
         for (size_t I = 0; I < vector.valueAmount; ++I)
             printf("%6G\t", vector.values[I]);
         printf("\n");
@@ -97,13 +115,28 @@ printNormalVector(BasicVector vector)
 {
     printf("Vector\n");
 
-    for (size_t i = 0; i < vector.length; ++i)
-        printf("%6lu\t", i);
-    printf("\n");
+    if (vector.length <= 30)
+    {
+        for (size_t i = 0; i < vector.length; ++i)
+            printf("%6lu\t", i);
+        printf("\n");
 
-    for (size_t i = 0; i < vector.length; ++i)
-        printf("%6G\t", vector.values[i]);
-    printf("\n");
+        for (size_t i = 0; i < vector.length; ++i)
+            printf("%6G\t", vector.values[i]);
+        printf("\n");
+    }
+    else
+    {
+        for (size_t i = 0; i < vector.length; ++i)
+            if (vector.values[i] != 0.0)
+                printf("%6lu\t", i);
+        printf("\n");
+
+        for (size_t i = 0; i < vector.length; ++i)
+            if (vector.values[i] != 0.0)
+                printf("%6G\t", vector.values[i]);
+        printf("\n");
+    }
 }
 
 

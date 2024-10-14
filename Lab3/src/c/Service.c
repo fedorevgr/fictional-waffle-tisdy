@@ -13,6 +13,8 @@
 #include <string.h>
 #include "FileManager.h"
 #include "Stats.h"
+#include <time.h>
+#define NANO_SEC(time) (time.tv_sec * 1000000000ULL + time.tv_nsec)
 
 // todo print result before gap
 
@@ -140,6 +142,11 @@ serviceMultiplyRare(void)
                 code += readMatrixFromFile(&matrix, matrixFileName);
                 if (code)
                     printf("Could not read the file\n");
+                else if (vector.length != matrix.dims.rows)
+                {
+                    printf("Incompatible objects dimensions\n");
+                    code = ERROR;
+                }
             }
             else
                 printf("Could not read the file\n");
@@ -163,8 +170,13 @@ serviceMultiplyRare(void)
         printf("*\n");
         printRareMatrix(matrix);
 
+        struct timespec start, end;
+        clock_gettime(CLOCK_REALTIME, &start);
         multiply(matrix, vector, &vectorResult);
+        clock_gettime(CLOCK_REALTIME, &end);
+
         printRareVector(vectorResult);
+        printf("Time: %llu\n",   NANO_SEC(end) -NANO_SEC(start));
     }
 
     if (!code && save)
@@ -249,8 +261,14 @@ serviceMultiplyBasic(void)
         printf("*\n");
         printNormalMatrix(matrix);
         printf("=\n");
+
+        struct timespec start, end;
+        clock_gettime(CLOCK_REALTIME, &start);
         multiplyBasic(matrix, vector, &vectorResult);
+        clock_gettime(CLOCK_REALTIME, &end);
+
         printNormalVector(vectorResult);
+        printf("Time: %llu\n",   NANO_SEC(end) -NANO_SEC(start));
     }
 
     basicVectorFree(&vector);

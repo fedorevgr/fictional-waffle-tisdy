@@ -55,4 +55,5 @@ dkms.conf
 cmake-build-debug
 .idea
 archive
-*.foo
+*/cache
+* .foo

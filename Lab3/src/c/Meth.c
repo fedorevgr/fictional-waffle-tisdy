@@ -11,7 +11,7 @@ multiply(const RareMatrix matrix, const RareVector vector, RareVector *result)
 {
     if (vector.length != matrix.dims.rows || matrix.dims.columns != result->length)
         return ERROR;
-    //todo
+
     double sum;
     size_t rowStartI, rowLength;
     for (size_t colI = 0; colI < matrix.dims.columns; ++colI)
