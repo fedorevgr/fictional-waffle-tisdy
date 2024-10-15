@@ -14,7 +14,8 @@ multiply(const RareMatrix matrix, const RareVector vector, RareVector *result)
 
     double sum;
     size_t rowStartI, rowEndI;
-    size_t vectorLastI;
+    size_t I;
+    double tmp;
     for (size_t colI = 0; colI < matrix.dims.columns; ++colI)
     {
         rowStartI = matrix.colStart[colI];
@@ -23,13 +24,19 @@ multiply(const RareMatrix matrix, const RareVector vector, RareVector *result)
         if (rowEndI - rowStartI != 0)
         {
             sum = 0;
-            vectorLastI = matrix.rowIndexes[rowStartI];
+            I = 0;
             for (; rowStartI < rowEndI; rowStartI++)
             {
-                sum += rareVectorGet(
-                    vector,
-                    matrix.rowIndexes[rowStartI]
-                ) * matrix.values[rowStartI];
+                tmp = 0;
+                for (; I < vector.valueAmount; ++I)
+                {
+                    if (vector.indexes[I] == matrix.rowIndexes[rowStartI])
+                    {
+                        tmp = vector.values[I];
+                        break;
+                    }
+                }
+                sum += tmp * matrix.values[rowStartI];
             }
             if (sum)
                 vectorAddElement(result, sum, colI);
