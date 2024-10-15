@@ -25,13 +25,12 @@ matrixAddElement(RareMatrix *matrix, const Element element)
     else
         return ERROR_MEMORY; // Couldn't add
 
-    size_t i = bufMatrix.dims.columns - 1;
+    size_t i = bufMatrix.dims.columns;
     for (; element.position.columns != i; i--)
-    {
         bufMatrix.colStart[i] += 1;
-    }
+
     size_t rowI = bufMatrix.colStart[i];
-    for (; element.position.rows < bufMatrix.rowIndexes[rowI]; rowI++);
+    for (; element.position.rows > bufMatrix.rowIndexes[rowI] && rowI < bufMatrix.colStart[i + 1] - 1; rowI++);
 
     size_t decoy = bufMatrix.elemAmount;
     arrayInsert(
@@ -61,14 +60,23 @@ rareMatrixGet(const RareMatrix matrix, const Dimensions position, double *result
     *result = 0;
 
     size_t colStartIndex = matrix.colStart[position.columns];
-    size_t colElementAmount = matrix.colStart[position.columns + 1] - colStartIndex;
 
     size_t found;
-    ErrorCode findCode = arrayFind(
-        matrix.rowIndexes + colStartIndex, colElementAmount,
-        sizeof(&matrix.rowIndexes),
-        &position.rows, &found
-    );
+    ErrorCode findCode = ERROR;
+    for (; colStartIndex < matrix.colStart[position.columns + 1]; colStartIndex++)
+    {
+        if (matrix.rowIndexes[colStartIndex] == position.rows)
+        {
+            found = colStartIndex;
+            findCode = OK;
+            break;
+        }
+    }
+//    ErrorCode findCode = arrayFind(
+//        matrix.rowIndexes + colStartIndex, colElementAmount,
+//        sizeof(&matrix.rowIndexes),
+//        &position.rows, &found
+//    );
 
     if (findCode == OK)
         *result = matrix.values[found];

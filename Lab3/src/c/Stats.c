@@ -11,7 +11,7 @@
 #include <unistd.h>
 #include "Meth.h"
 
-#define RUNS 3
+#define RUNS 20
 
 #define CACHE "cache"
 
@@ -134,84 +134,91 @@ unsigned long measureOneBasic(size_t size, size_t fill, size_t *memory)
     return timeElapsed / RUNS;
 }
 
-void
-run(size_t size, size_t fill)
+typedef struct
 {
-    char fileName[101] = "";
+    size_t timeRare;
+    size_t timeBasic;
+    size_t memRare;
+    size_t memBasic;
+} Data;
 
-    sprintf(fileName, CACHE "/%lu/%lu", fill, size);
+void
+run(size_t size, size_t fill, Data *d)
+{
     size_t size1 = 0;
     size_t size2 = 0;
-    FILE *file = fopen(fileName, "w");
-    if (file)
-    {
-        fprintf(file,
-                "%lu\n%lu\n%lu\n%lu\n",
-                measureOneRare(size, fill, &size1),
-                measureOneBasic(size, fill, &size2),
-                size1,
-                size2);
-        fclose(file);
-    }
-}
 
-ErrorCode createSourceDir(void)
-{
-    if (mkdir(CACHE, 0755))
-    {
-        if (rmdir(CACHE))
-            return ERROR;
-        if (mkdir(CACHE, 0755))
-            return ERROR;
-    }
-    return OK;
+    d->timeRare = measureOneRare(size, fill, &size1) / 1000;
+    d->timeBasic = measureOneBasic(size, fill, &size2) / 1000;
+    d->memRare = size1;
+    d->memBasic = size2;
 }
 
 
-#define SIZE_START 10
-#define SIZE_STEP  500
-#define SIZE_LIMIT 1010
+#define SIZE_START 50
+#define SIZE_STEP  225
+#define SIZE_LIMIT 510
 
 #define FILL_START 10
-#define FILL_STEP  10
+#define FILL_STEP  30
 #define FILL_END   100
 
 ErrorCode
 runStats(void)
 {
     printf("\n");
-    ErrorCode ec = createSourceDir();
-    if (ec)
-        return ec;
 
-    char buffer[51] = "";
+    Data data = { 0 };
 
+    FILE *dataFile = fopen("bigData.data", "w");
+    if (!dataFile)
+        printf("Couldn't create file\n");
+
+    printf("Stats:             |  TimeSPR   |  TimeBasic |   MemSPR   |  MemBasic  |TimeDiff| MemDiff \n");
     for (size_t percentile = 1; percentile <= 9; percentile += 1)
     {
-        printf("Stats: %lu%%/%d\n", percentile, FILL_END);
-        sprintf(buffer, CACHE "/%lu", percentile);
-        if (mkdir(buffer, 0755))
-            continue;
-
         for (size_t objSize = SIZE_START; objSize <= SIZE_LIMIT; objSize += SIZE_STEP)
         {
-            printf("Stats: %lu%%/%d -- %lu/%d\n", percentile, FILL_END, objSize, SIZE_LIMIT);
-            run(objSize, percentile);
+            run(objSize, percentile, &data);
+            printf("Stats:[%4lu%%,%5lu]: ", percentile, objSize);
+            printf("%10lu | %10lu | %10lu | %10lu | %6.1f%% | %6.1f%% |\n",
+                   data.timeRare, data.timeBasic, data.memRare, data.memBasic,
+                   (((long double) data.timeBasic) / ((long double) data.timeRare) - 1) * 100,
+                   (((long double) data.memBasic) / ((long double) data.memRare) - 1) * 100);
+            if (dataFile)
+            {
+                fprintf(dataFile, "Stats:[%4lu%%,%5lu]: " "%10lu | %10lu | %10lu | %10lu | %6.1f%% | %6.1f%% |\n",
+                        percentile, objSize,
+                        data.timeRare, data.timeBasic, data.memRare, data.memBasic,
+                        (((long double) data.timeBasic) / ((long double) data.timeRare) - 1) * 100,
+                        (((long double) data.memBasic) / ((long double) data.memRare) - 1) * 100);
+            }
         }
     }
     for (size_t percentile = FILL_START; percentile <= FILL_END; percentile += FILL_STEP)
     {
-        printf("Stats: %lu%%/%d\n", percentile, FILL_END);
-        sprintf(buffer, CACHE "/%lu", percentile);
-        if (mkdir(buffer, 0755))
-            continue;
-
         for (size_t objSize = SIZE_START; objSize <= SIZE_LIMIT; objSize += SIZE_STEP)
         {
-            printf("Stats: %lu%%/%d -- %lu/%d\n", percentile, FILL_END, objSize, SIZE_LIMIT);
-            run(objSize, percentile);
+            run(objSize, percentile, &data);
+            printf("Stats:[%4lu%%,%5lu]: ", percentile, objSize);
+            printf("%10lu | %10lu | %10lu | %10lu | %6.1f%% | %6.1f%% |\n",
+                   data.timeRare, data.timeBasic, data.memRare, data.memBasic,
+                   (((long double) data.timeBasic) / ((long double) data.timeRare) - 1) * 100,
+                   (((long double) data.memBasic) / ((long double) data.memRare) - 1) * 100);
+            if (dataFile)
+            {
+                fprintf(dataFile, "Stats:[%4lu%%,%5lu]: " "%10lu | %10lu | %10lu | %10lu | %6.1f%% | %6.1f%% |\n",
+                        percentile, objSize,
+                        data.timeRare, data.timeBasic, data.memRare, data.memBasic,
+                        (((long double) data.timeBasic) / ((long double) data.timeRare) - 1) * 100,
+                        (((long double) data.memBasic) / ((long double) data.memRare) - 1) * 100);
+            }
         }
     }
     printf("\n");
+
+    if (dataFile)
+        fclose(dataFile);
+
     return OK;
 }

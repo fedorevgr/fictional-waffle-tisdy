@@ -41,4 +41,7 @@ inputPercentile(void);
 bool
 getSaveOption(void);
 
+bool
+getResOption(void);
+
 #endif //LAB3_SRC_C_IN_H

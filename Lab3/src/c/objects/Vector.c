@@ -14,15 +14,15 @@ vectorAddElement(RareVector *vector, double value, size_t toIndex)
     if (toIndex > vector->length)
         return ERROR;
 
-    void *buf, *buf2;
-    buf = realloc(vector->values, (vector->valueAmount + 1) * sizeof(*vector->values));
-    buf2 = realloc(vector->indexes, (vector->valueAmount + 1) * sizeof(*vector->values));
-
-    if (!buf || !buf2)
-        return ERROR_MEMORY;
-
-    vector->values = buf;
-    vector->indexes = buf2;
+//    void *buf, *buf2;
+//    buf = realloc(vector->values, (vector->valueAmount + 1) * sizeof(*vector->values));
+//    buf2 = realloc(vector->indexes, (vector->valueAmount + 1) * sizeof(*vector->values));
+//
+//    if (!buf || !buf2)
+//        return ERROR_MEMORY;
+//
+//    vector->values = buf;
+//    vector->indexes = buf2;
 
     size_t i = 0;
     for (; vector->indexes[i] < toIndex && i < vector->valueAmount; i++);
@@ -62,8 +62,8 @@ ErrorCode vectorCreate(RareVector *vector, size_t size)
     if (size < 1)
         return ERROR;
 
-    vector->values = calloc(ARRAY_INIT_SIZE, sizeof(double));
-    vector->indexes = calloc(ARRAY_INIT_SIZE, sizeof(size_t));
+    vector->values = calloc(ARRAY_INIT_SIZE * size, sizeof(double));
+    vector->indexes = calloc(ARRAY_INIT_SIZE * size, sizeof(size_t));
     vector->length = size;
     vector->valueAmount = 0;
 
@@ -80,6 +80,9 @@ vectorFree(RareVector vector)
 ErrorCode
 basicVectorCreate(BasicVector *vector, size_t length)
 {
+    if (! length)
+        return ERROR;
+
     vector->length = length;
     vector->values = calloc(length, sizeof(double));
 

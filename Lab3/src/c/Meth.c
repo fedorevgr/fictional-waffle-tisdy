@@ -13,21 +13,24 @@ multiply(const RareMatrix matrix, const RareVector vector, RareVector *result)
         return ERROR;
 
     double sum;
-    size_t rowStartI, rowLength;
+    size_t rowStartI, rowEndI;
+    size_t vectorLastI;
     for (size_t colI = 0; colI < matrix.dims.columns; ++colI)
     {
         rowStartI = matrix.colStart[colI];
-        rowLength = matrix.colStart[colI + 1] - rowStartI;
+        rowEndI = matrix.colStart[colI + 1];
 
-
-        if ( rowLength != 0)
+        if (rowEndI - rowStartI != 0)
         {
             sum = 0;
-            for (size_t matrRow = 0; matrRow < rowLength; matrRow++)
+            vectorLastI = matrix.rowIndexes[rowStartI];
+            for (; rowStartI < rowEndI; rowStartI++)
+            {
                 sum += rareVectorGet(
                     vector,
-                    matrix.rowIndexes[rowStartI + matrRow]
-                    ) * matrix.values[rowStartI + matrRow];
+                    matrix.rowIndexes[rowStartI]
+                ) * matrix.values[rowStartI];
+            }
             if (sum)
                 vectorAddElement(result, sum, colI);
         }

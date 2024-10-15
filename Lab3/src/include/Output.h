@@ -8,8 +8,10 @@
 #include "objects/Matrix.h"
 #include "objects/Vector.h"
 
+#include <stdbool.h>
+
 void
-printRareMatrix(RareMatrix matrix);
+printRareMatrix(RareMatrix matrix, bool);
 
 void
 printNormalMatrix(BasicMatrix matrix);
@@ -18,6 +20,6 @@ void
 printNormalVector(BasicVector);
 
 void
-printRareVector(RareVector vector);
+printRareVector(RareVector vector, bool);
 
 #endif //LAB3_SRC_OUTPUT_H

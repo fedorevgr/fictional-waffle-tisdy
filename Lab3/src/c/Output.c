@@ -42,10 +42,10 @@ printRareMatrixSimple(RareMatrix matrix)
 }
 
 void
-printRareMatrix(RareMatrix matrix)
+printRareMatrix(RareMatrix matrix, bool sparse)
 {
     printf("Matrix\n");
-    if (matrix.dims.columns > PRINT_AMOUNT || matrix.dims.rows > PRINT_AMOUNT)
+    if (sparse || matrix.dims.columns > PRINT_AMOUNT || matrix.dims.rows > PRINT_AMOUNT)
         printRareMatrixInZip(matrix);
     else
         printRareMatrixSimple(matrix);
@@ -81,10 +81,10 @@ printNormalMatrix(BasicMatrix matrix)
 }
 
 void
-printRareVector(RareVector vector)
+printRareVector(RareVector vector, bool sparse)
 {
     printf("Vector\n");
-    if (vector.length <= PRINT_AMOUNT)
+    if (vector.length <= PRINT_AMOUNT && !sparse)
     {
         printf("Indx: ");
         for (size_t I = 0; I < vector.length; ++I)

@@ -75,6 +75,7 @@ serviceMultiplyRare(void)
     ErrorCode code = 0;
     Mode inputMode = inputModeOption();
     bool save = getSaveOption();
+    bool printOpt = getResOption();
 
     RareVector vector = {0};
     RareMatrix matrix = {0};
@@ -166,16 +167,16 @@ serviceMultiplyRare(void)
     else
     {
         printf(GAP);
-        printRareVector(vector);
+        printRareVector(vector, printOpt);
         printf("*\n");
-        printRareMatrix(matrix);
+        printRareMatrix(matrix, printOpt);
 
         struct timespec start, end;
         clock_gettime(CLOCK_REALTIME, &start);
         multiply(matrix, vector, &vectorResult);
         clock_gettime(CLOCK_REALTIME, &end);
 
-        printRareVector(vectorResult);
+        printRareVector(vectorResult, printOpt);
         printf("Time: %llu\n",   NANO_SEC(end) -NANO_SEC(start));
     }
 

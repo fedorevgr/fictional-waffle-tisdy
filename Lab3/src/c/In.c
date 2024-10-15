@@ -296,3 +296,15 @@ getSaveOption(void)
         return true;
     return false;
 }
+
+bool
+getResOption(void)
+{
+    printf("Print in sparse format (y|n): ");
+
+    char buffer[MAX_BUFFER_LENGTH + 1] = "";
+    InputError ie = inputString(buffer);
+    if (ie == INPUT_OK && buffer[0] == 'y')
+        return true;
+    return false;
+}
