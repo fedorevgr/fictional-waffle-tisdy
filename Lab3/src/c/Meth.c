@@ -12,26 +12,19 @@ multiply(const RareMatrix matrix, const RareVector vector, RareVector *result)
     if (vector.length != matrix.dims.rows || matrix.dims.columns != result->length)
         return ERROR;
 
-    double sum;
-    size_t rowStartI, rowEndI;
-    size_t I;
-    double tmp;
-    for (size_t colI = 0; colI < matrix.dims.columns; ++colI)
-    {
+    double sum, tmp;
+    size_t rowStartI, rowEndI, I;
+    for (size_t colI = 0; colI < matrix.dims.columns; ++colI) {
         rowStartI = matrix.colStart[colI];
         rowEndI = matrix.colStart[colI + 1];
 
-        if (rowEndI - rowStartI != 0)
-        {
+        if (rowEndI - rowStartI != 0) {
             sum = 0;
             I = 0;
-            for (; rowStartI < rowEndI; rowStartI++)
-            {
+            for (; rowStartI < rowEndI; rowStartI++) {
                 tmp = 0;
-                for (; I < vector.valueAmount; ++I)
-                {
-                    if (vector.indexes[I] == matrix.rowIndexes[rowStartI])
-                    {
+                for (; I < vector.valueAmount; ++I) {
+                    if (vector.indexes[I] == matrix.rowIndexes[rowStartI]) {
                         tmp = vector.values[I];
                         break;
                     }

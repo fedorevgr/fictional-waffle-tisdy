@@ -33,17 +33,11 @@ matrixAddElement(RareMatrix *matrix, const Element element)
     for (; element.position.rows > bufMatrix.rowIndexes[rowI] && rowI < bufMatrix.colStart[i + 1] - 1; rowI++);
 
     size_t decoy = bufMatrix.elemAmount;
-    arrayInsert(
-        bufMatrix.values, &bufMatrix.elemAmount,
-        sizeof(*bufMatrix.values),
-        &element.value, rowI
-    );
+    arrayInsert(bufMatrix.values, &bufMatrix.elemAmount,sizeof(*bufMatrix.values),
+        &element.value, rowI);
 
-    arrayInsert(
-        bufMatrix.rowIndexes, &decoy,
-        sizeof(*bufMatrix.rowIndexes),
-        &element.position.rows, rowI
-    );
+    arrayInsert(bufMatrix.rowIndexes, &decoy,sizeof(*bufMatrix.rowIndexes),
+        &element.position.rows, rowI);
 
     bufMatrix.colStart[bufMatrix.dims.columns] = bufMatrix.elemAmount;
 
@@ -72,12 +66,6 @@ rareMatrixGet(const RareMatrix matrix, const Dimensions position, double *result
             break;
         }
     }
-//    ErrorCode findCode = arrayFind(
-//        matrix.rowIndexes + colStartIndex, colElementAmount,
-//        sizeof(&matrix.rowIndexes),
-//        &position.rows, &found
-//    );
-
     if (findCode == OK)
         *result = matrix.values[found];
 
@@ -192,7 +180,6 @@ fillRandomBasicMatrix(BasicMatrix *matrix, size_t percentile)
 
     for (size_t row = 0; row < matrix->dimensions.rows; ++row)
         memcpy(matrix->values[row], array + matrix->dimensions.columns * row, sizeof(double) * matrix->dimensions.columns);
-
 
     free(array);
     return OK;

@@ -4,8 +4,6 @@
 
 #include "objects/Vector.h"
 #include "Arrays.h"
-#include <stdio.h>
-#include <stdbool.h>
 #include "simple/PrimitiveInput.h"
 
 ErrorCode
@@ -13,16 +11,6 @@ vectorAddElement(RareVector *vector, double value, size_t toIndex)
 {
     if (toIndex > vector->length)
         return ERROR;
-
-//    void *buf, *buf2;
-//    buf = realloc(vector->values, (vector->valueAmount + 1) * sizeof(*vector->values));
-//    buf2 = realloc(vector->indexes, (vector->valueAmount + 1) * sizeof(*vector->values));
-//
-//    if (!buf || !buf2)
-//        return ERROR_MEMORY;
-//
-//    vector->values = buf;
-//    vector->indexes = buf2;
 
     size_t i = 0;
     for (; vector->indexes[i] < toIndex && i < vector->valueAmount; i++);

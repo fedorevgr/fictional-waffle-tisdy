@@ -13,9 +13,6 @@
 
 #define RUNS 20
 
-#define CACHE "cache"
-
-
 void
 runRare(size_t size)
 {
@@ -98,7 +95,6 @@ unsigned long measureOneRare(size_t size, size_t fill, size_t *memory)
     vectorFree(vector);
     matrixFree(matrix);
 
-
     return timeElapsed / RUNS;
 }
 
@@ -160,7 +156,7 @@ run(size_t size, size_t fill, Data *d)
 #define SIZE_LIMIT 510
 
 #define FILL_START 10
-#define FILL_STEP  30
+#define FILL_STEP  20
 #define FILL_END   100
 
 ErrorCode
@@ -181,13 +177,13 @@ runStats(void)
         {
             run(objSize, percentile, &data);
             printf("Stats:[%4lu%%,%5lu]: ", percentile, objSize);
-            printf("%10lu | %10lu | %10lu | %10lu | %6.1f%% | %6.1f%% |\n",
+            printf("%10lu | %10lu | %10lu | %10lu | %6.1Lf%% | %6.1Lf%% |\n",
                    data.timeRare, data.timeBasic, data.memRare, data.memBasic,
                    (((long double) data.timeBasic) / ((long double) data.timeRare) - 1) * 100,
                    (((long double) data.memBasic) / ((long double) data.memRare) - 1) * 100);
             if (dataFile)
             {
-                fprintf(dataFile, "Stats:[%4lu%%,%5lu]: " "%10lu | %10lu | %10lu | %10lu | %6.1f%% | %6.1f%% |\n",
+                fprintf(dataFile, "Stats:[%4lu%%,%5lu]: " "%10lu | %10lu | %10lu | %10lu | %6.1Lf%% | %6.1Lf%% |\n",
                         percentile, objSize,
                         data.timeRare, data.timeBasic, data.memRare, data.memBasic,
                         (((long double) data.timeBasic) / ((long double) data.timeRare) - 1) * 100,
@@ -201,13 +197,13 @@ runStats(void)
         {
             run(objSize, percentile, &data);
             printf("Stats:[%4lu%%,%5lu]: ", percentile, objSize);
-            printf("%10lu | %10lu | %10lu | %10lu | %6.1f%% | %6.1f%% |\n",
+            printf("%10lu | %10lu | %10lu | %10lu | %6.1Lf%% | %6.1Lf%% |\n",
                    data.timeRare, data.timeBasic, data.memRare, data.memBasic,
                    (((long double) data.timeBasic) / ((long double) data.timeRare) - 1) * 100,
                    (((long double) data.memBasic) / ((long double) data.memRare) - 1) * 100);
             if (dataFile)
             {
-                fprintf(dataFile, "Stats:[%4lu%%,%5lu]: " "%10lu | %10lu | %10lu | %10lu | %6.1f%% | %6.1f%% |\n",
+                fprintf(dataFile, "Stats:[%4lu%%,%5lu]: " "%10lu | %10lu | %10lu | %10lu | %6.1Lf%% | %6.1Lf%% |\n",
                         percentile, objSize,
                         data.timeRare, data.timeBasic, data.memRare, data.memBasic,
                         (((long double) data.timeBasic) / ((long double) data.timeRare) - 1) * 100,
