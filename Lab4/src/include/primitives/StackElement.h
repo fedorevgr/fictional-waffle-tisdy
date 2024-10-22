@@ -1,0 +1,10 @@
+//
+// Created by Fedor Evgr on 22/10/2024.
+//
+
+#ifndef LAB4_SRC_INCLUDE_PRIMITIVES_STACKELEMENT_H
+#define LAB4_SRC_INCLUDE_PRIMITIVES_STACKELEMENT_H
+
+typedef float StackElement;
+
+#endif //LAB4_SRC_INCLUDE_PRIMITIVES_STACKELEMENT_H

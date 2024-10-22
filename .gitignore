@@ -56,5 +56,10 @@ cmake-build-debug
 .idea
 archive
 */cache
-* .foo
+*/*.foo
 Python 
+*.bin
+cmake-build-release
+Lab3/*.data
+
+
