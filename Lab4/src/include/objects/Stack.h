@@ -7,8 +7,14 @@
 #include "primitives/Array.h"
 
 #ifndef STACK_SPACE
-    #define STACK_SPACE    1000
+    #define STACK_SPACE    10
 #endif
+
+typedef enum StackType_
+{
+    FROM_START,
+    FROM_END
+} StackType;
 
 typedef struct Stack_
 {
@@ -20,7 +26,10 @@ typedef struct Stack_
 Stack *stackCreate(void);
 void stackDestroy(Stack *);
 
-ExitCode stackPush(Stack *, StackElement);
-ExitCode stackPop(Stack *);
+ExitCode stackPush(Stack *, StackElement, StackType);
+ExitCode stackPop(Stack *, StackType);
+
+StackElement *
+stackGet(Stack *stack, size_t index, StackType from);
 
 #endif //LAB4_SRC_C_OBJECTS_STACK_H

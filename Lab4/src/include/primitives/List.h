@@ -18,12 +18,19 @@ typedef struct List_
     Node *first;
 } List;
 
-List *listCreate(void);
-void listDestroy(List *);
+List *
+listCreate(void);
 
-ExitCode listAppend(List *, StackElement);
-ExitCode listPop(List *);
-ExitCode listGet(List *, size_t, StackElement *);
+void
+listDestroy(List *);
 
+ExitCode
+listAppend(List *, StackElement);
+
+ExitCode
+listPop(List *);
+
+StackElement *
+listGet(List *, size_t);
 
 #endif //LAB4_SRC_C_PRIMITIVES_LIST_H
