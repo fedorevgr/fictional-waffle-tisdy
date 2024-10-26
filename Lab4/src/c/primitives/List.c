@@ -68,8 +68,9 @@ listPop(List *list)
     return OK;
 }
 
+#include <assert.h>
 StackElement *
 listGet(List *list, size_t index)
 {
-    return NULL;
+    assert(0);
 }

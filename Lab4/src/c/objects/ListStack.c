@@ -3,30 +3,30 @@
 ListStack *
 listStackCreate(void)
 {
-    ListStack *listStack = malloc(sizeof(ListStack));
-
-    if (listStack)
-    {
-        listStack->first = NULL;
-    }
-
-    return listStack;
+    return listCreate();
 }
 
 void
 listStackDestroy(ListStack *stack)
 {
-
+    listDestroy(stack);
 }
 
 ExitCode
 lStackPush(ListStack *stack, StackElement value)
-{}
+{
+    return listAppend(stack, value);
+}
 
 ExitCode
 lStackPop(ListStack *stack)
-{}
+{
+    return listPop(stack);
+}
 
+#include <assert.h>
 StackElement *
-listStackGet(ListStack *stack, size_t index) {}
+listStackGet(ListStack *stack, size_t index) {
+    assert(0);
+}
 

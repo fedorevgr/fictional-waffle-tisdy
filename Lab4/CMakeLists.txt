@@ -6,7 +6,6 @@ set(CMAKE_C_STANDARD 23)
 include_directories(src/include)
 
 add_executable(lab.exe
-        src/c/main.c
         src/c/Service.c
         src/include/Codes.h
         src/c/objects/Stack.c
@@ -20,6 +19,9 @@ add_executable(lab.exe
         src/include/primitives/StackElement.h
         src/c/primitives/Array.c
         src/include/primitives/Array.h
+        src/c/primitives/PrimitiveInput.c
+        src/include/primitives/PrimitiveInput.h
+        src/main.c
 )
 
 #add_executable(unit.exe

@@ -111,7 +111,7 @@ stackPopEnd_(Stack *stack)
 static StackElement *
 stackStartGet_(Stack *stack, size_t index)
 {
-    if (stack->cursor < index)
+    if (stack->cursor <= index)
         return NULL;
 
     return stack->space->elements + index;
@@ -120,7 +120,8 @@ stackStartGet_(Stack *stack, size_t index)
 static StackElement *
 stackEndGet_(Stack *stack, size_t index)
 {
-    if (stack->reversedCursor > index)
+    size_t normalCursor = stack->space->length - stack->reversedCursor - 1;
+    if (normalCursor <= index)
         return NULL;
 
     return stack->space->elements + stack->space->length - 1 - index;

@@ -12,8 +12,8 @@
 
 typedef enum StackType_
 {
-    FROM_START,
-    FROM_END
+    FROM_START = 's',
+    FROM_END = 'e'
 } StackType;
 
 typedef struct Stack_
