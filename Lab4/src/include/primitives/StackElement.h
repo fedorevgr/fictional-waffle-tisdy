@@ -7,4 +7,12 @@
 
 typedef double StackElement;
 
+#define POPPED_MAX_LENGTH 1000
+typedef struct Popped_
+{
+    unsigned long length;
+    StackElement *values[POPPED_MAX_LENGTH];
+}
+PoppedList;
+
 #endif //LAB4_SRC_INCLUDE_PRIMITIVES_STACKELEMENT_H

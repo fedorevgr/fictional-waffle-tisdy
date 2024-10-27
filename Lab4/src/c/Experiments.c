@@ -70,7 +70,7 @@ measurePopStart(Stack *stack)
     clock_gettime(CLOCK_REALTIME, &timeStart);
 
     for (; i < RUNS; ++i)
-        stackPop(stack, FROM_START);
+        stackPop(stack, FROM_START, nullptr);
 
     clock_gettime(CLOCK_REALTIME, &timeEnd);
 
@@ -101,7 +101,7 @@ measurePopEnd(Stack *stack)
     clock_gettime(CLOCK_REALTIME, &timeStart);
 
     for (; i < RUNS; ++i)
-        stackPop(stack, FROM_END);
+        stackPop(stack, FROM_END, nullptr);
 
     clock_gettime(CLOCK_REALTIME, &timeEnd);
 
@@ -131,7 +131,7 @@ measurePopList(ListStack *stack)
     clock_gettime(CLOCK_REALTIME, &timeStart);
 
     for (; i < RUNS; ++i)
-        lStackPop(stack);
+        lStackPop(stack, nullptr);
 
     clock_gettime(CLOCK_REALTIME, &timeEnd);
 

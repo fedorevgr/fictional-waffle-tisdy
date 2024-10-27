@@ -93,6 +93,11 @@ stackPrint(Stack *stack)
             printf("        |                |");
         printf("\n");
     }
+    printf("Memory status:\n  Used: %lu\n  Taken: %lu\n",
+           sizeof(StackElement) * stack->cursor + sizeof(StackElement) * (stack->space->length - 1 - stack->reversedCursor) \
+                + sizeof(size_t) * 2,
+           sizeof(StackElement) * stack->space->length + sizeof(size_t) * 2
+           );
 }
 
 void
@@ -103,8 +108,26 @@ listStackPrint(ListStack *stack)
 
     Node *node = stack->first;
 
-    for (size_t i = 0; node; i++, node = node->next)
+    size_t length = 0;
+    for (size_t i = 0; node; i++, node = node->next, length++)
         printf("%3lu | %6g | %p\n", i + 1, node->value, node);
+
+    printf("Memory status:\n  Used: %lu\n  Taken: %lu\n",
+           sizeof(Node) * (length + 1), sizeof(Node) * (length + 1)
+    );
 }
 
+void
+printFragmentation(PoppedList history)
+{
+    printf("Fragmentation (popped values):\n");
 
+    if (history.length == 0)
+    {
+        printf("Nothing popped\n");
+        return;
+    }
+
+    for (size_t i = 0; i < history.length; ++i)
+        printf("  %p\n", history.values[i]);
+}

@@ -24,7 +24,8 @@ stackCreate(size_t size);
 void stackDestroy(Stack *);
 
 ExitCode stackPush(Stack *, StackElement, StackType);
-ExitCode stackPop(Stack *, StackType);
+ExitCode
+stackPop(Stack *, StackType, StackElement **poppedAddress);
 
 StackElement *
 stackGet(Stack *stack, size_t index, StackType from);

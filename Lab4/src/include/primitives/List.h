@@ -28,7 +28,7 @@ ExitCode
 listAppend(List *, StackElement);
 
 ExitCode
-listPop(List *);
+listPop(List *, StackElement **poppedAddress);
 
 StackElement *
 listGet(List *, size_t);

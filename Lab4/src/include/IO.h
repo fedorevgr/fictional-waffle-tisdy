@@ -32,4 +32,7 @@ stackPrint(Stack *stack);
 void
 listStackPrint(ListStack *stack);
 
+void
+printFragmentation(PoppedList history);
+
 #endif //LAB4_SRC_C_IO_H

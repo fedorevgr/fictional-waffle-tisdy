@@ -15,7 +15,7 @@ void
 listDestroy(List *list)
 {
     while (list->first)
-        listPop(list);
+        listPop(list, nullptr);
     free(list);
 }
 
@@ -45,7 +45,7 @@ listAppend(List *list, StackElement element)
 }
 
 ExitCode
-listPop(List *list)
+listPop(List *list, StackElement **poppedAddress)
 {
     if (!list->first)
         return ERROR_STACK_EMPTY;
@@ -62,6 +62,9 @@ listPop(List *list)
         prevNode->next = NULL;
     else
         list->first = NULL;
+
+    if (poppedAddress)
+        *poppedAddress = &node->value;
 
     free(node);
 

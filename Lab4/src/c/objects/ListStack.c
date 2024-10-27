@@ -19,9 +19,9 @@ lStackPush(ListStack *stack, StackElement value)
 }
 
 ExitCode
-lStackPop(ListStack *stack)
+lStackPop(ListStack *stack, StackElement **poppedAddress)
 {
-    return listPop(stack);
+    return listPop(stack, poppedAddress);
 }
 
 #include <assert.h>

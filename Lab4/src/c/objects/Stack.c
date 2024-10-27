@@ -37,10 +37,10 @@ static ExitCode
 stackPushEnd_(Stack *stack, StackElement value);
 
 static ExitCode
-stackPopStart_(Stack *stack);
+stackPopStart_(Stack *stack, StackElement **poppedAddress);
 
 static ExitCode
-stackPopEnd_(Stack *stack);
+stackPopEnd_(Stack *stack, StackElement **poppedAddress);
 
 static StackElement *
 stackStartGet_(Stack *stack, size_t index);
@@ -61,9 +61,9 @@ stackPush(Stack *stack, StackElement value, StackType to)
 }
 
 ExitCode
-stackPop(Stack *stack, StackType from)
+stackPop(Stack *stack, StackType from, StackElement **poppedAddress)
 {
-    return (from == FROM_START) ? stackPopStart_(stack) : stackPopEnd_(stack);
+    return (from == FROM_START) ? stackPopStart_(stack, poppedAddress) : stackPopEnd_(stack, poppedAddress);
 }
 
 static ExitCode
@@ -89,22 +89,34 @@ stackPushEnd_(Stack *stack, StackElement value)
 }
 
 static ExitCode
-stackPopStart_(Stack *stack)
+stackPopStart_(Stack *stack, StackElement **poppedAddress)
 {
     if (stack->cursor == 0)
+    {
+        if (poppedAddress)
+            *poppedAddress = NULL;
         return ERROR_STACK_EMPTY;
+    }
 
     stack->cursor -= 1;
+    if (poppedAddress)
+        *poppedAddress = stack->space->elements + stack->cursor;
     return OK;
 }
 
 static ExitCode
-stackPopEnd_(Stack *stack)
+stackPopEnd_(Stack *stack, StackElement **poppedAddress)
 {
     if (stack->reversedCursor + 1 == stack->space->length)
+    {
+        if (poppedAddress)
+            *poppedAddress = NULL;
         return ERROR_STACK_EMPTY;
+    }
 
     stack->reversedCursor += 1;
+    if (poppedAddress)
+        *poppedAddress = stack->space->elements + stack->reversedCursor;
     return OK;
 }
 

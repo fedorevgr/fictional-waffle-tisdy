@@ -10,7 +10,8 @@ ListStack *listStackCreate(void);
 void listStackDestroy(ListStack *stack);
 
 ExitCode lStackPush(ListStack *, StackElement);
-ExitCode lStackPop(ListStack *);
+ExitCode
+lStackPop(ListStack *, StackElement **poppedAddress);
 
 StackElement *
 listStackGet(ListStack *stack, size_t index);

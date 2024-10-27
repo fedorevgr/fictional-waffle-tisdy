@@ -11,6 +11,7 @@ void
 serviceStack(void)
 {
     Stack *stack;
+    PoppedList popHistory = { 0 };
     ExitCode exitCode;
     StackOption option;
     StackType type;
@@ -41,13 +42,17 @@ serviceStack(void)
                     printf("Error: OVERFLOW\n");
                 break;
             case POP:
-                exitCode = stackPop(stack, type);
+                exitCode = stackPop(stack, type, popHistory.values + popHistory.length);
+
                 if (exitCode)
                     printf("Error: POP FROM EMPTY\n");
+                else
+                    popHistory.length += 1;
                 break;
             case QUIT:break;
             case SHOW:
                 stackPrint(stack);
+                printFragmentation(popHistory);
                 break;
         }
     }
@@ -67,6 +72,8 @@ serviceListStack(void)
 
     listStack = listStackCreate();
 
+    PoppedList popHistory = { 0 };
+
     do
     {
         exitCode = OK;
@@ -85,13 +92,16 @@ serviceListStack(void)
                     printf("Error: OVERFLOW\n");
                 break;
             case POP:
-                exitCode = lStackPop(listStack);
+                exitCode = lStackPop(listStack, popHistory.values + popHistory.length);
                 if (exitCode)
                     printf("Error: POP FROM EMPTY\n");
+                else
+                    popHistory.length += 1;
                 break;
             case QUIT:break;
             case SHOW:
                 listStackPrint(listStack);
+                printFragmentation(popHistory);
                 break;
         }
     }
