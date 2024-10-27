@@ -1,7 +1,7 @@
 #include "objects/Stack.h"
 
 Stack *
-stackCreate(void)
+stackCreate(size_t size)
 {
     Stack *stack;
 
@@ -10,8 +10,8 @@ stackCreate(void)
     if (stack)
     {
         stack->cursor = 0;
-        stack->reversedCursor = STACK_SPACE - 1;
-        stack->space = arrayCreate(STACK_SPACE);
+        stack->reversedCursor = size - 1;
+        stack->space = arrayCreate(size);
 
         if (!stack->space)
         {

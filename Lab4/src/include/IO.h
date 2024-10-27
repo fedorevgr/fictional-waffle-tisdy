@@ -20,6 +20,9 @@ typedef enum StackOptions
 StackOption
 inputStackAction(void);
 
+size_t
+inputSize(void);
+
 StackType
 inputStackType(void);
 

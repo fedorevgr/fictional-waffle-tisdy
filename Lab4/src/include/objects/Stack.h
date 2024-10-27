@@ -6,10 +6,6 @@
 #include "primitives/StackElement.h"
 #include "primitives/Array.h"
 
-#ifndef STACK_SPACE
-    #define STACK_SPACE    10
-#endif
-
 typedef enum StackType_
 {
     FROM_START = 's',
@@ -23,7 +19,8 @@ typedef struct Stack_
     Array *space;
 } Stack;
 
-Stack *stackCreate(void);
+Stack *
+stackCreate(size_t size);
 void stackDestroy(Stack *);
 
 ExitCode stackPush(Stack *, StackElement, StackType);

@@ -3,6 +3,8 @@ project(Lab4 C)
 
 set(CMAKE_C_STANDARD 23)
 
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+
 include_directories(src/include)
 
 add_executable(lab.exe
@@ -22,6 +24,8 @@ add_executable(lab.exe
         src/c/primitives/PrimitiveInput.c
         src/include/primitives/PrimitiveInput.h
         src/main.c
+        src/c/Experiments.c
+        src/include/Experiments.h
 )
 
 #add_executable(unit.exe

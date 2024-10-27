@@ -17,7 +17,8 @@ serviceStack(void)
 
     StackElement buffer;
 
-    stack = stackCreate();
+    size_t stackSize = inputSize();
+    stack = stackCreate(stackSize);
 
     do
     {
@@ -30,10 +31,11 @@ serviceStack(void)
         switch (option)
         {
             case PUSH:
+                printf("Input value:");
                 if (inputDouble(&buffer) == INPUT_OK)
                     exitCode = stackPush(stack, buffer, type);
                 else
-                    printf("Illegal input\n");
+                    printf("Retry: ");
 
                 if (exitCode)
                     printf("Error: OVERFLOW\n");
@@ -50,7 +52,7 @@ serviceStack(void)
         }
     }
     while (option != QUIT);
-    printf("Quiting");
+    printf("Quiting...\n");
 
     stackDestroy(stack);
 }
@@ -60,10 +62,91 @@ serviceListStack(void)
 {
     ListStack *listStack;
     ExitCode exitCode = OK;
+    StackOption option;
+    StackElement buffer;
+
+    listStack = listStackCreate();
+
+    do
+    {
+        exitCode = OK;
+        option = inputStackAction();
+
+        switch (option)
+        {
+            case PUSH:
+                printf("Input value:");
+                if (inputDouble(&buffer) == INPUT_OK)
+                    exitCode = lStackPush(listStack, buffer);
+                else
+                    printf("Retry: ");
+
+                if (exitCode)
+                    printf("Error: OVERFLOW\n");
+                break;
+            case POP:
+                exitCode = lStackPop(listStack);
+                if (exitCode)
+                    printf("Error: POP FROM EMPTY\n");
+                break;
+            case QUIT:break;
+            case SHOW:
+                listStackPrint(listStack);
+                break;
+        }
+    }
+    while (option != QUIT);
+    printf("Quiting");
+
+    listStackDestroy(listStack);
 }
+
+#include "Experiments.h"
+
+#define FAKE_STACK_LENGTH 1000
 
 void
 serviceExperiment(void)
 {
+    Stack *fakeStack = stackCreate(FAKE_STACK_LENGTH);
+    for (int i = 0; i < FAKE_STACK_LENGTH; i++)
+        stackPush(fakeStack, 1, FROM_START);
+    stackDestroy(fakeStack);
 
+    printf("Measurements:\n");
+
+    double results[EXPERIMENTS] = { 0 };
+
+    Stack *stack;
+    ListStack *listStack;
+
+    stack = stackCreate(RUNS);
+    listStack = listStackCreate();
+
+    experiment(results, stack, listStack);
+
+    stackDestroy(stack);
+    listStackDestroy(listStack);
+
+    printf("     | Array     | Array End | %%     | List      | %%\n");
+    printf("PUSH | " TIME_FMT " | " TIME_FMT " | %5.1lf | " TIME_FMT " | %5.1lf\n",
+           results[PUSH_ARRAY_START],
+           results[PUSH_ARRAY_END],
+           (double) results[PUSH_ARRAY_END] / (double) results[PUSH_ARRAY_START] * 100 - 100,
+           results[PUSH_LIST],
+           (double) results[PUSH_LIST] / (double) results[PUSH_ARRAY_START] * 100 - 100
+    );
+
+    printf("POP  | " TIME_FMT " | " TIME_FMT " | %5.1lf | " TIME_FMT " | %5.1lf\n",
+           results[POP_ARRAY_START],
+           results[POP_ARRAY_END],
+           (double) results[POP_ARRAY_END] / (double) results[POP_ARRAY_START] * 100 - 100,
+           results[POP_LIST],
+           (double) results[POP_LIST] / (double) results[POP_ARRAY_START] * 100 - 100
+           );
+    printf("Diff | %8.1lf%% | %8.1lf%% |       | %8.1lf%% |\n",
+           results[POP_ARRAY_START] / results[PUSH_ARRAY_START] * 100 - 100,
+           results[POP_ARRAY_END] / results[PUSH_ARRAY_END] * 100 - 100,
+           results[POP_LIST] / results[PUSH_LIST] * 100 - 100
+           );
 }

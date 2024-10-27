@@ -1,7 +1,3 @@
-//
-// Created by Fedor Evgr on 05/10/2024.
-//
-
 #include "primitives//PrimitiveInput.h"
 #include <stdlib.h>
 #include <stdio.h>

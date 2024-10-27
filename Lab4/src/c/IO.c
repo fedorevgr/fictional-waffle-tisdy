@@ -3,6 +3,24 @@
 #include <stdio.h>
 #include <string.h>
 
+size_t
+inputSize(void)
+{
+    size_t number;
+    InputError inputError;
+
+    printf("Enter static stack size: ");
+    do
+    {
+        inputError = inputUnsigned(&number);
+        if (inputError)
+            printf("Try again: ");
+    }
+    while (inputError);
+    return number;
+}
+
+
 StackOption
 inputStackAction(void)
 {
@@ -86,7 +104,7 @@ listStackPrint(ListStack *stack)
     Node *node = stack->first;
 
     for (size_t i = 0; node; i++, node = node->next)
-        printf("%3lu | %6f | %p\n", i + 1, node->value, node);
+        printf("%3lu | %6g | %p\n", i + 1, node->value, node);
 }
 
 
