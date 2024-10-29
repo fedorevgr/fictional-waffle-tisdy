@@ -5,7 +5,6 @@
 #include "Codes.h"
 
 #include <stdio.h>
-#include <assert.h>
 
 void
 serviceStack(void)
@@ -66,7 +65,7 @@ void
 serviceListStack(void)
 {
     ListStack *listStack;
-    ExitCode exitCode = OK;
+    ExitCode exitCode;
     StackOption option;
     StackElement buffer;
 
@@ -159,4 +158,8 @@ serviceExperiment(void)
            results[POP_ARRAY_END] / results[PUSH_ARRAY_END] * 100 - 100,
            results[POP_LIST] / results[PUSH_LIST] * 100 - 100
            );
+    printf("First 10 elements memory (bytes):\nOn array / on list\n");
+    for (int i = 1; i < 11; ++i)
+        printf(" %2d - %10lu | %10lu\n", i,
+               sizeof(StackElement) * i + 3 * sizeof(size_t), sizeof(Node) * (i));
 }
