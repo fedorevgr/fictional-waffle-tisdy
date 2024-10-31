@@ -1,0 +1,10 @@
+
+#ifndef LAB5_SRC_INCLUDE_EXITCODES_H
+#define LAB5_SRC_INCLUDE_EXITCODES_H
+
+typedef enum {
+    OK,
+    ERROR
+} ExitCode;
+
+#endif //LAB5_SRC_INCLUDE_EXITCODES_H
