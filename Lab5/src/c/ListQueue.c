@@ -43,13 +43,13 @@ lIsEmpty(ListQueue *q)
     return (q->front == NULL);
 }
 
-ExitCode
+QueueStatus
 enqueueList(ListQueue *q, Element value)
 {
     Node *newNode = malloc(sizeof(Node));
 
     if (!newNode)
-        return ERROR;
+        return Q_FULL;
 
     newNode->data = value;
     newNode->next = NULL;
@@ -63,14 +63,14 @@ enqueueList(ListQueue *q, Element value)
         q->rear->next = newNode;
         q->rear = newNode;
     }
-    return OK;
+    return Q_OK;
 }
 
-Element
-dequeueList(ListQueue *q)
+QueueStatus
+dequeueList(ListQueue *q, Element *element)
 {
     if (lIsEmpty(q))
-        return (Element) { 0 };
+        return Q_EMPTY;
 
     Element value = q->front->data;
     Node *temp = q->front;
@@ -82,6 +82,7 @@ dequeueList(ListQueue *q)
     }
 
     free(temp);
-    return value;
+    *element = value;
+    return Q_OK;
 }
 

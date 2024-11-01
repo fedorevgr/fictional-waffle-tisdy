@@ -19,10 +19,10 @@ createArrayQueue(void);
 void
 freeArrayQueue(ArrayQueue *queue);
 
-ExitCode
+QueueStatus
 enqueueArray(ArrayQueue *q, Element val);
 
-Element
-dequeueArray(ArrayQueue *q);
+QueueStatus
+dequeueArray(ArrayQueue *q, Element *element);
 
 #endif //LAB5_SRC_C_ARRAYQUEUE_H

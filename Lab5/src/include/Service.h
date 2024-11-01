@@ -1,0 +1,5 @@
+
+#ifndef LAB5_SRC_C_SERVICE_H
+#define LAB5_SRC_C_SERVICE_H
+
+#endif //LAB5_SRC_C_SERVICE_H

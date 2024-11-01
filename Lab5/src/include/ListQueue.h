@@ -21,10 +21,10 @@ createListQueue(void);
 void
 freeListQueue(ListQueue *q);
 
-ExitCode
+QueueStatus
 enqueueList(ListQueue *q, Element value);
 
-Element
-dequeueList(ListQueue *q);
+QueueStatus
+dequeueList(ListQueue *q, Element *element);
 
 #endif //LAB5_SRC_C_LISTQUEUE_H

@@ -43,27 +43,28 @@ aIsFull(ArrayQueue *q)
     return (q->size == MAX_SIZE);
 }
 
-ExitCode
+QueueStatus
 enqueueArray(ArrayQueue *q, Element val)
 {
     if (aIsFull(q))
-        return ERROR;
+        return Q_FULL;
 
     q->rear = (q->rear + 1) % MAX_SIZE;
     q->arr[q->rear] = val;
     q->size++;
-    return OK;
+    return Q_OK;
 }
 
-Element
-dequeueArray(ArrayQueue *q)
+QueueStatus
+dequeueArray(ArrayQueue *q, Element *element)
 {
     if (aIsEmpty(q))
-        return (Element) { 0 };
+        return Q_EMPTY;
 
     Element val = q->arr[q->front];
     q->front = (q->front + 1) % MAX_SIZE;
     q->size--;
-    return val;
+    *element = val;
+    return Q_OK;
 }
 
