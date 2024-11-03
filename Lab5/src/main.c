@@ -2,9 +2,11 @@
 
 typedef enum Modes_
 {
-    ARRAY,
-    LIST,
-    EXPERIMENT
+    ARRAY = 'A',
+    LIST = 'L',
+    EXPERIMENT = 'E',
+    CHANGE_VERBOSE = 'v',
+    CHANGE_ADDRESS_DISPLAY = 'a'
 } Modes;
 
 int

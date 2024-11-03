@@ -39,8 +39,8 @@ simulateArrayQueue(bool verbose, bool showAddresses, ResultData *results)
     Element newElement = {0};
     Element currElement = {0};
 
-    InstantData instantData = { 0 };
-    ResultData resultData = { 0 };
+    InstantData instantData = {0};
+    ResultData resultData = {0};
     size_t previousElementsOut = 0;
 
     bool busy = false;
@@ -116,7 +116,8 @@ simulateArrayQueue(bool verbose, bool showAddresses, ResultData *results)
         instantData.averageQueueLengthAmount++;
         instantData.averageQueueLengthSum += OAQueue->size;
 
-        if (verbose && previousElementsOut != resultData.elementsOut && resultData.elementsOut % 100 == 0 && resultData.elementsOut != 0)
+        if (verbose && previousElementsOut != resultData.elementsOut && resultData.elementsOut % 100 == 0
+            && resultData.elementsOut != 0)
         {
             printf("%6lu | %7d | %7lf\n",
                    resultData.elementsOut,
@@ -136,10 +137,16 @@ simulateArrayQueue(bool verbose, bool showAddresses, ResultData *results)
     resultData.timeModel = NANO_SEC(tmpTime) - resultData.timeModel;
 
     printf("\nResults\n");
-    printf("Model time: %lu.%lu.%lu s\n", SEC(resultData.timeModel), MILLI_SEC(resultData.timeModel) % 1000, MICRO_SEC(resultData.timeModel) % 1000);
+    printf("Model time: %lu.%lu.%lu s\n",
+           SEC(resultData.timeModel),
+           MILLI_SEC(resultData.timeModel) % 1000,
+           MICRO_SEC(resultData.timeModel) % 1000);
     printf("Elements in: %lu, out: %lu\n", resultData.elementsIn, resultData.elementsOut);
     printf("Triggers: %lu\n", resultData.OATriggers);
-    printf("Idle time: %lu.%lu.%lu s\n", SEC(resultData.timeIdle), MILLI_SEC(resultData.timeIdle) % 1000, MICRO_SEC(resultData.timeIdle) % 1000);
+    printf("Idle time: %lu.%lu.%lu s\n",
+           SEC(resultData.timeIdle),
+           MILLI_SEC(resultData.timeIdle) % 1000,
+           MICRO_SEC(resultData.timeIdle) % 1000);
 
     *results = resultData;
     return ticks;
@@ -160,8 +167,8 @@ simulateListQueue(bool verbose, bool showAddresses, ResultData *results)
     Element newElement = {0};
     Element currElement = {0};
 
-    InstantData instantData = { 0 };
-    ResultData resultData = { 0 };
+    InstantData instantData = {0};
+    ResultData resultData = {0};
     size_t previousElementsOut = 0;
 
     bool busy = false;
@@ -237,7 +244,8 @@ simulateListQueue(bool verbose, bool showAddresses, ResultData *results)
         instantData.averageQueueLengthAmount++;
         instantData.averageQueueLengthSum += OAQueue->size;
 
-        if (verbose && previousElementsOut != resultData.elementsOut && resultData.elementsOut % 100 == 0 && resultData.elementsOut != 0)
+        if (verbose && previousElementsOut != resultData.elementsOut && resultData.elementsOut % 100 == 0
+            && resultData.elementsOut != 0)
         {
             printf("%6lu | %7d | %7lf\n",
                    resultData.elementsOut,
@@ -257,12 +265,59 @@ simulateListQueue(bool verbose, bool showAddresses, ResultData *results)
     resultData.timeModel = NANO_SEC(tmpTime) - resultData.timeModel;
 
     printf("\nResults\n");
-    printf("Model time: %lu.%lu.%lu s\n", SEC(resultData.timeModel), MILLI_SEC(resultData.timeModel) % 1000, MICRO_SEC(resultData.timeModel) % 1000);
+    printf("Model time: %lu.%lu.%lu s\n",
+           SEC(resultData.timeModel),
+           MILLI_SEC(resultData.timeModel) % 1000,
+           MICRO_SEC(resultData.timeModel) % 1000);
     printf("Elements in: %lu, out: %lu\n", resultData.elementsIn, resultData.elementsOut);
     printf("Triggers: %lu\n", resultData.OATriggers);
-    printf("Idle time: %lu.%lu.%lu s\n", SEC(resultData.timeIdle), MILLI_SEC(resultData.timeIdle) % 1000, MICRO_SEC(resultData.timeIdle) % 1000);
+    printf("Idle time: %lu.%lu.%lu s\n",
+           SEC(resultData.timeIdle),
+           MILLI_SEC(resultData.timeIdle) % 1000,
+           MICRO_SEC(resultData.timeIdle) % 1000);
 
     *results = resultData;
     return ticks;
 }
 
+#define TOLERANCE 0.03
+#define LIMIT 100
+
+void
+calculateError(ResultData *array, int length, double *errModel, double *errIdle)
+{
+
+    for (int i = 0; i < length; ++i)
+    {
+
+    }
+
+}
+
+size_t
+measure(size_t (*f)(bool, bool, ResultData *), ResultData *averageResult, double *errorModel, double *errorIdle)
+{
+    size_t ticks = 0;
+    *errorModel = 1;
+    *errorIdle = 1;
+
+    ResultData results[LIMIT] = {0};
+    ticks += f(0, 0, results);
+
+    int i = 1;
+    for (; i < LIMIT && (*errorModel > TOLERANCE || *errorIdle > TOLERANCE); ++i)
+    {
+        ticks += f(0, 0, results + i);
+
+    }
+
+    if (i == LIMIT)
+        printf("Limit reached\n");
+
+}
+
+void
+serviceExperiment(void)
+{
+
+}
