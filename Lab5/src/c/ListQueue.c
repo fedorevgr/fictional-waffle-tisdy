@@ -63,6 +63,7 @@ enqueueList(ListQueue *q, Element value)
         q->rear->next = newNode;
         q->rear = newNode;
     }
+    q->size++;
     return Q_OK;
 }
 
@@ -83,6 +84,7 @@ dequeueList(ListQueue *q, Element *element)
 
     free(temp);
     *element = value;
+    q->size--;
     return Q_OK;
 }
 

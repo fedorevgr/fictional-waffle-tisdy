@@ -13,6 +13,7 @@ typedef struct Node {
 typedef struct {
     Node* front;
     Node* rear;
+    int size;
 } ListQueue;
 
 ListQueue *
