@@ -28,4 +28,7 @@ simulateArrayQueue(bool verbose, bool showAddresses, ResultData *results);
 size_t
 simulateListQueue(bool verbose, bool showAddresses, ResultData *results);
 
+void
+serviceExperiment(void);
+
 #endif //LAB5_SRC_C_SERVICE_H

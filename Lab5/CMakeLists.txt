@@ -10,4 +10,5 @@ add_executable(Lab5 src/main.c
         src/c/ListQueue.c
         src/c/Service.c
         src/c/QueueElement.c
+        src/c/PrimitiveInput.c
 )

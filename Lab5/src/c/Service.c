@@ -5,7 +5,7 @@
 #include "ArrayQueue.h"
 #include "ListQueue.h"
 
-#define TIME_FACTOR 1e6
+#define TIME_FACTOR 1e4
 #define TIME_MIN 0
 #define TIME_MAX_T1 (6 * TIME_FACTOR)
 #define TIME_MAX_T2 (1 * TIME_FACTOR)
@@ -23,6 +23,17 @@ typedef struct InstantData_
     size_t averageQueueLengthSum;
     size_t averageQueueLengthAmount;
 } InstantData;
+
+static void printResult(ResultData resultData)
+{
+    printf("\nResults\n");
+    printf("Model time: %.3lf ms\n",
+           (double) resultData.timeModel / M_SEC);
+    printf("Elements in: %lu, out: %lu\n", resultData.elementsIn, resultData.elementsOut);
+    printf("Triggers: %lu\n", resultData.OATriggers);
+    printf("Idle time: %.3lf ms\n",
+           (double) resultData.timeIdle / M_SEC);
+}
 
 size_t
 simulateArrayQueue(bool verbose, bool showAddresses, ResultData *results)
@@ -136,17 +147,7 @@ simulateArrayQueue(bool verbose, bool showAddresses, ResultData *results)
     clock_gettime(CLOCK_REALTIME, &tmpTime);
     resultData.timeModel = NANO_SEC(tmpTime) - resultData.timeModel;
 
-    printf("\nResults\n");
-    printf("Model time: %lu.%lu.%lu s\n",
-           SEC(resultData.timeModel),
-           MILLI_SEC(resultData.timeModel) % 1000,
-           MICRO_SEC(resultData.timeModel) % 1000);
-    printf("Elements in: %lu, out: %lu\n", resultData.elementsIn, resultData.elementsOut);
-    printf("Triggers: %lu\n", resultData.OATriggers);
-    printf("Idle time: %lu.%lu.%lu s\n",
-           SEC(resultData.timeIdle),
-           MILLI_SEC(resultData.timeIdle) % 1000,
-           MICRO_SEC(resultData.timeIdle) % 1000);
+    printResult(resultData);
 
     *results = resultData;
     return ticks;
@@ -264,17 +265,7 @@ simulateListQueue(bool verbose, bool showAddresses, ResultData *results)
     clock_gettime(CLOCK_REALTIME, &tmpTime);
     resultData.timeModel = NANO_SEC(tmpTime) - resultData.timeModel;
 
-    printf("\nResults\n");
-    printf("Model time: %lu.%lu.%lu s\n",
-           SEC(resultData.timeModel),
-           MILLI_SEC(resultData.timeModel) % 1000,
-           MICRO_SEC(resultData.timeModel) % 1000);
-    printf("Elements in: %lu, out: %lu\n", resultData.elementsIn, resultData.elementsOut);
-    printf("Triggers: %lu\n", resultData.OATriggers);
-    printf("Idle time: %lu.%lu.%lu s\n",
-           SEC(resultData.timeIdle),
-           MILLI_SEC(resultData.timeIdle) % 1000,
-           MICRO_SEC(resultData.timeIdle) % 1000);
+    printResult(resultData);
 
     *results = resultData;
     return ticks;
@@ -282,42 +273,108 @@ simulateListQueue(bool verbose, bool showAddresses, ResultData *results)
 
 #define TOLERANCE 0.03
 #define LIMIT 100
+#include <math.h>
 
 void
-calculateError(ResultData *array, int length, double *errModel, double *errIdle)
+findAverage(ResultData *array, int length, size_t *averageModel, size_t *averageIdle)
 {
+    size_t sumModel = 0;
+    size_t sumIdle = 0;
+    for (int i = 0; i < length; ++i)
+    {
+        sumModel += array[i].timeModel;
+        sumIdle += array[i].timeIdle;
+    }
+
+    *averageModel = sumModel / length;
+    *averageIdle = sumIdle / length;
+}
+
+void
+calculateError(ResultData *array, int length, size_t *averageModel, size_t *averageIdle, size_t *errModel, size_t *errIdle)
+{
+    findAverage(array, length, averageModel, averageIdle);
+
+    size_t modelSquareSum = 0;
+    size_t idleSquareSum = 0;
+
+    size_t tmp;
 
     for (int i = 0; i < length; ++i)
     {
+        tmp = array[i].timeModel - *averageModel;
+        modelSquareSum += tmp * tmp;
 
+        tmp = array[i].timeIdle - *averageIdle;
+        idleSquareSum += tmp * tmp;
     }
-
+    *errModel = (unsigned long) sqrt((double) modelSquareSum / (length * (length - 1)));
+    *errIdle = (unsigned long) sqrt((double) idleSquareSum / (length * (length - 1)));
 }
 
-size_t
-measure(size_t (*f)(bool, bool, ResultData *), ResultData *averageResult, double *errorModel, double *errorIdle)
+void
+measure(
+    size_t (*f)(bool, bool, ResultData *),
+    size_t *averageResultModel,
+    size_t *averageResultIdle,
+    size_t *errorModel,
+    size_t *errorIdle
+)
 {
-    size_t ticks = 0;
+    *averageResultIdle = 1;
+    *averageResultModel = 1;
     *errorModel = 1;
     *errorIdle = 1;
 
+
     ResultData results[LIMIT] = {0};
-    ticks += f(0, 0, results);
+    f(0, 0, results);
 
     int i = 1;
-    for (; i < LIMIT && (*errorModel > TOLERANCE || *errorIdle > TOLERANCE); ++i)
+    for (; i < LIMIT && ((double)*errorModel / (double)*averageResultModel > TOLERANCE || (double)*errorIdle / (double) *averageResultIdle > TOLERANCE); ++i)
     {
-        ticks += f(0, 0, results + i);
-
+        f(0, 0, results + i);
+        calculateError(results, i + 1, averageResultModel, averageResultIdle, errorModel, errorIdle);
     }
 
     if (i == LIMIT)
-        printf("Limit reached\n");
+        printf("Limit reached %d\n", LIMIT);
 
 }
 
 void
 serviceExperiment(void)
 {
+    size_t averageResultModel;
+    size_t averageResultIdle;
+    size_t errorModel;
+    size_t errorIdle;
 
+    size_t averageResultModel2;
+    size_t averageResultIdle2;
+    size_t errorModel2;
+    size_t errorIdle2;
+
+    printf("Measurements:\n");
+    printf("Array:\n");
+    measure(simulateArrayQueue, &averageResultModel, &averageResultIdle, &errorModel, &errorIdle);
+    printf("List:\n");
+    measure(simulateListQueue, &averageResultModel2, &averageResultIdle2, &errorModel2, &errorIdle2);
+    printf("\n\n\n\n\n\n\n\n\n\n\n"
+           "Array:\n");
+    printf("    Results: \n"
+           "\tModeling time: %.3lf ± %.3lf ms\n"
+           "\tIdle time: %.3lf ± %.3lf ms\n", // todo all in nanoseconds
+           (double) averageResultModel / M_SEC,
+           (double) errorModel / M_SEC,
+           (double) averageResultIdle / M_SEC,
+           (double) errorIdle / M_SEC);
+    printf("List:\n");
+    printf("    Results: \n"
+           "\tModeling time: %.3lf ± %.3lf ms\n"
+           "\tIdle time: %.3lf ± %.3lf ms\n", // todo all in nanoseconds
+           (double) averageResultModel2 / M_SEC,
+           (double) errorModel2 / M_SEC,
+           (double) averageResultIdle2 / M_SEC,
+           (double) errorIdle2 / M_SEC);
 }
