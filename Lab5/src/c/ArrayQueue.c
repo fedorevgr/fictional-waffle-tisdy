@@ -68,3 +68,8 @@ dequeueArray(ArrayQueue *q, Element *element)
     return Q_OK;
 }
 
+size_t
+getArraySize(const ArrayQueue *q)
+{
+    return sizeof(*q);
+}

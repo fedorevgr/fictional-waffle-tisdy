@@ -88,3 +88,8 @@ dequeueList(ListQueue *q, Element *element)
     return Q_OK;
 }
 
+size_t
+getListSize(const ListQueue *q)
+{
+    return sizeof(*q) + q->size * sizeof(Node);
+}

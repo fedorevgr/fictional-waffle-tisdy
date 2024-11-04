@@ -4,7 +4,8 @@
 #include "QueueElement.h"
 #include "ExitCodes.h"
 
-#define MAX_SIZE 5050
+#define MAX_SIZE 1000
+
 
 typedef struct {
     Element arr[MAX_SIZE];
@@ -24,5 +25,8 @@ enqueueArray(ArrayQueue *q, Element val);
 
 QueueStatus
 dequeueArray(ArrayQueue *q, Element *element);
+
+unsigned long
+getArraySize(const ArrayQueue *q);
 
 #endif //LAB5_SRC_C_ARRAYQUEUE_H

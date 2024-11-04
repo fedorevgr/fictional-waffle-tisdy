@@ -28,4 +28,7 @@ enqueueList(ListQueue *q, Element value);
 QueueStatus
 dequeueList(ListQueue *q, Element *element);
 
+unsigned long
+getListSize(const ListQueue *q);
+
 #endif //LAB5_SRC_C_LISTQUEUE_H

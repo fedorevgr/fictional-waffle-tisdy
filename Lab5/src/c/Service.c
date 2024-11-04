@@ -34,7 +34,7 @@ printResult(ResultData resultData, size_t ticks)
 static void
 printInstantData(InstantData instantData, int size, size_t elemOut)
 {
-    printf("%6lu | %7d | %7lf\n",
+    printf("%6lu | %7d | %7lf |",
            elemOut,
            size,
            (double) instantData.averageQueueLengthSum / (double) instantData.averageQueueLengthAmount);
@@ -67,7 +67,7 @@ simulateArrayQueue(size_t maxPoolTime, size_t maxServeTime, bool verbose, bool s
         return 0;
 
     if (verbose)
-        printf("Exited | Current | Average\n");
+        printf("Exited | Current | Average  | Mem\n");
 
     clock_gettime(CLOCK_REALTIME, &tmpTime);
     resultData.timeModel = NANO_SEC(tmpTime);
@@ -136,6 +136,8 @@ simulateArrayQueue(size_t maxPoolTime, size_t maxServeTime, bool verbose, bool s
             && resultData.elementsOut != 0)
         {
             printInstantData(instantData, OAQueue->size, resultData.elementsOut);
+            printf(" %lu\n", getArraySize(OAQueue));
+
             instantData.averageQueueLengthSum = 0;
             instantData.averageQueueLengthAmount = 0;
             previousElementsOut = resultData.elementsOut;
@@ -152,6 +154,7 @@ simulateArrayQueue(size_t maxPoolTime, size_t maxServeTime, bool verbose, bool s
     printResult(resultData, ticks);
 
     *results = resultData;
+    freeArrayQueue(OAQueue);
     return ticks;
 }
 
@@ -182,14 +185,14 @@ simulateListQueue(size_t maxPoolTime, size_t maxServeTime, bool verbose, bool sh
         return 0;
 
     if (verbose)
-        printf("Exited | Current | Average\n");
+        printf("Exited | Current | Average  | Mem\n");
 
     clock_gettime(CLOCK_REALTIME, &tmpTime);
     resultData.timeModel = NANO_SEC(tmpTime);
 
     while (resultData.elementsOut < POOL_LIMIT)
     {
-        if (poolingTimer <= 0)
+        if (poolingTimer <= 0 && pooled < POOL_LIMIT)
         {
             queueStatus = enqueueList(OAQueue, newElement);
 
@@ -251,6 +254,8 @@ simulateListQueue(size_t maxPoolTime, size_t maxServeTime, bool verbose, bool sh
             && resultData.elementsOut != 0)
         {
             printInstantData(instantData, OAQueue->size, resultData.elementsOut);
+            printf(" %lu\n", getListSize(OAQueue));
+
             instantData.averageQueueLengthSum = 0;
             instantData.averageQueueLengthAmount = 0;
             previousElementsOut = resultData.elementsOut;
@@ -267,6 +272,7 @@ simulateListQueue(size_t maxPoolTime, size_t maxServeTime, bool verbose, bool sh
     printResult(resultData, ticks);
 
     *results = resultData;
+    freeListQueue(OAQueue);
     return ticks;
 }
 
