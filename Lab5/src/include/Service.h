@@ -4,6 +4,13 @@
 
 #include <stdio.h>
 
+#define TIME_FACTOR 1e4
+#define TIME_MIN 0
+#define TIME_MAX_T1 (6 * TIME_FACTOR)
+#define TIME_MAX_T2 (1 * TIME_FACTOR)
+
+#define POOL_LIMIT 1000
+
 #define BILLION 1000000000
 #define MK_SEC 1000
 #define M_SEC (MK_SEC * 1000)

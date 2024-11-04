@@ -5,12 +5,6 @@
 #include "ArrayQueue.h"
 #include "ListQueue.h"
 
-#define TIME_FACTOR 1e4
-#define TIME_MIN 0
-#define TIME_MAX_T1 (6 * TIME_FACTOR)
-#define TIME_MAX_T2 (1 * TIME_FACTOR)
-
-#define POOL_LIMIT 1000
 
 long
 createTimer(size_t limit)
@@ -24,7 +18,9 @@ typedef struct InstantData_
     size_t averageQueueLengthAmount;
 } InstantData;
 
-static void printResult(ResultData resultData)
+
+static void
+printResult(ResultData resultData, size_t ticks)
 {
     printf("\nResults\n");
     printf("Model time: %.3lf ms\n",
@@ -33,6 +29,7 @@ static void printResult(ResultData resultData)
     printf("Triggers: %lu\n", resultData.OATriggers);
     printf("Idle time: %.3lf ms\n",
            (double) resultData.timeIdle / M_SEC);
+
 }
 
 size_t
@@ -147,7 +144,7 @@ simulateArrayQueue(bool verbose, bool showAddresses, ResultData *results)
     clock_gettime(CLOCK_REALTIME, &tmpTime);
     resultData.timeModel = NANO_SEC(tmpTime) - resultData.timeModel;
 
-    printResult(resultData);
+    printResult(resultData, ticks);
 
     *results = resultData;
     return ticks;
@@ -265,82 +262,13 @@ simulateListQueue(bool verbose, bool showAddresses, ResultData *results)
     clock_gettime(CLOCK_REALTIME, &tmpTime);
     resultData.timeModel = NANO_SEC(tmpTime) - resultData.timeModel;
 
-    printResult(resultData);
+    printResult(resultData, ticks);
 
     *results = resultData;
     return ticks;
 }
 
-#define TOLERANCE 0.03
-#define LIMIT 100
-#include <math.h>
-
-void
-findAverage(ResultData *array, int length, size_t *averageModel, size_t *averageIdle)
-{
-    size_t sumModel = 0;
-    size_t sumIdle = 0;
-    for (int i = 0; i < length; ++i)
-    {
-        sumModel += array[i].timeModel;
-        sumIdle += array[i].timeIdle;
-    }
-
-    *averageModel = sumModel / length;
-    *averageIdle = sumIdle / length;
-}
-
-void
-calculateError(ResultData *array, int length, size_t *averageModel, size_t *averageIdle, size_t *errModel, size_t *errIdle)
-{
-    findAverage(array, length, averageModel, averageIdle);
-
-    size_t modelSquareSum = 0;
-    size_t idleSquareSum = 0;
-
-    size_t tmp;
-
-    for (int i = 0; i < length; ++i)
-    {
-        tmp = array[i].timeModel - *averageModel;
-        modelSquareSum += tmp * tmp;
-
-        tmp = array[i].timeIdle - *averageIdle;
-        idleSquareSum += tmp * tmp;
-    }
-    *errModel = (unsigned long) sqrt((double) modelSquareSum / (length * (length - 1)));
-    *errIdle = (unsigned long) sqrt((double) idleSquareSum / (length * (length - 1)));
-}
-
-void
-measure(
-    size_t (*f)(bool, bool, ResultData *),
-    size_t *averageResultModel,
-    size_t *averageResultIdle,
-    size_t *errorModel,
-    size_t *errorIdle
-)
-{
-    *averageResultIdle = 1;
-    *averageResultModel = 1;
-    *errorModel = 1;
-    *errorIdle = 1;
-
-
-    ResultData results[LIMIT] = {0};
-    f(0, 0, results);
-
-    int i = 1;
-    for (; i < LIMIT && ((double)*errorModel / (double)*averageResultModel > TOLERANCE || (double)*errorIdle / (double) *averageResultIdle > TOLERANCE); ++i)
-    {
-        f(0, 0, results + i);
-        calculateError(results, i + 1, averageResultModel, averageResultIdle, errorModel, errorIdle);
-    }
-
-    if (i == LIMIT)
-        printf("Limit reached %d\n", LIMIT);
-
-}
+#include "Measure.h"
 
 void
 serviceExperiment(void)
@@ -349,32 +277,28 @@ serviceExperiment(void)
     size_t averageResultIdle;
     size_t errorModel;
     size_t errorIdle;
+    size_t ticks;
 
     size_t averageResultModel2;
     size_t averageResultIdle2;
     size_t errorModel2;
     size_t errorIdle2;
+    size_t ticks2;
 
     printf("Measurements:\n");
+
     printf("Array:\n");
-    measure(simulateArrayQueue, &averageResultModel, &averageResultIdle, &errorModel, &errorIdle);
+    ticks = measure(simulateArrayQueue, &averageResultModel, &averageResultIdle, &errorModel, &errorIdle);
+
     printf("List:\n");
-    measure(simulateListQueue, &averageResultModel2, &averageResultIdle2, &errorModel2, &errorIdle2);
+    ticks2 = measure(simulateListQueue, &averageResultModel2, &averageResultIdle2, &errorModel2, &errorIdle2);
+
     printf("\n\n\n\n\n\n\n\n\n\n\n"
            "Array:\n");
-    printf("    Results: \n"
-           "\tModeling time: %.3lf ± %.3lf ms\n"
-           "\tIdle time: %.3lf ± %.3lf ms\n", // todo all in nanoseconds
-           (double) averageResultModel / M_SEC,
-           (double) errorModel / M_SEC,
-           (double) averageResultIdle / M_SEC,
-           (double) errorIdle / M_SEC);
+    printMeasureResults(averageResultModel, averageResultIdle, errorModel, errorIdle, ticks);
+    printEstimation(ticks, averageResultModel);
+
     printf("List:\n");
-    printf("    Results: \n"
-           "\tModeling time: %.3lf ± %.3lf ms\n"
-           "\tIdle time: %.3lf ± %.3lf ms\n", // todo all in nanoseconds
-           (double) averageResultModel2 / M_SEC,
-           (double) errorModel2 / M_SEC,
-           (double) averageResultIdle2 / M_SEC,
-           (double) errorIdle2 / M_SEC);
+    printMeasureResults(averageResultModel2, averageResultIdle2, errorModel2, errorIdle2, ticks2);
+    printEstimation(ticks2, averageResultModel2);
 }
