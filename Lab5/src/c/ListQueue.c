@@ -70,7 +70,7 @@ enqueueList(ListQueue *q, Element value)
 QueueStatus
 dequeueList(ListQueue *q, Element *element)
 {
-    if (lIsEmpty(q))
+    if (q->size == 0)
         return Q_EMPTY;
 
     Element value = q->front->data;

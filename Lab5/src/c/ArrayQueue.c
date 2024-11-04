@@ -46,7 +46,7 @@ aIsFull(ArrayQueue *q)
 QueueStatus
 enqueueArray(ArrayQueue *q, Element val)
 {
-    if (aIsFull(q))
+    if (q->size == MAX_SIZE)
         return Q_FULL;
 
     q->rear = (q->rear + 1) % MAX_SIZE;
@@ -58,7 +58,7 @@ enqueueArray(ArrayQueue *q, Element val)
 QueueStatus
 dequeueArray(ArrayQueue *q, Element *element)
 {
-    if (aIsEmpty(q))
+    if (q->size == 0)
         return Q_EMPTY;
 
     Element val = q->arr[q->front];

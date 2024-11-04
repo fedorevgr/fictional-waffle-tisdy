@@ -279,8 +279,13 @@ simulateListQueue(size_t maxPoolTime, size_t maxServeTime, bool verbose, bool sh
 #include "Measure.h"
 
 void
+serviceMeasureFIFO(void);
+
+void
 serviceExperiment(void)
 {
+    serviceMeasureFIFO();
+
     size_t averageResultModel;
     size_t averageResultIdle;
     size_t errorModel;
@@ -311,4 +316,71 @@ serviceExperiment(void)
     printMeasureResults(averageResultModel2, averageResultIdle2, errorModel2, errorIdle2, ticks2);
     printEstimation(ticks2, averageResultModel2);
     printf("Memory:\n  Min - %lu\n  Max - %lu\n", sizeof(ListQueue), sizeof(ListQueue) + 1000 * sizeof(Node));
+}
+
+#define LOOPS 1000
+
+void
+serviceMeasureFIFO(void)
+{
+    ArrayQueue *startQueue = createArrayQueue();
+    int i = 0;
+    for (; i < LOOPS; ++i)
+        enqueueArray(startQueue, (Element) { 0 });
+    freeArrayQueue(startQueue);
+
+    struct timespec timeStart, timeEnd;
+    Element elementBuff;
+
+    struct TimeResults {
+        size_t arrayEnqueue;
+        size_t arrayDequeue;
+        size_t listEnqueue;
+        size_t listDequeue;
+    } timeResults = { 0 };
+
+    ArrayQueue *arrayQueue = createArrayQueue();
+
+    clock_gettime(CLOCK_REALTIME, &timeStart);
+    for (i = 0; i < LOOPS; ++i)
+        enqueueArray(arrayQueue, (Element) { 0 });
+    clock_gettime(CLOCK_REALTIME, &timeEnd);
+
+    timeResults.arrayEnqueue = (NANO_SEC(timeEnd) - NANO_SEC(timeStart)) / LOOPS;
+
+
+    clock_gettime(CLOCK_REALTIME, &timeStart);
+    for (i = 0; i < LOOPS; ++i)
+        dequeueArray(arrayQueue, &elementBuff);
+    clock_gettime(CLOCK_REALTIME, &timeEnd);
+
+
+    timeResults.arrayDequeue = (NANO_SEC(timeEnd) - NANO_SEC(timeStart)) / LOOPS;
+
+    freeArrayQueue(arrayQueue);
+
+    ListQueue *listQueue = createListQueue();
+
+    clock_gettime(CLOCK_REALTIME, &timeStart);
+    for (i = 0; i < LOOPS; ++i)
+        enqueueList(listQueue, (Element) { 0 });
+    clock_gettime(CLOCK_REALTIME, &timeEnd);
+
+    timeResults.listEnqueue = (NANO_SEC(timeEnd) - NANO_SEC(timeStart)) / LOOPS;
+
+    clock_gettime(CLOCK_REALTIME, &timeStart);
+    for (i = 0; i < LOOPS; ++i)
+        dequeueList(listQueue, &elementBuff);
+    clock_gettime(CLOCK_REALTIME, &timeEnd);
+
+    timeResults.listDequeue = (NANO_SEC(timeEnd) - NANO_SEC(timeStart)) / LOOPS;
+
+    freeListQueue(listQueue);
+
+    printf("Put, get measurements:\n"
+           "Array put - %lu ns\n"
+           "Array get - %lu ns\n"
+           "List put - %lu ns\n"
+           "List get - %lu ns\n",
+           timeResults.arrayEnqueue, timeResults.arrayDequeue, timeResults.listEnqueue, timeResults.listDequeue);
 }
