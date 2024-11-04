@@ -12,5 +12,5 @@ add_executable(Lab5 src/main.c
         src/c/QueueElement.c
         src/c/PrimitiveInput.c
         src/c/Measure.c
-        src/c/Measure.h
+        src/include/Measure.h
 )
