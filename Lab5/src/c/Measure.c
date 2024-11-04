@@ -88,7 +88,7 @@ printMeasureResults(
 {
     printf("    Results: \n"
            "\tModeling time: %.3lf ± %.3lf ms\n"
-           "\tIdle time: %.3lf ± %.3lf ms\n", // todo all in nanoseconds
+           "\tIdle time: %.3lf ± %.3lf ms\n",
            (double) averageResultModel / M_SEC,
            (double) errorModel / M_SEC,
            (double) averageResultIdle / M_SEC,
