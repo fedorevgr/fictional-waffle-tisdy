@@ -4,7 +4,7 @@
 #include "QueueElement.h"
 #include "ExitCodes.h"
 
-#define MAX_SIZE 100
+#define MAX_SIZE 5050
 
 typedef struct {
     Element arr[MAX_SIZE];

@@ -6,7 +6,7 @@
 
 size_t
 measure(
-    size_t (*f)(bool, bool, ResultData *),
+    size_t (*f)(size_t, size_t, bool, bool, ResultData *),
     size_t *averageResultModel,
     size_t *averageResultIdle,
     size_t *errorModel,

@@ -4,10 +4,10 @@
 
 #include <stdio.h>
 
-#define TIME_FACTOR 1e4
+#define TIME_FACTOR 1e5
 #define TIME_MIN 0
-#define TIME_MAX_T1 (6 * TIME_FACTOR)
-#define TIME_MAX_T2 (1 * TIME_FACTOR)
+#define TIME_MAX_T1 (0.6 * TIME_FACTOR)
+#define TIME_MAX_T2 (0.1 * TIME_FACTOR)
 
 #define POOL_LIMIT 1000
 
@@ -30,10 +30,10 @@ typedef struct RData_
 } ResultData;
 
 size_t
-simulateArrayQueue(bool verbose, bool showAddresses, ResultData *results);
+simulateArrayQueue(size_t maxPoolTime, size_t maxServeTime, bool verbose, bool showAddresses, ResultData *results);
 
 size_t
-simulateListQueue(bool verbose, bool showAddresses, ResultData *results);
+simulateListQueue(size_t maxPoolTime, size_t maxServeTime, bool verbose, bool showAddresses, ResultData *results);
 
 void
 serviceExperiment(void);

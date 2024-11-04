@@ -49,7 +49,7 @@ calculateError(ResultData *array,
 
 size_t
 measure(
-    size_t (*f)(bool, bool, ResultData *),
+    size_t (*f)(size_t , size_t, bool, bool, ResultData *),
     size_t *averageResultModel,
     size_t *averageResultIdle,
     size_t *errorModel,
@@ -63,13 +63,13 @@ measure(
     *errorIdle = 1;
 
     ResultData results[LIMIT] = {0};
-    ticks = f(0, 0, results);
+    ticks = f(TIME_MAX_T1, TIME_MAX_T2, 0, 0, results);
 
     int i = 1;
     for (; i < LIMIT && ((double) *errorModel / (double) *averageResultModel > TOLERANCE
         || (double) *errorIdle / (double) *averageResultIdle > TOLERANCE); ++i)
     {
-        f(0, 0, results + i);
+        f(TIME_MAX_T1, TIME_MAX_T2, 0, 0, results + i);
         calculateError(results, i + 1, averageResultModel, averageResultIdle, errorModel, errorIdle);
     }
 

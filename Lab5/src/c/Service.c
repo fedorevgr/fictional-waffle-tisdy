@@ -29,11 +29,19 @@ printResult(ResultData resultData, size_t ticks)
     printf("Triggers: %lu\n", resultData.OATriggers);
     printf("Idle time: %.3lf ms\n",
            (double) resultData.timeIdle / M_SEC);
+}
 
+static void
+printInstantData(InstantData instantData, int size, size_t elemOut)
+{
+    printf("%6lu | %7d | %7lf\n",
+           elemOut,
+           size,
+           (double) instantData.averageQueueLengthSum / (double) instantData.averageQueueLengthAmount);
 }
 
 size_t
-simulateArrayQueue(bool verbose, bool showAddresses, ResultData *results)
+simulateArrayQueue(size_t maxPoolTime, size_t maxServeTime, bool verbose, bool showAddresses, ResultData *results)
 {
     struct timespec tmpTime, idleTmpTimeStart, idleTmpTimeEnd;
     clock_gettime(CLOCK_REALTIME, &idleTmpTimeStart);
@@ -66,13 +74,13 @@ simulateArrayQueue(bool verbose, bool showAddresses, ResultData *results)
 
     while (resultData.elementsOut < POOL_LIMIT)
     {
-        if (poolingTimer <= 0)
+        if (poolingTimer <= 0 && pooled < POOL_LIMIT)
         {
             queueStatus = enqueueArray(OAQueue, newElement);
 
             if (queueStatus == Q_OK)
             {
-                poolingTimer = createTimer(TIME_MAX_T1);
+                poolingTimer = createTimer(maxPoolTime);
                 pooled++;
                 resultData.elementsIn++;
 
@@ -105,7 +113,7 @@ simulateArrayQueue(bool verbose, bool showAddresses, ResultData *results)
             {
                 currElement.cycles++;
 
-                OATimer = createTimer(TIME_MAX_T2);
+                OATimer = createTimer(maxServeTime);
 
                 resultData.OATriggers++;
                 busy = true;
@@ -127,10 +135,7 @@ simulateArrayQueue(bool verbose, bool showAddresses, ResultData *results)
         if (verbose && previousElementsOut != resultData.elementsOut && resultData.elementsOut % 100 == 0
             && resultData.elementsOut != 0)
         {
-            printf("%6lu | %7d | %7lf\n",
-                   resultData.elementsOut,
-                   OAQueue->size,
-                   (double) instantData.averageQueueLengthSum / (double) instantData.averageQueueLengthAmount);
+            printInstantData(instantData, OAQueue->size, resultData.elementsOut);
             instantData.averageQueueLengthSum = 0;
             instantData.averageQueueLengthAmount = 0;
             previousElementsOut = resultData.elementsOut;
@@ -151,7 +156,7 @@ simulateArrayQueue(bool verbose, bool showAddresses, ResultData *results)
 }
 
 size_t
-simulateListQueue(bool verbose, bool showAddresses, ResultData *results)
+simulateListQueue(size_t maxPoolTime, size_t maxServeTime, bool verbose, bool showAddresses, ResultData *results)
 {
     struct timespec tmpTime, idleTmpTimeStart, idleTmpTimeEnd;
     clock_gettime(CLOCK_REALTIME, &idleTmpTimeStart);
@@ -190,7 +195,7 @@ simulateListQueue(bool verbose, bool showAddresses, ResultData *results)
 
             if (queueStatus == Q_OK)
             {
-                poolingTimer = createTimer(TIME_MAX_T1);
+                poolingTimer = createTimer(maxPoolTime);
                 pooled++;
                 resultData.elementsIn++;
 
@@ -223,7 +228,7 @@ simulateListQueue(bool verbose, bool showAddresses, ResultData *results)
             {
                 currElement.cycles++;
 
-                OATimer = createTimer(TIME_MAX_T2);
+                OATimer = createTimer(maxServeTime);
 
                 resultData.OATriggers++;
                 busy = true;
@@ -245,10 +250,7 @@ simulateListQueue(bool verbose, bool showAddresses, ResultData *results)
         if (verbose && previousElementsOut != resultData.elementsOut && resultData.elementsOut % 100 == 0
             && resultData.elementsOut != 0)
         {
-            printf("%6lu | %7d | %7lf\n",
-                   resultData.elementsOut,
-                   OAQueue->size,
-                   (double) instantData.averageQueueLengthSum / (double) instantData.averageQueueLengthAmount);
+            printInstantData(instantData, OAQueue->size, resultData.elementsOut);
             instantData.averageQueueLengthSum = 0;
             instantData.averageQueueLengthAmount = 0;
             previousElementsOut = resultData.elementsOut;
