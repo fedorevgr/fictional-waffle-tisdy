@@ -4,7 +4,7 @@
 
 #include <stdio.h>
 
-#define TIME_FACTOR 1e5
+#define TIME_FACTOR 1e6
 #define TIME_MIN 0
 #define TIME_MAX_T1 (0.6 * TIME_FACTOR)
 #define TIME_MAX_T2 (0.1 * TIME_FACTOR)

@@ -305,8 +305,10 @@ serviceExperiment(void)
            "Array:\n");
     printMeasureResults(averageResultModel, averageResultIdle, errorModel, errorIdle, ticks);
     printEstimation(ticks, averageResultModel);
+    printf("Memory: %lu\n", 3 * sizeof(int) + MAX_SIZE * sizeof(Element));
 
     printf("List:\n");
     printMeasureResults(averageResultModel2, averageResultIdle2, errorModel2, errorIdle2, ticks2);
     printEstimation(ticks2, averageResultModel2);
+    printf("Memory:\n  Min - %lu\n  Max - %lu\n", sizeof(ListQueue), sizeof(ListQueue) + 1000 * sizeof(Node));
 }
