@@ -20,15 +20,31 @@ typedef struct InstantData_
 
 
 static void
-printResult(ResultData resultData, size_t ticks)
+printResult(ResultData resultData, size_t ticks, size_t maxPoolTime, size_t maxServeTime)
 {
     printf("\nResults\n");
-    printf("Model time: %.3lf ms\n",
+    printf("Model realtime: %.3lf ms\n",
            (double) resultData.timeModel / M_SEC);
-    printf("Elements in: %lu, out: %lu\n", resultData.elementsIn, resultData.elementsOut);
-    printf("Triggers: %lu\n", resultData.OATriggers);
-    printf("Idle time: %.3lf ms\n",
+    printf("Idle realtime: %.3lf ms\n\n",
            (double) resultData.timeIdle / M_SEC);
+
+    printf("Elements in: %lu, out: %lu\n", resultData.elementsIn, resultData.elementsOut);
+    printf("Triggers: %lu\n\n", resultData.OATriggers);
+
+    size_t expectedResult = (maxPoolTime / 2) * resultData.elementsIn;
+    printf("Model time: %.3lf\n"
+           "Expected result: %.3lf\n",
+           (double) ticks / TIME_FACTOR, (double) expectedResult / TIME_FACTOR);
+    double factor = (double) (ticks) / (double) (expectedResult);
+    printf("Deviation: %.2lf%%\n\n", factor * 100 - 100);
+
+    size_t expectedIdleResult = expectedResult - ((maxServeTime / 2) * resultData.OATriggers);
+    printf("Idle model time: %.3lf\n"
+           "Expected: %.3lf\n",
+           (double) resultData.ticksIdle / TIME_FACTOR,
+           (double) (expectedIdleResult) / TIME_FACTOR);
+    factor = (double) (resultData.ticksIdle) / (double) (expectedIdleResult);
+    printf("Deviation: %.2lf%%\n\n", factor * 100 - 100);
 }
 
 static void
@@ -44,6 +60,7 @@ size_t
 simulateArrayQueue(size_t maxPoolTime, size_t maxServeTime, bool verbose, bool showAddresses, ResultData *results)
 {
     struct timespec tmpTime, idleTmpTimeStart, idleTmpTimeEnd;
+    size_t tickIdleStart = 0, tickIdleEnd = 0;
     clock_gettime(CLOCK_REALTIME, &idleTmpTimeStart);
 
     srand(time(nullptr));
@@ -75,7 +92,7 @@ simulateArrayQueue(size_t maxPoolTime, size_t maxServeTime, bool verbose, bool s
 
     while (resultData.elementsOut < POOL_LIMIT)
     {
-        if (poolingTimer <= 0 && (maxServeTime < maxPoolTime || pooled < POOL_LIMIT))
+        if (poolingTimer <= 0)
         {
             enqueuedElement = OAQueue->arr + OAQueue->rear + 1;
             queueStatus = enqueueArray(OAQueue, newElement);
@@ -95,41 +112,52 @@ simulateArrayQueue(size_t maxPoolTime, size_t maxServeTime, bool verbose, bool s
             enqueuedInTick = false;
             if (busy)
             {
-                if (currElement.cycles == 5)
+                queueStatus = Q_OK;
+                if (currElement.cycles == CYCLES)
                     resultData.elementsOut++;
                 else
                 {
                     enqueuedElement = OAQueue->arr + OAQueue->rear + 1;
-                    enqueueArray(OAQueue, currElement);
+                    queueStatus = enqueueArray(OAQueue, currElement);
 
-                    if (showAddresses)
+                    if (queueStatus == Q_OK && showAddresses)
                         printf("Added: %p\n", enqueuedElement);
                 }
 
-                clock_gettime(CLOCK_REALTIME, &idleTmpTimeStart);
-                enqueuedInTick = true;
-            }
-            busy = false;
-
-            dequeuedElement = OAQueue->arr + OAQueue->front;
-            queueStatus = dequeueArray(OAQueue, &currElement);
-            if (queueStatus == Q_OK)
-            {
-                currElement.cycles++;
-
-                OATimer = createTimer(maxServeTime);
-
-                resultData.OATriggers++;
-                busy = true;
-
-                if (!enqueuedInTick)
+                if (queueStatus == Q_OK)
                 {
-                    clock_gettime(CLOCK_REALTIME, &idleTmpTimeEnd);
-                    resultData.timeIdle += NANO_SEC(idleTmpTimeEnd) - NANO_SEC(idleTmpTimeStart);
+                    clock_gettime(CLOCK_REALTIME, &idleTmpTimeStart);
+                    tickIdleStart = ticks;
+                    enqueuedInTick = true;
                 }
+            }
+            if (queueStatus == Q_OK)
+                busy = false;
 
-                if (showAddresses)
-                    printf("Removed: %p\n", dequeuedElement);
+            if (!busy)
+            {
+                dequeuedElement = OAQueue->arr + OAQueue->front;
+                queueStatus = dequeueArray(OAQueue, &currElement);
+                if (queueStatus == Q_OK)
+                {
+                    currElement.cycles++;
+
+                    OATimer = createTimer(maxServeTime);
+
+                    resultData.OATriggers++;
+                    busy = true;
+
+                    if (!enqueuedInTick)
+                    {
+                        clock_gettime(CLOCK_REALTIME, &idleTmpTimeEnd);
+                        tickIdleEnd = ticks;
+                        resultData.timeIdle += NANO_SEC(idleTmpTimeEnd) - NANO_SEC(idleTmpTimeStart);
+                        resultData.ticksIdle += tickIdleEnd - tickIdleStart;
+                    }
+
+                    if (showAddresses)
+                        printf("Removed: %p\n", dequeuedElement);
+                }
             }
         }
 
@@ -155,7 +183,7 @@ simulateArrayQueue(size_t maxPoolTime, size_t maxServeTime, bool verbose, bool s
     clock_gettime(CLOCK_REALTIME, &tmpTime);
     resultData.timeModel = NANO_SEC(tmpTime) - resultData.timeModel;
 
-    printResult(resultData, ticks);
+    printResult(resultData, ticks, maxPoolTime, maxServeTime);
 
     *results = resultData;
     freeArrayQueue(OAQueue);
@@ -167,6 +195,7 @@ simulateListQueue(size_t maxPoolTime, size_t maxServeTime, bool verbose, bool sh
 {
     struct timespec tmpTime, idleTmpTimeStart, idleTmpTimeEnd;
     clock_gettime(CLOCK_REALTIME, &idleTmpTimeStart);
+    size_t tickIdleStart = 0, tickIdleEnd = 0;
 
     srand(time(nullptr));
     long poolingTimer = 0, OATimer = 0;
@@ -197,7 +226,7 @@ simulateListQueue(size_t maxPoolTime, size_t maxServeTime, bool verbose, bool sh
 
     while (resultData.elementsOut < POOL_LIMIT)
     {
-        if (poolingTimer <= 0 && (maxServeTime < maxPoolTime || pooled < POOL_LIMIT))
+        if (poolingTimer <= 0) // todo time edinitsi
         {
             queueStatus = enqueueList(OAQueue, newElement);
 
@@ -216,7 +245,7 @@ simulateListQueue(size_t maxPoolTime, size_t maxServeTime, bool verbose, bool sh
             enqueuedInTick = false;
             if (busy)
             {
-                if (currElement.cycles == 5)
+                if (currElement.cycles == CYCLES)
                     resultData.elementsOut++;
                 else
                 {
@@ -225,7 +254,7 @@ simulateListQueue(size_t maxPoolTime, size_t maxServeTime, bool verbose, bool sh
                     if (showAddresses)
                         printf("Added: %p\n", OAQueue->rear);
                 }
-
+                tickIdleStart = ticks;
                 clock_gettime(CLOCK_REALTIME, &idleTmpTimeStart);
                 enqueuedInTick = true;
             }
@@ -244,8 +273,10 @@ simulateListQueue(size_t maxPoolTime, size_t maxServeTime, bool verbose, bool sh
 
                 if (!enqueuedInTick)
                 {
+                    tickIdleEnd = ticks;
                     clock_gettime(CLOCK_REALTIME, &idleTmpTimeEnd);
                     resultData.timeIdle += NANO_SEC(idleTmpTimeEnd) - NANO_SEC(idleTmpTimeStart);
+                    resultData.ticksIdle = tickIdleEnd - tickIdleStart;
                 }
 
                 if (showAddresses)
@@ -275,7 +306,7 @@ simulateListQueue(size_t maxPoolTime, size_t maxServeTime, bool verbose, bool sh
     clock_gettime(CLOCK_REALTIME, &tmpTime);
     resultData.timeModel = NANO_SEC(tmpTime) - resultData.timeModel;
 
-    printResult(resultData, ticks);
+    printResult(resultData, ticks, maxPoolTime, maxServeTime);
 
     *results = resultData;
     freeListQueue(OAQueue);

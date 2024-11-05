@@ -4,10 +4,11 @@
 
 #include <stdio.h>
 
-#define TIME_FACTOR 1e6
+#define TIME_FACTOR 1e5
 #define TIME_MIN 0
-#define TIME_MAX_T1 (0.6 * TIME_FACTOR)
-#define TIME_MAX_T2 (0.1 * TIME_FACTOR)
+#define TIME_MAX_T1 (6 * TIME_FACTOR)
+#define TIME_MAX_T2 (1 * TIME_FACTOR)
+#define CYCLES 5
 
 #define POOL_LIMIT 1000
 
@@ -27,6 +28,7 @@ typedef struct RData_
     size_t elementsOut;
     size_t OATriggers;
     size_t timeIdle;
+    size_t ticksIdle;
 } ResultData;
 
 size_t

@@ -89,6 +89,7 @@ getOption(void)
             printf("Illegal option, Try again...\n");
     }
     while (ec != INPUT_OK);
+    printf("\n\n\n\n");
     return tmp[0];
 }
 
