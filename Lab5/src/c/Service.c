@@ -63,6 +63,7 @@ simulateArrayQueue(size_t maxPoolTime, size_t maxServeTime, bool verbose, bool s
     bool enqueuedInTick = false;
     QueueStatus queueStatus;
     ArrayQueue *OAQueue = createArrayQueue();
+    Element *enqueuedElement, *dequeuedElement;
     if (!OAQueue)
         return 0;
 
@@ -74,8 +75,9 @@ simulateArrayQueue(size_t maxPoolTime, size_t maxServeTime, bool verbose, bool s
 
     while (resultData.elementsOut < POOL_LIMIT)
     {
-        if (poolingTimer <= 0 && pooled < POOL_LIMIT)
+        if (poolingTimer <= 0 && (maxServeTime < maxPoolTime || pooled < POOL_LIMIT))
         {
+            enqueuedElement = OAQueue->arr + OAQueue->rear + 1;
             queueStatus = enqueueArray(OAQueue, newElement);
 
             if (queueStatus == Q_OK)
@@ -85,7 +87,7 @@ simulateArrayQueue(size_t maxPoolTime, size_t maxServeTime, bool verbose, bool s
                 resultData.elementsIn++;
 
                 if (showAddresses)
-                    printf("Added: %p\n", OAQueue->arr + OAQueue->rear);
+                    printf("Added: %p\n", enqueuedElement);
             }
         }
         if (OATimer <= 0)
@@ -97,10 +99,11 @@ simulateArrayQueue(size_t maxPoolTime, size_t maxServeTime, bool verbose, bool s
                     resultData.elementsOut++;
                 else
                 {
+                    enqueuedElement = OAQueue->arr + OAQueue->rear + 1;
                     enqueueArray(OAQueue, currElement);
 
                     if (showAddresses)
-                        printf("Added: %p\n", OAQueue->arr + OAQueue->rear);
+                        printf("Added: %p\n", enqueuedElement);
                 }
 
                 clock_gettime(CLOCK_REALTIME, &idleTmpTimeStart);
@@ -108,6 +111,7 @@ simulateArrayQueue(size_t maxPoolTime, size_t maxServeTime, bool verbose, bool s
             }
             busy = false;
 
+            dequeuedElement = OAQueue->arr + OAQueue->front;
             queueStatus = dequeueArray(OAQueue, &currElement);
             if (queueStatus == Q_OK)
             {
@@ -125,7 +129,7 @@ simulateArrayQueue(size_t maxPoolTime, size_t maxServeTime, bool verbose, bool s
                 }
 
                 if (showAddresses)
-                    printf("Removed: %p\n", OAQueue->arr + OAQueue->front);
+                    printf("Removed: %p\n", dequeuedElement);
             }
         }
 
@@ -181,6 +185,7 @@ simulateListQueue(size_t maxPoolTime, size_t maxServeTime, bool verbose, bool sh
     bool enqueuedInTick = false;
     QueueStatus queueStatus;
     ListQueue *OAQueue = createListQueue();
+    Node *enqueuedElement, *dequeuedElement;
     if (!OAQueue)
         return 0;
 
@@ -192,7 +197,7 @@ simulateListQueue(size_t maxPoolTime, size_t maxServeTime, bool verbose, bool sh
 
     while (resultData.elementsOut < POOL_LIMIT)
     {
-        if (poolingTimer <= 0 && pooled < POOL_LIMIT)
+        if (poolingTimer <= 0 && (maxServeTime < maxPoolTime || pooled < POOL_LIMIT))
         {
             queueStatus = enqueueList(OAQueue, newElement);
 
@@ -226,6 +231,7 @@ simulateListQueue(size_t maxPoolTime, size_t maxServeTime, bool verbose, bool sh
             }
             busy = false;
 
+            dequeuedElement = OAQueue->front;
             queueStatus = dequeueList(OAQueue, &currElement);
             if (queueStatus == Q_OK)
             {
@@ -243,7 +249,7 @@ simulateListQueue(size_t maxPoolTime, size_t maxServeTime, bool verbose, bool sh
                 }
 
                 if (showAddresses)
-                    printf("Removed: %p\n", OAQueue->front);
+                    printf("Removed: %p\n", dequeuedElement);
             }
         }
 
