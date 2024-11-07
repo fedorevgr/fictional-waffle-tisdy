@@ -100,13 +100,13 @@ printEstimation(size_t ticks, size_t modelTime)
 {
     double ticksToMs = (double) ticks / ((double) (modelTime) / M_SEC);
 
-    printf("Ticks: %lu\n", ticks);
-    printf("Tick to time ratio: %.2lf 1/ms\n", ticksToMs);
+    printf("Model time: %.3lf\n", (double) ticks / TIME_FACTOR);
+    printf("Model to real ratio: %.2lf 1/ms\n", ticksToMs / TIME_FACTOR);
 
     size_t ticksPerRequest = ((size_t) TIME_MAX_T1 + TIME_MIN) / 2;
     size_t estimatedTicks = ticksPerRequest * POOL_LIMIT;
 
-    printf("Average ticks per request: %lu\n", ticksPerRequest);
-    printf("Estimated model time: %lu\n", estimatedTicks);
-    printf("Estimated time equivalent: %.1lf\n", (double) estimatedTicks / ticksToMs);
+    printf("Average model time per request: %.3lf\n", (double) ticksPerRequest / TIME_FACTOR);
+    printf("Estimated model time: %.3lf\n", (double) estimatedTicks / TIME_FACTOR);
+    printf("Estimated realtime equivalent: %.1lf ms\n", (double) estimatedTicks / ticksToMs);
 }

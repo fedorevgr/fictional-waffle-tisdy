@@ -14,3 +14,5 @@ add_executable(Lab5 src/main.c
         src/c/Measure.c
         src/include/Measure.h
 )
+
+

@@ -5,6 +5,9 @@
 #include "ArrayQueue.h"
 #include "ListQueue.h"
 
+#define MAX(a, b) ((a >= b) ? a : b)
+#define MIN(a, b) ((a < b) ? a : b)
+
 
 long
 createTimer(size_t limit)
@@ -38,13 +41,13 @@ printResult(ResultData resultData, size_t ticks, size_t maxPoolTime, size_t maxS
     double factor = (double) (ticks) / (double) (expectedResult);
     printf("Deviation: %.2lf%%\n\n", factor * 100 - 100);
 
-    size_t expectedIdleResult = expectedResult - ((maxServeTime / 2) * resultData.OATriggers);
+    size_t expectedActiveResult = (maxServeTime / 2) * resultData.OATriggers;
     printf("Idle model time: %.3lf\n"
-           "Expected: %.3lf\n",
+           "    Active expected: %.3lf\n"
+           "Diff: %.3lf\n",
            (double) resultData.ticksIdle / TIME_FACTOR,
-           (double) (expectedIdleResult) / TIME_FACTOR);
-    factor = (double) (resultData.ticksIdle) / (double) (expectedIdleResult);
-    printf("Deviation: %.2lf%%\n\n", factor * 100 - 100);
+           (double) (expectedActiveResult) / TIME_FACTOR,
+           (double) expectedResult / TIME_FACTOR - (double) (expectedActiveResult) / TIME_FACTOR);
 }
 
 static void
@@ -226,7 +229,7 @@ simulateListQueue(size_t maxPoolTime, size_t maxServeTime, bool verbose, bool sh
 
     while (resultData.elementsOut < POOL_LIMIT)
     {
-        if (poolingTimer <= 0) // todo time edinitsi
+        if (poolingTimer <= 0)
         {
             queueStatus = enqueueList(OAQueue, newElement);
 
