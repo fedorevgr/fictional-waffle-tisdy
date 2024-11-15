@@ -1,6 +1,7 @@
 #ifndef BINARYTREES_SRC_C_BINTREE_H
 #define BINARYTREES_SRC_C_BINTREE_H
 #include <stdlib.h>
+#define MAX_ARRAY_SIZE 256
 
 typedef int Elem;
 typedef Elem **ElemPointerArray;

@@ -1,9 +1,25 @@
 
+typedef enum Program_
+{
+    BUILD,
+    EXIT_PROGRAM,
+    MEASURE_SORTS
+} Program;
+
+Program getProgram(void);
 
 int
 main(void)
 {
-    int a = 0;
+    Program program;
 
-    return a;
+    do
+    {
+        program = getProgram();
+    }
+    while (program != EXIT_PROGRAM);
+
+    return 0;
 }
+
+

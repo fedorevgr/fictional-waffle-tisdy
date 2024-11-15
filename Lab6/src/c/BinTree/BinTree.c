@@ -1,6 +1,5 @@
 #include "BinTree.h"
 #include <assert.h>
-#define MAX_ARRAY_SIZE 256
 
 #define MAX(a, b) (((a) > (b)) ? a : b)
 
