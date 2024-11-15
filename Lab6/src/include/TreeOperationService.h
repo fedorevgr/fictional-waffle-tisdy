@@ -6,6 +6,4 @@
 #include "File.h"
 #include "BinTree.h"
 
-
-
 #endif //BINARYTREES_SRC_C_TREEOPERATIONSERVICE_H
