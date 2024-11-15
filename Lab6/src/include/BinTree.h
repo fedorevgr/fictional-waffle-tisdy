@@ -12,6 +12,7 @@ struct BinaryTree_
     Elem key;
     BinTree *left;
     BinTree *right;
+    BinTree *parent;
 };
 
 typedef enum BinTreeEc_

@@ -10,5 +10,7 @@ add_executable(BinaryTrees.exe
     src/main.c
         src/c/BinTree.c
         src/include/BinTree.h
+        src/c/BinRemove.c
+        src/c/BinTraverse.c
 )
 

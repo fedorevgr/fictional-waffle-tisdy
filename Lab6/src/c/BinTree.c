@@ -12,16 +12,16 @@ newNode(void)
     if (node)
     {
         node->key = 0;
-        node->right = node->left = nullptr;
+        node->right = node->left = node->parent = nullptr;
     }
 
     return node;
 }
 
 static size_t
-treeTraverseIn(BinTree *node, ElemPointerArray result, NodeApplicator applicator);
+treeTraversePost_(BinTree *node, ElemPointerArray result, NodeApplicator applicator);
 
-static void nodeDestroyer(BinTree *node)
+static void nodeDestroyer_(BinTree *node)
 {
     free(node);
 }
@@ -29,117 +29,68 @@ static void nodeDestroyer(BinTree *node)
 void
 treeDestroy(BinTree *tree)
 {
-    treeTraverseIn(tree, nullptr, nodeDestroyer);
+    treeTraversePost_(tree, nullptr, nodeDestroyer_);
 }
 
 BinTreeEc
 treeAdd(BinTree **tree, Elem element)
 {
+    BinTree *newElem = newNode();
 
+    if (newElem == nullptr)
+        return B_MEMORY;
+
+    newElem->key = element;
+
+    if (*tree == nullptr)
+    {
+        *tree = newElem;
+        return B_OK;
+    }
+
+    BinTreeEc ec = B_OK;
+    BinTree *currNode = *tree, *prevNode;
+
+    while (ec == B_OK && currNode)
+    {
+        prevNode = currNode;
+        if (currNode->key == element)
+        {
+            free(newElem);
+            ec = B_EXISTS;
+        }
+        else if (currNode->key > element)
+            currNode = currNode->left;
+        else if (currNode->key < element)
+            currNode = currNode->right;
+    }
+
+    if (ec == B_OK)
+    {
+        if (prevNode->key > element)
+            prevNode->left = newElem;
+        else
+            prevNode->right = newElem;
+        newElem->parent = prevNode;
+    }
+
+    return ec;
 }
 
-BinTreeEc
-treeRemove(BinTree **tree, Elem element)
-{
-
-}
 
 BinTree *
 treeFind(BinTree *tree, Elem element)
 {
-
-}
-
-// todo: may not work
-#define NON_NULL_SUM(res, factor) (result) ? (res + factor) : nullptr
-
-static size_t
-treeTraverseIn(BinTree *node, ElemPointerArray result, NodeApplicator applicator)
-{
-    size_t amount = 0;
-
-    if (node->left)
-        amount += treeTraverseIn(node->left, result, applicator);
-
-    if (result)
-        result[amount] = &node->key;
-    amount += 1;
-
-    if (node->right)
-        amount += treeTraverseIn(node->right, NON_NULL_SUM(result, amount), applicator);
-
-    if (applicator)
-        applicator(node);
-
-    return amount;
-}
-
-static size_t
-treeTraversePre(BinTree *node, ElemPointerArray result, NodeApplicator applicator)
-{
-    size_t amount = 0;
-
-    if (result)
-        result[amount] = &node->key;
-    amount += 1;
-
-
-    if (node->left)
-        amount += treeTraversePre(node->left, result, applicator);
-
-    if (node->right)
-        amount += treeTraversePre(node->right, NON_NULL_SUM(result, amount), applicator);
-
-    if (applicator)
-        applicator(node);
-
-    return amount;
-}
-
-static size_t
-treeTraversePost(BinTree *node, ElemPointerArray result, NodeApplicator applicator)
-{
-    size_t amount = 0;
-
-    if (node->left)
-        amount += treeTraversePost(node->left, result, applicator);
-
-    if (node->right)
-        amount += treeTraversePost(node->right, NON_NULL_SUM(result, amount), applicator);
-
-    if (result)
-        result[amount] = &node->key;
-    amount += 1;
-
-    if (applicator)
-        applicator(node);
-
-    return amount;
-}
-
-size_t
-treeTraverse(BinTree *tree, Order order, ElemPointerArray *result, NodeApplicator applicator)
-{
-    ElemPointerArray traverseElemPointers = calloc(MAX_ARRAY_SIZE, sizeof(Elem *));
-
-    size_t amount = 0;
-
-    if (traverseElemPointers)
+    while (tree)
     {
-        switch (order)
-        {
-            case ORDER_IN:amount = treeTraverseIn(tree, traverseElemPointers, applicator);
-                break;
-            case ORDER_PREV:amount = treeTraversePre(tree, traverseElemPointers, applicator);
-                break;
-            case ORDER_POST:amount = treeTraversePost(tree, traverseElemPointers, applicator);
-                break;
-            default:assert(0);
-        }
+        if (tree->key == element)
+            return tree;
+        else if (tree->key > element)
+            tree = tree->left;
+        else
+            tree = tree->right;
     }
-
-    *result = traverseElemPointers;
-    return amount;
+    return nullptr;
 }
 
 size_t
@@ -186,7 +137,7 @@ treeSort(BinTree *tree, ElemPointerArray sorted)
 static FILE *globFile__;
 
 static void
-printNode(BinTree *node)
+printNode_(BinTree *node)
 {
     if (node->left)
         fprintf(globFile__, "%d -> %d\n", node->key, node->left->key);
@@ -202,11 +153,11 @@ treePrint(BinTree *tree, char *filename)
     globFile__ = file;
     if (file)
     {
-        printNode(tree);
+        treeTraversePost_(tree, nullptr, printNode_);
 
         fclose(file);
+        globFile__ = nullptr;
     }
-    globFile__ = nullptr;
 }
 
 size_t
