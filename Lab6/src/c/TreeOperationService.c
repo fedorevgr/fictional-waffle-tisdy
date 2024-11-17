@@ -113,6 +113,7 @@ void service(void)
             case LEVEL:ec = serviceLevel(tree);
                 break;
             case QUIT:printf("Quitting...\n");
+                ec = B_OK;
                 break;
             default:printf("Error: Illegal option\n");
         }

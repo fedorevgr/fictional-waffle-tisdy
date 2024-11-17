@@ -4,7 +4,7 @@ set(CMAKE_C_STANDARD 23)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
 
-include_directories(src/include)
+include_directories(src/include src/Etc)
 
 add_executable(BinaryTrees.exe
     src/main.c
@@ -23,5 +23,10 @@ add_executable(BinaryTrees.exe
 
         src/c/PrimitiveInput.c
         src/include/PrimitiveInput.h
+        src/c/Statistics.c
+        src/include/Statistics.h
+        src/Etc/Shuffle.c
+        src/Etc/Shuffle.h
+        src/c/AddRemoveTimings.c
 )
 

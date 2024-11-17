@@ -1,4 +1,5 @@
 #include "TreeOperationService.h"
+#include "Statistics.h"
 #include <stdio.h>
 
 typedef enum Program_
@@ -25,7 +26,7 @@ main(void)
                 break;
             case EXIT_PROGRAM:printf("Quitting...");
                 break;
-            case MEASURE_SORTS: // todo do
+            case MEASURE_SORTS:showStats();
                 break;
         }
     }

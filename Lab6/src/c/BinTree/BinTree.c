@@ -118,20 +118,6 @@ treeSort(BinTree *tree, ElemPointerArray sorted)
 
 #include <stdio.h>
 
-//static void printNode(FILE* file, BinTree *node)
-//{
-//    if (node->left)
-//    {
-//        printf("%d -> %d\n", node->key, node->left->key);
-//        printNode(file, node->left);
-//    }
-//
-//    if (node->right)
-//    {
-//        printf("%d -> %d\n", node->key, node->right->key);
-//        printNode(file, node->right);
-//    }
-//}
 
 static FILE *globFile__;
 
