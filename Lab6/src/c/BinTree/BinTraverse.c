@@ -36,7 +36,7 @@ treeTraversePre_(BinTree *node, ElemPointerArray result, NodeApplicator applicat
         applicator(node);
 
     if (node->left)
-        amount += treeTraversePre_(node->left, result, applicator);
+        amount += treeTraversePre_(node->left, NON_NULL_SUM(result, amount), applicator);
 
     if (node->right)
         amount += treeTraversePre_(node->right, NON_NULL_SUM(result, amount), applicator);
@@ -51,7 +51,7 @@ treeTraversePost_(BinTree *node, ElemPointerArray result, NodeApplicator applica
     size_t amount = 0;
 
     if (node->left)
-        amount += treeTraversePost_(node->left, result, applicator);
+        amount += treeTraversePost_(node->left, NON_NULL_SUM(result, amount), applicator);
 
     if (node->right)
         amount += treeTraversePost_(node->right, NON_NULL_SUM(result, amount), applicator);
@@ -69,30 +69,34 @@ treeTraversePost_(BinTree *node, ElemPointerArray result, NodeApplicator applica
 size_t
 treeTraverse(BinTree *tree, Order order, ElemPointerArray *result, NodeApplicator applicator)
 {
-    ElemPointerArray traverseElemPointers = calloc(MAX_ARRAY_SIZE, sizeof(Elem *));
+    ElemPointerArray traverseElemPointers = nullptr;
+
+    if (result)
+        traverseElemPointers = calloc(MAX_ARRAY_SIZE, sizeof(Elem *));
 
     size_t amount = 0;
 
-    if (traverseElemPointers)
+
+    switch (order)
     {
-        switch (order)
+        case ORDER_IN:amount = treeTraverseIn_(tree, traverseElemPointers, applicator);
+            break;
+        case ORDER_PREV:amount = treeTraversePre_(tree, traverseElemPointers, applicator);
+            break;
+        case ORDER_POST:amount = treeTraversePost_(tree, traverseElemPointers, applicator);
+            break;
+        default:
         {
-            case ORDER_IN:amount = treeTraverseIn_(tree, traverseElemPointers, applicator);
-                break;
-            case ORDER_PREV:amount = treeTraversePre_(tree, traverseElemPointers, applicator);
-                break;
-            case ORDER_POST:amount = treeTraversePost_(tree, traverseElemPointers, applicator);
-                break;
-            default:
-            {
-                free(traverseElemPointers);
+            free(traverseElemPointers);
+            if (result)
                 *result = nullptr;
-                return 0;
-            }
+            return 0;
         }
     }
 
-    *result = traverseElemPointers;
+    if (result)
+        *result = traverseElemPointers;
+
     return amount;
 }
 

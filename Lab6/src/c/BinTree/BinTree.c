@@ -157,6 +157,10 @@ treePrint(BinTree *tree, char *filename)
         fprintf(file, "}\n");
         fclose(file);
         globFile__ = nullptr;
+
+        char buffer[100] = "";
+        sprintf(buffer, "dot -Tpng %s -o %s.png", filename, filename);
+        system(buffer);
     }
 }
 
@@ -166,17 +170,22 @@ treeLayers(BinTree *tree, int *layersArray)
     if (tree == nullptr)
         return 0;
 
-    size_t height = 1;
+    *layersArray += 1;
+
+    size_t height = 1, heightL = 0, heightR = 0;
     if (tree->left)
     {
-        *layersArray += 1;
-        height = MAX(treeLayers(tree->left, layersArray + 1), height);
+        heightL = treeLayers(tree->left, layersArray + 1);
+        heightL = MAX(heightL, height);
     }
     if (tree->right)
     {
-        *layersArray += 1;
-        height = MAX(treeLayers(tree->right, layersArray + 1), height);
+        heightR = treeLayers(tree->right, layersArray + 1);
+        heightR = MAX(heightR, height);
     }
+
+    height += MAX(heightL, heightR);
+
     return height;
 }
 

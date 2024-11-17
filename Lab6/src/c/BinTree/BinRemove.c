@@ -33,29 +33,35 @@ removeOneLeaf(BinTree **tree, BinTree *toRemove)
         else
             parent->left = nextNode;
     }
+    nextNode->parent = parent;
 }
 
+#define SWAP(a, b) do { \
+                    a ^= b; \
+                    b ^= a; \
+                    a ^= b; \
+                while(0);
+
+
 static void
-removeTwoLeaves(BinTree **tree, BinTree *toRemove)
+removeTwoLeaves(BinTree **tree, BinTree **toRemove)
 {
-    // todo test
-    BinTree *maximal = toRemove->left;
+    BinTree *toSwap = *toRemove;
+    BinTree *maximal = toSwap->left;
 
     while (maximal->right)
         maximal = maximal->right;
 
-    toRemove->key = maximal->key;
+    toSwap->key = maximal->key;
+    *toRemove = maximal;
 
     if (maximal->left)
     {
-        maximal->parent->right = maximal->left;
-        maximal->left = nullptr;
-        free(maximal);
+        removeOneLeaf(tree, *toRemove);
     }
     else
     {
-        maximal->parent->right = nullptr;
-        free(maximal);
+        removeNoLeaf(tree, *toRemove);
     }
 }
 
@@ -73,7 +79,7 @@ treeRemove(BinTree **tree, Elem element)
     }
     else if (toRemove->left && toRemove->right)
     {
-        removeTwoLeaves(tree, toRemove);
+        removeTwoLeaves(tree, &toRemove);
     }
     else
     {

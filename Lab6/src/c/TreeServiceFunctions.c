@@ -213,7 +213,9 @@ BinTreeEc serviceTraverse(BinTree *tree)
 
 BinTreeEc serviceSort(BinTree *tree)
 {
+    printf("Sorted array:\n");
     treeTraverse(tree, ORDER_IN, nullptr, applicatorPrint);
+    printf("\n");
     return B_OK;
 }
 
