@@ -8,13 +8,20 @@ include_directories(src/include)
 
 add_executable(BinaryTrees.exe
     src/main.c
-        src/c/BinTree/BinTree.c
         src/include/BinTree.h
+        src/c/BinTree/BinTree.c
         src/c/BinTree/BinRemove.c
         src/c/BinTree/BinTraverse.c
+
         src/c/TreeOperationService.c
         src/include/TreeOperationService.h
+
         src/c/File.c
         src/include/File.h
+
+        src/c/TreeServiceFunctions.c
+
+        src/c/PrimitiveInput.c
+        src/include/PrimitiveInput.h
 )
 

@@ -17,7 +17,7 @@ newNode(void)
     return node;
 }
 
-static size_t
+size_t
 treeTraversePost_(BinTree *node, ElemPointerArray result, NodeApplicator applicator);
 
 static void nodeDestroyer_(BinTree *node)
@@ -139,10 +139,10 @@ static void
 printNode_(BinTree *node)
 {
     if (node->left)
-        fprintf(globFile__, "%d -> %d\n", node->key, node->left->key);
+        fprintf(globFile__, "%d->%d;\n", node->key, node->left->key);
 
     if (node->right)
-        fprintf(globFile__, "%d -> %d\n", node->key, node->right->key);
+        fprintf(globFile__, "%d->%d;\n", node->key, node->right->key);
 }
 
 void
@@ -152,8 +152,9 @@ treePrint(BinTree *tree, char *filename)
     globFile__ = file;
     if (file)
     {
+        fprintf(file, "digraph G {\n");
         treeTraversePost_(tree, nullptr, printNode_);
-
+        fprintf(file, "}\n");
         fclose(file);
         globFile__ = nullptr;
     }
@@ -162,6 +163,9 @@ treePrint(BinTree *tree, char *filename)
 size_t
 treeLayers(BinTree *tree, int *layersArray)
 {
+    if (tree == nullptr)
+        return 0;
+
     size_t height = 1;
     if (tree->left)
     {

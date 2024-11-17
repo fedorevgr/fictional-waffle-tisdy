@@ -4,7 +4,7 @@
 // todo: may not work
 #define NON_NULL_SUM(res, factor) (result) ? (res + factor) : nullptr
 
-static size_t
+size_t
 treeTraverseIn_(BinTree *node, ElemPointerArray result, NodeApplicator applicator)
 {
     size_t amount = 0;
@@ -24,7 +24,7 @@ treeTraverseIn_(BinTree *node, ElemPointerArray result, NodeApplicator applicato
     return amount;
 }
 
-static size_t
+size_t
 treeTraversePre_(BinTree *node, ElemPointerArray result, NodeApplicator applicator)
 {
     size_t amount = 0;
@@ -45,7 +45,7 @@ treeTraversePre_(BinTree *node, ElemPointerArray result, NodeApplicator applicat
     return amount;
 }
 
-static size_t
+size_t
 treeTraversePost_(BinTree *node, ElemPointerArray result, NodeApplicator applicator)
 {
     size_t amount = 0;
@@ -83,7 +83,12 @@ treeTraverse(BinTree *tree, Order order, ElemPointerArray *result, NodeApplicato
                 break;
             case ORDER_POST:amount = treeTraversePost_(tree, traverseElemPointers, applicator);
                 break;
-            default:assert(0);
+            default:
+            {
+                free(traverseElemPointers);
+                *result = nullptr;
+                return 0;
+            }
         }
     }
 

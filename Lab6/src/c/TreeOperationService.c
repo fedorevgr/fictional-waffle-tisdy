@@ -17,7 +17,6 @@ BinTreeEc serviceSort(BinTree *tree);
 BinTreeEc serviceLevel(BinTree *tree);
 
 #define MENU "Tree actions:\n" \
-            " - R - read tree from file\n" \
             " - W - save tree\n"           \
             " - P - print\n"                   \
             " - A - add to tree\n" \
@@ -33,7 +32,7 @@ BinTreeEc serviceLevel(BinTree *tree);
 
 typedef enum Mode_
 {
-    READ = 'R',
+    // READ = 'R',
     WRITE = 'W',
     ADD = 'A',
     ADD_FILE = 'a',
@@ -63,10 +62,11 @@ TreeMode getMode(void)
 void service(void)
 {
     TreeMode treeMode;
-    BinTree *tree;
+    BinTree *tree = nullptr;
     BinTreeEc ec;
     char filename[MAX_BUFFER_LENGTH + 2] = "";
 
+    printf("Enter file with numbers: ");
     if (inputString(filename) != INPUT_OK)
     {
         printf("Error: input string\n");
@@ -83,6 +83,8 @@ void service(void)
         fclose(file);
     }
 
+    serviceRead(&tree, filename);
+
     do
     {
         printf(MENU);
@@ -90,8 +92,6 @@ void service(void)
 
         switch (treeMode)
         {
-            case READ:ec = serviceRead(&tree, filename);
-                break;
             case WRITE:ec = serviceWrite(tree, filename);
                 break;
             case PRINT:ec = servicePrint(tree);
@@ -121,5 +121,7 @@ void service(void)
             printf("ERROR\n");
     }
     while (treeMode != QUIT);
+
+    treeDestroy(tree);
 }
 

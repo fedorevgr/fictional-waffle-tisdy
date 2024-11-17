@@ -2,7 +2,6 @@
 #ifndef LAB3_SRC_C_INPUT_H
 #define LAB3_SRC_C_INPUT_H
 
-#include "Codes.h"
 #include <assert.h>
 
 #define MAX_BUFFER_LENGTH 50
