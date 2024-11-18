@@ -7,6 +7,9 @@
 size_t
 treeTraverseIn_(BinTree *node, ElemPointerArray result, NodeApplicator applicator)
 {
+    if (node == nullptr)
+        return 0;
+
     size_t amount = 0;
 
     if (node->left)
@@ -27,6 +30,9 @@ treeTraverseIn_(BinTree *node, ElemPointerArray result, NodeApplicator applicato
 size_t
 treeTraversePre_(BinTree *node, ElemPointerArray result, NodeApplicator applicator)
 {
+    if (node == nullptr)
+        return 0;
+
     size_t amount = 0;
 
     if (result)
@@ -48,6 +54,9 @@ treeTraversePre_(BinTree *node, ElemPointerArray result, NodeApplicator applicat
 size_t
 treeTraversePost_(BinTree *node, ElemPointerArray result, NodeApplicator applicator)
 {
+    if (node == nullptr)
+        return 0;
+
     size_t amount = 0;
 
     if (node->left)

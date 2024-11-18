@@ -201,20 +201,23 @@ static void applicatorPrint(BinTree *node)
 BinTreeEc serviceTraverse(BinTree *tree)
 {
     long traverseType;
-    printf("Input new element value: ");
+    printf("Input order: 1 - pre, 2 - in, 3 - post: ");
     if (inputSigned(&traverseType) != INPUT_OK)
     {
         printf("Illegal number\n");
         return B_UNK_ERR;
     }
-    treeTraverse(tree, (Order) traverseType, nullptr, applicatorPrint);
+    if (treeTraverse(tree, (Order) traverseType - 1, nullptr, applicatorPrint) == 0)
+        printf("Empty tree");
+    printf("\n");
     return B_OK;
 }
 
 BinTreeEc serviceSort(BinTree *tree)
 {
     printf("Sorted array:\n");
-    treeTraverse(tree, ORDER_IN, nullptr, applicatorPrint);
+    if (treeTraverse(tree, ORDER_IN, nullptr, applicatorPrint) == 0)
+        printf("Empty");
     printf("\n");
     return B_OK;
 }
@@ -229,7 +232,10 @@ BinTreeEc serviceLevel(BinTree *tree)
         {
             for (size_t i = 0; i < length; ++i)
                 printf("%lu - %d nodes\n", i, layers[i]);
-
+        }
+        else
+        {
+            printf("Empty tree\n");
         }
         free(layers);
         return B_OK;

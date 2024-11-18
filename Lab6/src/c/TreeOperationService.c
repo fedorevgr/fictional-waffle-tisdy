@@ -77,8 +77,16 @@ void service(void)
         FILE *file = fopen(filename, "r");
         if (!file)
         {
-            printf("Error: file\n");
-            return;
+            printf("File may not exist, creating...\n");
+            file = fopen(filename, "w");
+
+            if (!file)
+            {
+                printf("Error: file\n");
+                return;
+            }
+            fclose(file);
+            printf("File %s created\n", filename);
         }
         fclose(file);
     }

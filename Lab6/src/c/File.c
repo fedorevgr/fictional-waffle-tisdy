@@ -23,6 +23,7 @@ readFile(const char *filename, Elem **elements)
     int i = 0;
     for (; i < MAX_ARRAY_SIZE && fscanf(file, "%d", *elements + i) == 1; ++i);
 
+    fclose(file);
     return i;
 }
 
@@ -39,5 +40,6 @@ writeFile(const char *filename, const Elem *elements, size_t length)
     for (size_t i = 0; i < length; ++i)
         fprintf(file, "%d\n", elements[i]);
 
+    fclose(file);
     return F_OK;
 }

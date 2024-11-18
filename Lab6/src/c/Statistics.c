@@ -13,9 +13,11 @@ static size_t getNanoSec(struct timespec time)
     return time.tv_sec * 1000000000 + time.tv_nsec;
 }
 
-#define MAX_DEPTH 10000
-#define STEP 100
-#define REPETITIONS 100
+static void fillArraySequence(Elem *elemArray, size_t length)
+{
+    for (int I = 0; I < length; ++I)
+        elemArray[I] = I;
+}
 
 BinTree *treeFromArray(Elem *array, size_t length)
 {
@@ -26,7 +28,7 @@ BinTree *treeFromArray(Elem *array, size_t length)
     }
     return tree;
 }
-
+#define EPS 0.01
 #define MICROSECONDS_FACTOR 1000
 
 void runRepetitions(Elem *elemArray, size_t depth)
@@ -37,32 +39,41 @@ void runRepetitions(Elem *elemArray, size_t depth)
     size_t resFind = 0;
     struct timespec timeStart, timeEnd;
 
-    for (int i = 0; i < REPETITIONS; ++i)
+    for (int branching = 0; branching <= BRANCHING_LEVELS; branching++)
     {
-        shuffle(elemArray, depth, sizeof(Elem));
-        tree = treeFromArray(elemArray, depth);
+        fillArraySequence(elemArray, depth);
 
-        clock_gettime(CLOCK_REALTIME, &timeStart);
-        treeTraverse(tree, ORDER_IN, nullptr, nullptr);
-        clock_gettime(CLOCK_REALTIME, &timeEnd);
+        for (int i = 0; i < REPETITIONS; ++i)
+        {
+            shuffle(
+                elemArray,
+                depth,
+                sizeof(Elem),
+                1 - (double) branching / BRANCHING_LEVELS);
 
-        resSort += getNanoSec(timeEnd) - getNanoSec(timeStart);
+            tree = treeFromArray(elemArray, depth);
 
-        clock_gettime(CLOCK_REALTIME, &timeStart);
-        treeFind(tree, toFind);
-        clock_gettime(CLOCK_REALTIME, &timeEnd);
+            clock_gettime(CLOCK_REALTIME, &timeStart);
+            treeTraverse(tree, ORDER_IN, nullptr, nullptr);
+            clock_gettime(CLOCK_REALTIME, &timeEnd);
 
-        resFind += getNanoSec(timeEnd) - getNanoSec(timeStart);
+            resSort += getNanoSec(timeEnd) - getNanoSec(timeStart);
 
-        treeDestroy(tree);
+            clock_gettime(CLOCK_REALTIME, &timeStart);
+            treeFind(tree, toFind);
+            clock_gettime(CLOCK_REALTIME, &timeEnd);
+
+            resFind += getNanoSec(timeEnd) - getNanoSec(timeStart);
+
+            treeDestroy(tree);
+        }
+        resSort /= REPETITIONS;
+        resFind /= REPETITIONS;
+
+        printf("%9.2lf | %9.2lf | ",
+               (double) resSort / MICROSECONDS_FACTOR,
+               (double) resFind / MICROSECONDS_FACTOR);
     }
-    resSort /= REPETITIONS;
-    resFind /= REPETITIONS;
-
-    printf("%5lu | %7.2lf | %7.2lf\n",
-           depth,
-           (double) resSort / MICROSECONDS_FACTOR,
-           (double) resFind / MICROSECONDS_FACTOR);
 }
 
 void getRemoveTime(void);
@@ -75,13 +86,16 @@ void showStats(void)
 {
     srand(time(nullptr));
     Elem elemArray[MAX_DEPTH] = { 0 };
-    for (int I = 0; I < MAX_DEPTH; ++I)
-        elemArray[I] = I;
 
-    printf("Depth | Sort    | Find\n");
+    printf("Depth |");
+    for (int branching = 0; branching <= BRANCHING_LEVELS; branching++)
+        printf(" Sort  %2.1f | Find  %2.1f |", 1 - (double) branching / BRANCHING_LEVELS, 1 - (double) branching / BRANCHING_LEVELS);
+    printf("\n");
     for (size_t depth = STEP; depth <= MAX_DEPTH; depth += STEP)
     {
+        printf("%5lu | ", depth);
         runRepetitions(elemArray, depth);
+        printf("\n");
     }
 
     getAddTime();

@@ -17,7 +17,7 @@ void getAddTime(void)
     Elem treeElements[ADD_TO_SIZE];
     for (int I = 0; I < ADD_TO_SIZE; ++I)
         treeElements[I] = I * 2;
-    shuffle(treeElements, ADD_TO_SIZE, sizeof(Elem));
+    shuffle(treeElements, ADD_TO_SIZE, sizeof(Elem), 0);
     for (int I = 0; I < ADD_TO_SIZE; ++I)
         treeAdd(&tree, treeElements[I]);
 
@@ -27,7 +27,7 @@ void getAddTime(void)
     Elem elemArray[REPETITIONS];
     for (int I = 0; I < REPETITIONS; ++I)
         elemArray[I] = I * 2 - 1;
-    shuffle(elemArray, REPETITIONS, sizeof(Elem));
+    shuffle(elemArray, REPETITIONS, sizeof(Elem), 0);
 
     for (int I = 0; I < REPETITIONS; ++I)
     {
@@ -46,7 +46,7 @@ void getAddFileTime(void)
     Elem treeElements[ADD_TO_SIZE];
     for (int I = 0; I < ADD_TO_SIZE; ++I)
         treeElements[I] = I * 2;
-    shuffle(treeElements, ADD_TO_SIZE, sizeof(Elem));
+    shuffle(treeElements, ADD_TO_SIZE, sizeof(Elem), 0);
 
     size_t result = 0;
     struct timespec timeStart, timeEnd;
@@ -54,7 +54,7 @@ void getAddFileTime(void)
     Elem elemArray[REPETITIONS];
     for (int I = 0; I < REPETITIONS; ++I)
         elemArray[I] = I * 2 - 1;
-    shuffle(elemArray, REPETITIONS, sizeof(Elem));
+    shuffle(elemArray, REPETITIONS, sizeof(Elem), 0);
 
     for (int I = 0; I < REPETITIONS; ++I)
     {
@@ -81,7 +81,7 @@ void getRemoveFileTime(void)
     Elem treeElements[ADD_TO_SIZE];
     for (int I = 0; I < ADD_TO_SIZE; ++I)
         treeElements[I] = I * 2;
-    shuffle(treeElements, ADD_TO_SIZE, sizeof(Elem));
+    shuffle(treeElements, ADD_TO_SIZE, sizeof(Elem), 0);
 
     size_t result = 0;
     struct timespec timeStart, timeEnd;
@@ -89,7 +89,7 @@ void getRemoveFileTime(void)
     Elem elemArray[REPETITIONS];
     for (int I = 0; I < REPETITIONS; ++I)
         elemArray[I] = I * 2 - 1;
-    shuffle(elemArray, REPETITIONS, sizeof(Elem));
+    shuffle(elemArray, REPETITIONS, sizeof(Elem), 0);
 
     for (int I = 0; I < REPETITIONS; ++I)
     {
@@ -118,7 +118,7 @@ void getRemoveTime(void)
     Elem treeElements[ADD_TO_SIZE];
     for (int I = 0; I < ADD_TO_SIZE; ++I)
         treeElements[I] = I * 2;
-    shuffle(treeElements, ADD_TO_SIZE, sizeof(Elem));
+    shuffle(treeElements, ADD_TO_SIZE, sizeof(Elem), 0);
     for (int I = 0; I < ADD_TO_SIZE; ++I)
         treeAdd(&tree, treeElements[I]);
 
@@ -128,7 +128,7 @@ void getRemoveTime(void)
     Elem elemArray[REPETITIONS];
     for (int I = 0; I < REPETITIONS; ++I)
         elemArray[I] = I * 2 - 1;
-    shuffle(elemArray, REPETITIONS, sizeof(Elem));
+    shuffle(elemArray, REPETITIONS, sizeof(Elem), 0);
 
     for (int I = 0; I < REPETITIONS; ++I)
     {

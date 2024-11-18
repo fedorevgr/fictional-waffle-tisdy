@@ -5,12 +5,18 @@
 
 static int swap(void *first_elem, void *second_elem, size_t element_size);
 
-int shuffle(void *array, size_t size, size_t element_size)
+int
+shuffle(void *array, size_t size, size_t element_size, double shuffleFactor)
 {
+    if (shuffleFactor > 1)
+        return ARGUMENT_ERR;
+
     int rc = OK;
 
     char *pointer_to_array = (char *)array;
-    for (size_t i = size - 1; rc == OK && i > 0; --i)
+    size_t rounds = (size_t) ((double) size * shuffleFactor);
+
+    for (size_t i = size - 1, k = 0; rc == OK && i > 0 && k < rounds; --i)
     {
         size_t j = rand() % (i + 1);
         rc = swap(pointer_to_array + j * element_size, pointer_to_array + i * element_size, element_size);
