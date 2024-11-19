@@ -2,13 +2,18 @@
 #include "BinTree.h"
 #include <stdio.h>
 
+#define ADD_TO_SIZE 10000
+#define REPETITIONS 1000
+
 static size_t getNanoSec(struct timespec time)
 {
     return time.tv_sec * 1000000000 + time.tv_nsec;
 }
 
-#define ADD_TO_SIZE 10000
-#define REPETITIONS 1000
+int getSize(void)
+{
+    return ADD_TO_SIZE;
+}
 
 void getAddTime(void)
 {

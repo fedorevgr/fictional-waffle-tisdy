@@ -76,6 +76,7 @@ void runRepetitions(Elem *elemArray, size_t depth)
     }
 }
 
+int getSize(void);
 void getRemoveTime(void);
 void getRemoveFileTime(void);
 void getAddFileTime(void);
@@ -87,17 +88,19 @@ void showStats(void)
     srand(time(nullptr));
     Elem elemArray[MAX_DEPTH] = { 0 };
 
+    printf("Time units - mks, memory units - bytes\n");
     printf("Depth |");
     for (int branching = 0; branching <= BRANCHING_LEVELS; branching++)
         printf(" Sort  %2.1f | Find  %2.1f |", 1 - (double) branching / BRANCHING_LEVELS, 1 - (double) branching / BRANCHING_LEVELS);
-    printf("\n");
+    printf(" memory\n");
     for (size_t depth = STEP; depth <= MAX_DEPTH; depth += STEP)
     {
         printf("%5lu | ", depth);
         runRepetitions(elemArray, depth);
-        printf("\n");
+        printf(" %lu\n", depth * sizeof(BinTree));
     }
 
+    printf("Elements in tree: %d\n", getSize());
     getAddTime();
     getAddFileTime();
     getRemoveTime();
