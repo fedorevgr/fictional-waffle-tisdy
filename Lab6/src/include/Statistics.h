@@ -1,11 +1,11 @@
 #ifndef BINARYTREES_SRC_C_STATISTICS_H
 #define BINARYTREES_SRC_C_STATISTICS_H
 
-#define MAX_DEPTH 5000
-#define STEP 500
+#define MAX_DEPTH 2500
+#define STEP 250
 #define REPETITIONS 100
 
-#define BRANCHING_LEVELS 3
+#define BRANCHING_LEVELS 5
 
 void showStats(void);
 

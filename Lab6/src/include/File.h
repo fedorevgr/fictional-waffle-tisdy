@@ -15,4 +15,10 @@ readFile(const char *filename, Elem **elements);
 FileCode
 writeFile(const char *filename, const Elem *elements, size_t length);
 
+FileCode
+addToFile(const char *filename, Elem elem);
+
+FileCode
+removeFromFile(const char *filename, Elem elem);
+
 #endif //BINARYTREES_SRC_C_FILE_H

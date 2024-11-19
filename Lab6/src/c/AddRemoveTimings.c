@@ -1,6 +1,7 @@
 #include "Shuffle.h"
 #include "BinTree.h"
 #include <stdio.h>
+#include "File.h"
 
 #define ADD_TO_SIZE 10000
 #define REPETITIONS 1000
@@ -37,14 +38,20 @@ void getAddTime(void)
     for (int I = 0; I < REPETITIONS; ++I)
     {
         clock_gettime(CLOCK_REALTIME, &timeStart);
+
+        BinTree *newElem = malloc(sizeof(BinTree));
         treeFind(tree, elemArray[I]);
+
         clock_gettime(CLOCK_REALTIME, &timeEnd);
+        free(newElem);
         result += getNanoSec(timeEnd) - getNanoSec(timeStart);
     }
 
     treeDestroy(tree);
     printf("Tree add time: %7.2lf\n",  (double) result / REPETITIONS);
 }
+
+#define STATS_FILE_NAME "test.txt"
 
 void getAddFileTime(void)
 {
@@ -63,16 +70,11 @@ void getAddFileTime(void)
 
     for (int I = 0; I < REPETITIONS; ++I)
     {
+        writeFile(STATS_FILE_NAME, treeElements, ADD_TO_SIZE);
+
         clock_gettime(CLOCK_REALTIME, &timeStart);
 
-        for (int J = 0; J < ADD_TO_SIZE; ++J)
-        {
-            if (treeElements[J] == elemArray[I])
-            {
-                J = J + 100;
-                J = J - 100;
-            }
-        }
+        addToFile(STATS_FILE_NAME, elemArray[I]);
 
         clock_gettime(CLOCK_REALTIME, &timeEnd);
         result += getNanoSec(timeEnd) - getNanoSec(timeStart);
@@ -98,16 +100,11 @@ void getRemoveFileTime(void)
 
     for (int I = 0; I < REPETITIONS; ++I)
     {
+        writeFile(STATS_FILE_NAME, treeElements, ADD_TO_SIZE);
+
         clock_gettime(CLOCK_REALTIME, &timeStart);
 
-        for (int J = 0; J < ADD_TO_SIZE; ++J)
-        {
-            if (treeElements[J] == elemArray[I])
-            {
-                J = J + 100;
-                J = J - 100;
-            }
-        }
+        removeFromFile(STATS_FILE_NAME, elemArray[I]);
 
         clock_gettime(CLOCK_REALTIME, &timeEnd);
         result += getNanoSec(timeEnd) - getNanoSec(timeStart);
@@ -137,9 +134,16 @@ void getRemoveTime(void)
 
     for (int I = 0; I < REPETITIONS; ++I)
     {
+        BinTree *newElem = malloc(sizeof(BinTree));
+
         clock_gettime(CLOCK_REALTIME, &timeStart);
+
         treeFind(tree, elemArray[I]);
+        free(newElem);
+
         clock_gettime(CLOCK_REALTIME, &timeEnd);
+
+
         result += getNanoSec(timeEnd) - getNanoSec(timeStart);
     }
 

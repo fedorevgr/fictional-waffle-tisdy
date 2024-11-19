@@ -16,7 +16,7 @@ shuffle(void *array, size_t size, size_t element_size, double shuffleFactor)
     char *pointer_to_array = (char *)array;
     size_t rounds = (size_t) ((double) size * shuffleFactor);
 
-    for (size_t i = size - 1, k = 0; rc == OK && i > 0 && k < rounds; --i)
+    for (size_t i = size - 1, k = 0; rc == OK && i > 0 && k < rounds; --i, k++)
     {
         size_t j = rand() % (i + 1);
         rc = swap(pointer_to_array + j * element_size, pointer_to_array + i * element_size, element_size);

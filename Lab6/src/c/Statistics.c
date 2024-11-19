@@ -28,23 +28,23 @@ BinTree *treeFromArray(Elem *array, size_t length)
     }
     return tree;
 }
-#define EPS 0.01
+
 #define MICROSECONDS_FACTOR 1000
 
 void runRepetitions(Elem *elemArray, size_t depth)
 {
     BinTree *tree;
-    Elem toFind = 1;
     size_t resSort = 0;
     size_t resFind = 0;
+    size_t curFindTime = 0;
     struct timespec timeStart, timeEnd;
 
     for (int branching = 0; branching <= BRANCHING_LEVELS; branching++)
     {
-        fillArraySequence(elemArray, depth);
-
         for (int i = 0; i < REPETITIONS; ++i)
         {
+            fillArraySequence(elemArray, depth);
+
             shuffle(
                 elemArray,
                 depth,
@@ -59,11 +59,16 @@ void runRepetitions(Elem *elemArray, size_t depth)
 
             resSort += getNanoSec(timeEnd) - getNanoSec(timeStart);
 
-            clock_gettime(CLOCK_REALTIME, &timeStart);
-            treeFind(tree, toFind);
-            clock_gettime(CLOCK_REALTIME, &timeEnd);
+            curFindTime = 0;
+            for (int I = 0; I < depth; ++I)
+            {
+                clock_gettime(CLOCK_REALTIME, &timeStart);
+                treeFind(tree, elemArray[I]);
+                clock_gettime(CLOCK_REALTIME, &timeEnd);
 
-            resFind += getNanoSec(timeEnd) - getNanoSec(timeStart);
+                curFindTime += getNanoSec(timeEnd) - getNanoSec(timeStart);
+            }
+            resFind += curFindTime / depth;
 
             treeDestroy(tree);
         }
@@ -74,6 +79,42 @@ void runRepetitions(Elem *elemArray, size_t depth)
                (double) resSort / MICROSECONDS_FACTOR,
                (double) resFind / MICROSECONDS_FACTOR);
     }
+}
+
+#define BRANCHING_ELEM_AMOUNT 500
+
+void branchingToLevels(void)
+{
+    Elem elements[BRANCHING_ELEM_AMOUNT];
+    BinTree *tree;
+    int *layersBuffer = calloc(BRANCHING_ELEM_AMOUNT, sizeof(int));
+    size_t layerCount;
+
+    printf("%d elems average tree height, from branching\n", BRANCHING_ELEM_AMOUNT);
+    printf("Layers|");
+    for (int branching = 0; branching <= BRANCHING_LEVELS; branching++)
+    {
+        layerCount = 0;
+
+        for (int i = 0; i < REPETITIONS; ++i)
+        {
+            fillArraySequence(elements, BRANCHING_ELEM_AMOUNT);
+
+            shuffle(
+                elements,
+                BRANCHING_ELEM_AMOUNT,
+                sizeof(Elem),
+                1 - (double) branching / BRANCHING_LEVELS);
+
+            tree = treeFromArray(elements, BRANCHING_ELEM_AMOUNT);
+
+            layerCount += treeLayers(tree, layersBuffer);
+            treeDestroy(tree);
+        }
+        printf("  %20.2lf |", (double ) layerCount / REPETITIONS);
+    }
+    printf("\n");
+    free(layersBuffer);
 }
 
 int getSize(void);
@@ -89,7 +130,7 @@ void showStats(void)
     Elem elemArray[MAX_DEPTH] = { 0 };
 
     printf("Time units - mks, memory units - bytes\n");
-    printf("Depth |");
+    printf("Elems |");
     for (int branching = 0; branching <= BRANCHING_LEVELS; branching++)
         printf(" Sort  %2.1f | Find  %2.1f |", 1 - (double) branching / BRANCHING_LEVELS, 1 - (double) branching / BRANCHING_LEVELS);
     printf(" memory\n");
@@ -99,6 +140,7 @@ void showStats(void)
         runRepetitions(elemArray, depth);
         printf(" %lu\n", depth * sizeof(BinTree));
     }
+    branchingToLevels();
 
     printf("Elements in tree: %d\n", getSize());
     getAddTime();

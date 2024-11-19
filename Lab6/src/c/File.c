@@ -43,3 +43,53 @@ writeFile(const char *filename, const Elem *elements, size_t length)
     fclose(file);
     return F_OK;
 }
+
+FileCode
+addToFile(const char *filename, const Elem elem)
+{
+    FILE *file = fopen(filename, "a");
+    if (file)
+        return F_ERR;
+
+    fprintf(file, " %d", elem);
+
+    fclose(file);
+    return F_OK;
+}
+
+FileCode
+removeFromFile(const char *filename, const Elem elem)
+{
+    Elem *elements = nullptr;
+    size_t length = readFile(filename, &elements);
+
+    if (!elements)
+    {
+        printf("Error memory\n");
+        return F_ERR;
+    }
+    FileCode ec = F_OK;
+
+    if (length)
+    {
+        size_t shift = 0;
+        for (size_t i = 0; i < length; ++i)
+        {
+            if (elements[i] == elem)
+            {
+                shift += 1;
+                continue;
+            }
+            elements[i - shift] = elements[i];
+        }
+        length -= shift;
+        ec = writeFile(filename, elements, length);
+    }
+    else
+        ec = F_ERR;
+
+    if (elements)
+        free(elements);
+
+    return ec;
+}
