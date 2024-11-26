@@ -5,9 +5,6 @@
 
 size_t
 treeLayers(BinTree *tree, int *layers);
-
-BinTree *
-treeFind(BinTree *, Elem);
 size_t
 treeTraverse(BinTree *tree, Order order, ElemPointerArray *result, NodeApplicator applicator);
 size_t

@@ -1,18 +1,18 @@
 #include "BinTree.h"
 #include <assert.h>
 #include "BinTreeRotators.h"
+#include "BinTreeEtc.h"
 
 #define MAX(a, b) (((a) > (b)) ? a : b)
 
 BinTree *
-newNode(int key, bool balanced)
+newNode(int key)
 {
     BinTree *node = malloc(sizeof(BinTree));
 
     if (node)
     {
-        node->balancing = balanced;
-        node->key = 0;
+        node->key = key;
         node->right = node->left = node->parent = nullptr;
     }
 
@@ -55,29 +55,6 @@ treeFind(BinTree *tree, Elem element)
     return nullptr;
 }
 
-size_t
-treeSort(BinTree *tree, ElemPointerArray sorted)
-{
-    Elem *sortedArray = nullptr;
-    ElemPointerArray elementsPointers = nullptr;
-    size_t size = treeTraverse(tree, ORDER_IN, &elementsPointers, nullptr);
-
-    if (size)
-    {
-        sortedArray = calloc(size, sizeof(Elem));
-
-        if (sortedArray)
-        {
-            for (size_t i = 0; i < size; ++i)
-                sortedArray[i] = *(elementsPointers[i]);
-        }
-    }
-
-    free(elementsPointers);
-
-    *sorted = sortedArray;
-    return size;
-}
 
 #include <stdio.h>
 static FILE *globFile__;

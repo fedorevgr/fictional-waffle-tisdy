@@ -22,4 +22,10 @@ add_executable(Lab7.exe
         BinTree/BinTree.h
 )
 
-add_dependencies(Lab7 BinTree HashMap)
+add_dependencies(Lab7.exe BinTree HashMap)
+
+add_executable(test.exe test_main.c)
+
+add_dependencies(test.exe BinTree HashMap)
+
+target_link_libraries(test.exe BinTree)

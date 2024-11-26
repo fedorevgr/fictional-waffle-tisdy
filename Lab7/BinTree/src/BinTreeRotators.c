@@ -3,31 +3,43 @@
 BinTree *
 rotateLeft(BinTree *tree)
 {
+    BinTree *ancestor = tree->parent;
     BinTree *y = tree->right;
     BinTree *T2 = y->left;
 
     y->left = tree;
-    tree->right = T2;
+    tree->parent = y;
 
+    tree->right = T2;
+    if (T2)
+        T2->parent = tree;
+
+    y->parent = ancestor;
     return y;
 }
 
 BinTree *
 rotateRight(BinTree *tree)
 {
+    BinTree *ancestor = tree->parent;
     BinTree *x = tree->left;
     BinTree *T2 = x->right;
 
     x->right = tree;
+    tree->parent = x;
     tree->left = T2;
+    if (T2)
+        T2->parent = tree;
 
+    x->parent = ancestor;
     return x;
 }
 
-BinTree *nodeBalance(BinTree *node)
+BinTree *nodeBalance(BinTree *node, int key)
 {
     int balance = treeGetBalance(node);
-    int key = node->key;
+    if (balance == 0)
+        return node;
 
     if (balance > 1)
     {
@@ -55,10 +67,10 @@ BinTree *nodeBalance(BinTree *node)
 
 BinTree *treeBalance(BinTree *fromNode)
 {
-    BinTree *previous;
+    BinTree *previous = nullptr;
     while (fromNode)
     {
-        fromNode = nodeBalance(fromNode);
+        fromNode = nodeBalance(fromNode, fromNode->key);
         previous = fromNode;
         fromNode = fromNode->parent;
     }

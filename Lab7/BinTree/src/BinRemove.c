@@ -1,5 +1,6 @@
 #include "BinTree.h"
 #include "BinTreeRotators.h"
+#include "BinTreeIO.h"
 #include <assert.h>
 
 static BinTree *
@@ -52,10 +53,14 @@ removeTwoLeaves(BinTree **tree, BinTree **toRemove)
     *toRemove = maximal;
 
     if (maximal->left)
-        return removeOneLeaf(tree, *toRemove);
+        removeOneLeaf(tree, *toRemove);
     else
-        return removeNoLeaf(tree, *toRemove);
+        removeNoLeaf(tree, *toRemove);
+    return toSwap;
 }
+
+static BinTree *
+balanceFromNode(BinTree *fromNode);
 
 BinTreeEc
 treeRemove(BinTree **tree, Elem element, bool balance)
@@ -65,18 +70,61 @@ treeRemove(BinTree **tree, Elem element, bool balance)
     if (!toRemove)
         return B_EMPTY;
 
-    BinTree *fromNode;
+    BinTree *fromNode = toRemove->parent;
     if (toRemove->left == nullptr && toRemove->right == nullptr)
-        fromNode = removeNoLeaf(tree, toRemove);
+        removeNoLeaf(tree, toRemove);
     else if (toRemove->left && toRemove->right)
-        fromNode = removeTwoLeaves(tree, &toRemove);
+        removeTwoLeaves(tree, &toRemove);
     else
-        fromNode = removeOneLeaf(tree, toRemove);
+        removeOneLeaf(tree, toRemove);
 
     free(toRemove);
 
-    if (balance)
-        *tree = treeBalance(fromNode);
+//    if (balance)
+//        *tree = balanceFromNode(fromNode);
 
     return B_OK;
+}
+
+static BinTree *
+nodeBalance(BinTree *node)
+{
+    if (node == NULL)
+        return node;
+
+    int balance = treeGetBalance(node);
+
+    if (balance > 1 && treeGetBalance(node->left) >= 0)
+        return rotateRight(node);
+
+    if (balance > 1 && treeGetBalance(node->left) < 0)
+    {
+        node->left = rotateLeft(node->left);
+        return rotateRight(node);
+    }
+
+    if (balance < -1 && treeGetBalance(node->right) <= 0)
+        return rotateLeft(node);
+
+    if (balance < -1 && treeGetBalance(node->right) > 0)
+    {
+        node->right = rotateRight(node->right);
+        return rotateLeft(node);
+    }
+
+    return node;
+}
+
+static BinTree *
+balanceFromNode(BinTree *fromNode)
+{
+    BinTree *previous = nullptr;
+    while (fromNode)
+    {
+        fromNode = nodeBalance(fromNode);
+        previous = fromNode;
+        fromNode = fromNode->parent;
+    }
+
+    return previous;
 }

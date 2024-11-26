@@ -1,18 +1,28 @@
 #include "BinTree.h"
 #include "BinTreeRotators.h"
 
+BinTree *nodeBalance(BinTree *node, int key);
+
 static BinTree *
 treeAddAvl(BinTree *node, Elem key)
 {
     if (node == NULL)
-        return (newNode(key, 1));
+        return newNode(key);
 
+    BinTree *insertingNode;
     if (key < node->key)
-        node->left = treeAddAvl(node->left, key);
+    {
+        insertingNode = treeAddAvl(node->left, key);
+        node->left = insertingNode;
+    }
     else if (key > node->key)
-        node->right = treeAddAvl(node->right, key);
+    {
+        insertingNode = treeAddAvl(node->right, key);
+        node->right = insertingNode;
+    }
     else
         return node;
+    insertingNode->parent = node;
 
     int balance = treeGetBalance(node);
 
@@ -40,10 +50,11 @@ treeAddAvl(BinTree *node, Elem key)
     return node;
 }
 
+
 static BinTreeEc
 treeAdd_(BinTree **tree, Elem element)
 {
-    BinTree *newElem = newNode(element, 0);
+    BinTree *newElem = newNode(element);
 
     if (newElem == nullptr)
         return B_MEMORY;

@@ -109,3 +109,26 @@ treeTraverse(BinTree *tree, Order order, ElemPointerArray *result, NodeApplicato
     return amount;
 }
 
+size_t
+treeSort(BinTree *tree, ElemPointerArray sorted)
+{
+    Elem *sortedArray = nullptr;
+    ElemPointerArray elementsPointers = nullptr;
+    size_t size = treeTraverse(tree, ORDER_IN, &elementsPointers, nullptr);
+
+    if (size)
+    {
+        sortedArray = calloc(size, sizeof(Elem));
+
+        if (sortedArray)
+        {
+            for (size_t i = 0; i < size; ++i)
+                sortedArray[i] = *(elementsPointers[i]);
+        }
+    }
+
+    free(elementsPointers);
+
+    *sorted = sortedArray;
+    return size;
+}

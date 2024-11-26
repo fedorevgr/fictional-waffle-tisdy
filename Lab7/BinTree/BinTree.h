@@ -35,7 +35,7 @@ typedef enum Order_
 typedef void (*NodeApplicator)(BinTree *);
 
 BinTree *
-newNode(int key, bool balanced);
+newNode(int key);
 void
 treeDestroy(BinTree *);
 
@@ -50,5 +50,7 @@ int treeGetBalance(BinTree *node);
 int
 treeHeight(BinTree *tree);
 
+BinTree *
+treeFind(BinTree *, Elem);
 
 #endif //BINARYTREES_SRC_C_BINTREE_H
