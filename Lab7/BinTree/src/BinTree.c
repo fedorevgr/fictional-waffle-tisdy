@@ -62,11 +62,15 @@ static FILE *globFile__;
 static void
 printNode_(BinTree *node)
 {
+//    if (node->parent)
+//        fprintf(globFile__, "%d->%d [color=\"green\"];\n", node->key, node->parent->key);
+
     if (node->left)
         fprintf(globFile__, "%d->%d;\n", node->key, node->left->key);
 
     if (node->right)
         fprintf(globFile__, "%d->%d;\n", node->key, node->right->key);
+
 }
 
 void

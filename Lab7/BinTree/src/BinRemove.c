@@ -80,8 +80,8 @@ treeRemove(BinTree **tree, Elem element, bool balance)
 
     free(toRemove);
 
-//    if (balance)
-//        *tree = balanceFromNode(fromNode);
+    if (balance)
+        *tree = balanceFromNode(fromNode);
 
     return B_OK;
 }
@@ -92,6 +92,7 @@ nodeBalance(BinTree *node)
     if (node == NULL)
         return node;
 
+    BinTree *parent = nullptr;
     int balance = treeGetBalance(node);
 
     if (balance > 1 && treeGetBalance(node->left) >= 0)
@@ -119,9 +120,19 @@ static BinTree *
 balanceFromNode(BinTree *fromNode)
 {
     BinTree *previous = nullptr;
+    BinTree *parent;
     while (fromNode)
     {
         fromNode = nodeBalance(fromNode);
+
+        if (fromNode->parent)
+        {
+            if (fromNode->parent->key > fromNode->key)
+                fromNode->parent->left = fromNode;
+            else
+                fromNode->parent->right = fromNode;
+        }
+
         previous = fromNode;
         fromNode = fromNode->parent;
     }
