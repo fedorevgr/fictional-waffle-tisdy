@@ -5,7 +5,7 @@ typedef struct node Node;
 
 struct node
 {
-	void *data;
+	int data;
 	Node *next;
 };
 
@@ -16,14 +16,9 @@ typedef enum list_status_
 	ERROR
 } list_status_t;
 
-Node *next(Node *node);
-void *value(Node *);
+list_status_t listPush(Node **head, int data);
+list_status_t listRemove(Node **head, int data);
 
-list_status_t push(Node **head, void *data);
-list_status_t pop(Node **head, void **data);
 
-Node *sort(Node *head, int (*comp)(const void *, const void *));
-void sorted_insert(Node **head, Node *element, int (*comp)(const void *, const void *));
-Node *reverse(Node *head);
 
 #endif //LAB_10_1_LIST_H

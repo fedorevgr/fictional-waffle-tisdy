@@ -11,8 +11,11 @@ add_library(BinTree BinTree/src/BinRemove.c BinTree/src/BinTraverse.c BinTree/sr
 target_include_directories(BinTree PRIVATE BinTree)
 
 add_library(HashMap
-        HashMap/src/HashMap.c
+        HashMap/src/HashMapPublic.c
         HashMap/List/List.c
+        HashMap/HashMapPrivate.h
+        HashMap/Common.h
+        HashMap/src/HashMapPrivate.c
 )
 target_include_directories(HashMap PRIVATE HashMap)
 
@@ -28,4 +31,4 @@ add_executable(test.exe test_main.c)
 
 add_dependencies(test.exe BinTree HashMap)
 
-target_link_libraries(test.exe BinTree)
+target_link_libraries(test.exe BinTree HashMap)
