@@ -105,6 +105,7 @@ treeAdd(BinTree **tree, Elem element, bool balancing)
     if (treeFind(*tree, element))
         return B_EXISTS;
 
+    counterGet();
     if (balancing)
         *tree = treeAddAvl(*tree, element);
     else

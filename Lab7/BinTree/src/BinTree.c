@@ -72,9 +72,13 @@ printNode_(BinTree *node)
 
     if (node->left)
         fprintf(globFile__, "%d->%d;\n", node->key, node->left->key);
+    else
+        fprintf(globFile__, "%d->x [color=\"white\"];\n", node->key);
 
     if (node->right)
         fprintf(globFile__, "%d->%d;\n", node->key, node->right->key);
+    else
+        fprintf(globFile__, "%d->x [color=\"white\"];\n", node->key);
 
 }
 
@@ -87,6 +91,7 @@ treePrint(BinTree *tree, char *filename)
     {
         fprintf(file, "digraph G {\n");
         treeTraversePost_(tree, nullptr, printNode_);
+        fprintf(globFile__, "x [color=\"white\"];\n");
         fprintf(file, "}\n");
         fclose(file);
         globFile__ = nullptr;

@@ -53,11 +53,13 @@ removeTwoLeaves(BinTree **tree, BinTree **toRemove)
     toSwap->key = maximal->key;
     *toRemove = maximal;
 
+    BinTree *startFrom = maximal->parent;
+
     if (maximal->left)
         removeOneLeaf(tree, *toRemove);
     else
         removeNoLeaf(tree, *toRemove);
-    return toSwap;
+    return startFrom;
 }
 
 static BinTree *
@@ -76,13 +78,13 @@ treeRemove(BinTree **tree, Elem element, bool balance)
     if (toRemove->left == nullptr && toRemove->right == nullptr)
         removeNoLeaf(tree, toRemove);
     else if (toRemove->left && toRemove->right)
-        removeTwoLeaves(tree, &toRemove);
+        fromNode = removeTwoLeaves(tree, &toRemove);
     else
         removeOneLeaf(tree, toRemove);
 
     free(toRemove);
 
-    if (balance)
+    if (balance && fromNode)
         *tree = balanceFromNode(fromNode);
 
     return B_OK;

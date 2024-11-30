@@ -33,7 +33,6 @@ void serviceTree(bool avl)
     BinTree *found;
     do
     {
-
         size = treeTraverse(binTree, ORDER_IN, nullptr, nullptr) * sizeof(BinTree);
         printf("Current size: %lu bytes\n", size);
         mode = getMode();
