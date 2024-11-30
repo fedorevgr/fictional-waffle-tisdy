@@ -2,6 +2,7 @@
 #include "BinTreeRotators.h"
 #include "BinTreeIO.h"
 #include <assert.h>
+#include "IterCounters.h"
 
 static BinTree *
 removeNoLeaf(BinTree **tree, BinTree *toRemove)
@@ -71,6 +72,7 @@ treeRemove(BinTree **tree, Elem element, bool balance)
         return B_EMPTY;
 
     BinTree *fromNode = toRemove->parent;
+    counterInc();
     if (toRemove->left == nullptr && toRemove->right == nullptr)
         removeNoLeaf(tree, toRemove);
     else if (toRemove->left && toRemove->right)
@@ -95,18 +97,22 @@ nodeBalance(BinTree *node)
     BinTree *parent = nullptr;
     int balance = treeGetBalance(node);
 
+    counterInc();
     if (balance > 1 && treeGetBalance(node->left) >= 0)
         return rotateRight(node);
 
+    counterInc();
     if (balance > 1 && treeGetBalance(node->left) < 0)
     {
         node->left = rotateLeft(node->left);
         return rotateRight(node);
     }
 
+    counterInc();
     if (balance < -1 && treeGetBalance(node->right) <= 0)
         return rotateLeft(node);
 
+    counterInc();
     if (balance < -1 && treeGetBalance(node->right) > 0)
     {
         node->right = rotateRight(node->right);
@@ -127,6 +133,7 @@ balanceFromNode(BinTree *fromNode)
 
         if (fromNode->parent)
         {
+            counterInc();
             if (fromNode->parent->key > fromNode->key)
                 fromNode->parent->left = fromNode;
             else

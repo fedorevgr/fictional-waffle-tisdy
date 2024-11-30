@@ -1,4 +1,5 @@
 #include "HashMapPrivate.h"
+#include "IterCounters.h"
 
 static TypeKey getHash(TypeVal val, size_t size)
 {
@@ -83,6 +84,7 @@ HashMapRC hashPriMapAdd(HashMapPrivate **hashPtr, TypeVal val)
     TypeKey attemptIndex;
     for (; I < ITER_LIMIT_; ++I)
     {
+        counterInc();
         attemptIndex = (int) ((key + I * I) % hash->size);
         if (hash->blocks[attemptIndex].status == OCCUPIED && hash->blocks[attemptIndex].data == val)
             return HM_EXISTS;
@@ -110,6 +112,7 @@ HashMapRC hashPriMapRemove(HashMapPrivate *hash, TypeVal val)
     TypeKey attemptIndex;
     for (; I < ITER_LIMIT_; ++I)
     {
+        counterInc();
         attemptIndex = (int) ((key + I * I) % hash->size);
         if (hash->blocks[attemptIndex].status == OCCUPIED && hash->blocks[attemptIndex].data == val)
         {
@@ -131,6 +134,7 @@ HashMapRC hashPriMapIn(HashMapPrivate *hash, TypeVal val)
     TypeKey attemptIndex;
     for (; I < ITER_LIMIT_; ++I)
     {
+        counterInc();
         attemptIndex = (int) ((key + I * I) % hash->size);
         if (hash->blocks[attemptIndex].status == OCCUPIED && hash->blocks[attemptIndex].data == val)
             return HM_OK;
@@ -157,4 +161,9 @@ void hashPriPrint(HashMapPrivate *hash)
         }
         printf("\n");
     }
+}
+
+size_t hashPriSize(HashMapPrivate *hash)
+{
+    return hash->size * sizeof(Block) + sizeof(HashMapPrivate);
 }

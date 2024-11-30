@@ -34,5 +34,6 @@ HashMapRC hashPriMapRemove(HashMapPrivate *, TypeKey key);
 
 HashMapRC hashPriMapIn(HashMapPrivate *hash, TypeVal val);
 void hashPriPrint(HashMapPrivate *hash);
+size_t hashPriSize(HashMapPrivate *hash);
 
 #endif //LAB7_HASHMAP_HASHMAPPRIVATE_H

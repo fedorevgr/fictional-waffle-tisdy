@@ -22,5 +22,6 @@ HashMapRC hashPubMapRemove(HashMapPub *, TypeKey key);
 
 HashMapRC hashPubMapIn(HashMapPub *hash, TypeVal val);
 void hashPubPrint(HashMapPub *hash);
+size_t hashPubSize(HashMapPub *hash);
 
 #endif //LAB7_HASHMAP_HASHMAP_H

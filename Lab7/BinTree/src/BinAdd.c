@@ -1,5 +1,6 @@
 #include "BinTree.h"
 #include "BinTreeRotators.h"
+#include "IterCounters.h"
 
 BinTree *nodeBalance(BinTree *node, int key);
 
@@ -10,6 +11,7 @@ treeAddAvl(BinTree *node, Elem key)
         return newNode(key);
 
     BinTree *insertingNode;
+    counterInc();
     if (key < node->key)
     {
         insertingNode = treeAddAvl(node->left, key);
@@ -26,8 +28,10 @@ treeAddAvl(BinTree *node, Elem key)
 
     int balance = treeGetBalance(node);
 
+    counterInc();
     if (balance > 1)
     {
+        counterInc();
         if (key < node->left->key)
             return rotateRight(node);
         else if (key > node->left->key)
@@ -38,6 +42,7 @@ treeAddAvl(BinTree *node, Elem key)
     }
     else if (balance < -1)
     {
+        counterInc();
         if (key > node->right->key)
             return rotateLeft(node);
         else
@@ -49,7 +54,6 @@ treeAddAvl(BinTree *node, Elem key)
 
     return node;
 }
-
 
 static BinTreeEc
 treeAdd_(BinTree **tree, Elem element)
@@ -71,6 +75,7 @@ treeAdd_(BinTree **tree, Elem element)
     while (ec == B_OK && currNode)
     {
         prevNode = currNode;
+        counterInc();
         if (currNode->key == element)
         {
             free(newElem);

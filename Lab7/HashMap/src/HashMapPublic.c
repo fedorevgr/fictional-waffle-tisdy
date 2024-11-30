@@ -1,6 +1,7 @@
 #include "HashMapPublic.h"
 #include <stdlib.h>
 #include <assert.h>
+#include "IterCounters.h"
 
 #define PRIME_START 2
 
@@ -110,6 +111,7 @@ HashMapRC hashPubMapAdd(HashMapPub **hashPtr, TypeVal val)
         prev = block;
         block = block->next;
         triggers += 1;
+        counterInc();
     }
 
     Node *newNode = malloc(sizeof(Node));
@@ -142,6 +144,7 @@ HashMapRC hashPubMapRemove(HashMapPub *hash, TypeVal val)
     {
         prevNode = nullptr;
         node = node->next;
+        counterInc();
     }
 
     if (node == NULL)
@@ -164,7 +167,10 @@ HashMapRC hashPubMapIn(HashMapPub *hash, TypeVal val)
 
     Node *node = hash->blocks[key];
     while (node && node->data != val)
+    {
         node = node->next;
+        counterInc();
+    }
 
     if (node == NULL)
         return HM_EMPTY;
@@ -196,4 +202,9 @@ void hashPubPrint(HashMapPub *hash)
         }
         printf("\n");
     }
+}
+
+size_t hashPubSize(HashMapPub *hash)
+{
+    return sizeof(HashMapPub) + sizeof(Node) * hash->elements + sizeof(Node *) * hash->size;
 }

@@ -2,6 +2,7 @@
 #include <assert.h>
 #include "BinTreeRotators.h"
 #include "BinTreeEtc.h"
+#include "IterCounters.h"
 
 #define MAX(a, b) (((a) > (b)) ? a : b)
 
@@ -45,10 +46,14 @@ treeFind(BinTree *tree, Elem element)
 {
     while (tree)
     {
+        counterInc();
         if (tree->key == element)
             return tree;
         else if (tree->key > element)
+        {
+            counterInc();
             tree = tree->left;
+        }
         else
             tree = tree->right;
     }
@@ -98,6 +103,7 @@ treeHeight(BinTree *tree)
     if (tree == nullptr)
         return 0;
 
+    counterInc();
     size_t height = 1, heightL = 0, heightR = 0;
     if (tree->left)
     {
@@ -114,7 +120,6 @@ treeHeight(BinTree *tree)
 
     return height;
 }
-
 
 size_t
 treeLayers(BinTree *tree, int *layersArray)

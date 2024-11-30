@@ -1,4 +1,5 @@
 #include "BinTree.h"
+#include "IterCounters.h"
 
 BinTree *
 rotateLeft(BinTree *tree)
@@ -41,6 +42,7 @@ BinTree *nodeBalance(BinTree *node, int key)
     if (balance == 0)
         return node;
 
+    counterInc();
     if (balance > 1)
     {
         if (key < node->left->key)
