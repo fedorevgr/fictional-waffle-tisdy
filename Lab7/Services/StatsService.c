@@ -164,8 +164,26 @@ static void runStats(void)
     }
 }
 
+static void preLoad(void)
+{
+    const char *filename = "TestsStats.txt";
+    int size = REPETITIONS;
+    int *elements = calloc(size, sizeof(int));
+
+    for (int J = 0; J < REPETITIONS; ++J)
+    {
+        for (int I = 0; I < size; elements[I] = I, ++I);
+        shuffle(elements, size, sizeof(int), 1);
+
+        writeFile(filename, elements, size);
+    }
+    free(elements);
+}
+
 void serviceStatistics(void)
 {
+    preLoad();
+
     srand(time(nullptr));
 
     printf("\n\nAverage find time (ms), comparisons, memory (bytes)\n\n");
