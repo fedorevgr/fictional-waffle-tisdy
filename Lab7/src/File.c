@@ -1,4 +1,5 @@
 #include "File.h"
+#include "IterCounters.h"
 
 #include <stdio.h>
 
@@ -60,6 +61,29 @@ addToFile(const char *filename, const int elem)
 }
 
 FileCode
+fileFind(const char *filename, const int elem)
+{
+    FILE *file = fopen(filename, "r");
+    if (!file)
+        return F_ERR;
+
+    counterGet();
+    int buffer;
+    int found = 0;
+    while (fscanf(file, "%d", &buffer) == 1)
+    {
+        counterInc();
+        if (buffer == elem)
+        {
+            found = true;
+            break;
+        }
+    }
+    fclose(file);
+    return (found) ? F_OK : F_ERR;
+}
+
+FileCode
 removeFromFile(const char *filename, const int elem)
 {
     int *elements = nullptr;
@@ -94,4 +118,17 @@ removeFromFile(const char *filename, const int elem)
         free(elements);
 
     return ec;
+}
+
+size_t
+fileSize(const char *filename)
+{
+    FILE *file = fopen(filename, "r");
+    if (!file)
+        return 0;
+
+    fseek(file, 0l, SEEK_END);
+    size_t result = ftell(file);
+    fclose(file);
+    return result;
 }

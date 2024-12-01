@@ -43,7 +43,7 @@ void serviceHash(bool private)
         if (mode == ADD || mode == DELETE || mode == FIND)
         {
             long newElement;
-            printf("Input new element value: ");
+            printf("Input element value: ");
             if (inputSigned(&newElement) != INPUT_OK)
             {
                 printf("Illegal number\n");

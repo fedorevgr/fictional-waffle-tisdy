@@ -1,0 +1,6 @@
+#ifndef LAB7_SERVICES_STATSSERVICE_H
+#define LAB7_SERVICES_STATSSERVICE_H
+
+void serviceStatistics(void);
+
+#endif //LAB7_SERVICES_STATSSERVICE_H

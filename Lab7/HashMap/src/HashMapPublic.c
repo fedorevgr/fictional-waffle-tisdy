@@ -166,6 +166,7 @@ HashMapRC hashPubMapIn(HashMapPub *hash, TypeVal val)
     TypeKey key = getHash(val, hash->size);
 
     Node *node = hash->blocks[key];
+    counterInc();
     while (node && node->data != val)
     {
         node = node->next;

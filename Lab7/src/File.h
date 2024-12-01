@@ -21,4 +21,10 @@ addToFile(const char *filename, int elem);
 FileCode
 removeFromFile(const char *filename, int elem);
 
+FileCode
+fileFind(const char *filename, const int elem);
+
+size_t
+fileSize(const char *filename);
+
 #endif //BINARYTREES_SRC_C_FILE_H

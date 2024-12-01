@@ -136,8 +136,12 @@ HashMapRC hashPriMapIn(HashMapPrivate *hash, TypeVal val)
     {
         counterInc();
         attemptIndex = (int) ((key + I * I) % hash->size);
-        if (hash->blocks[attemptIndex].status == OCCUPIED && hash->blocks[attemptIndex].data == val)
-            return HM_OK;
+        if (hash->blocks[attemptIndex].status == OCCUPIED )
+        {
+            counterInc();
+            if (hash->blocks[attemptIndex].data == val)
+                return HM_OK;
+        }
     }
 
     return HM_EMPTY;

@@ -40,6 +40,9 @@ add_executable(Lab7.exe
         Services/HashService.h
         Services/Common.h
         Services/Common.c
+        Services/StatsService.c
+        Services/StatsService.h
+        src/etc/Shuffle.c
 )
 add_dependencies(Lab7.exe BinTree HashMap)
 target_link_libraries(Lab7.exe BinTree HashMap)

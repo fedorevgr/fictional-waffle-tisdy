@@ -3,6 +3,7 @@
 
 #include "Services/TreeService.h"
 #include "Services/HashService.h"
+#include "Services/StatsService.h"
 
 #define MENU "Enter program \n" \
                 "\tB - Build bin tree\n"             \
@@ -46,7 +47,7 @@ main(void)
             case BUILD_PRIVATE:serviceHash(true);
                 break;
             case STATS:
-                assert(0);
+                serviceStatistics();
                 break;
             case EXIT_PROGRAM:break;
             default:printf("ERROR: Unknown option\n");
