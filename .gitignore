@@ -63,4 +63,5 @@ cmake-build-release
 Lab3/*.data
 .cache
 build
-
+*.png
+*.graph

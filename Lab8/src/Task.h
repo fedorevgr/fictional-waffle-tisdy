@@ -20,7 +20,6 @@ struct Path_
 };
 
 Path *findPaths(const Graph *graph);
-void
-graphPrintPath(const Graph *graph, const Path *path, const char *filename);
+void graphPrintPath(const Graph *graph, const Path *path, const char *filename);
 
 #endif //LAB8_SRC_TASK_H

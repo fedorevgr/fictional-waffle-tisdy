@@ -1,6 +1,0 @@
-digraph G {
-"Moscow"->"Petersburg"[arrowhead=none color=grey]
-"Moscow"->"Novgorod"[arrowhead=none color=grey]
-"Petersburg"->"Yekaterinburg"[arrowhead=none color=grey]
-"Yekaterinburg"->"Novgorod"[arrowhead=none color=grey]
-}
