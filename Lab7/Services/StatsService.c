@@ -2,11 +2,13 @@
 
 #include "BinTree/BinTree.h"
 #include "BinTree/BinTreeEtc.h"
+#include "BinTree/BinTreeIO.h"
 #include "HashMap/HashMapPrivate.h"
 #include "HashMap/HashMapPublic.h"
 #include "File.h"
 
 #include "IterCounters.h"
+
 
 #include "etc/Shuffle.h"
 #include "IterCounters.h"
@@ -15,8 +17,8 @@
 #include <time.h>
 
 #define STARTING_SIZE 10
-#define SIZE_STEP 50
-#define SIZE_LIMIT 1010
+#define SIZE_STEP 100
+#define SIZE_LIMIT 510
 
 #define REPETITIONS 20
 

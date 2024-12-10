@@ -97,8 +97,11 @@ HashMapRC hashPriMapAdd(HashMapPrivate **hashPtr, TypeVal val)
         }
     }
     hash->elements += 1;
-    if (I == ITER_LIMIT_)
+    if (I >= ITER_LIMIT_)
+    {
         hash = hashPriMapRehash(hash);
+        hashPriMapAdd(&hash, val);
+    }
 
     *hashPtr = hash;
     return HM_OK;

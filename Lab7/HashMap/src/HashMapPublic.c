@@ -142,7 +142,7 @@ HashMapRC hashPubMapRemove(HashMapPub *hash, TypeVal val)
     Node *node = hash->blocks[key], *prevNode = nullptr;
     while (node && node->data != val)
     {
-        prevNode = nullptr;
+        prevNode = node;
         node = node->next;
         counterInc();
     }
