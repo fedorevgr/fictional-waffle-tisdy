@@ -108,13 +108,13 @@ graphPrint(Graph *graph, const char *filename)
     for (int I = 0; I < graph->size; ++I)
     {
         fromTown = graph->townNames[I];
+        (fromTown) ? fprintf(file, "\"%s\";\n", fromTown) : fprintf(file, "%d;\n", I);
         for (int J = I + 1; J < graph->size; ++J)
         {
             toTown = graph->townNames[J];
 
             if (graph->matrix[I][J].connection)
                 townPrint(file, I, J, fromTown, toTown);
-
         }
     }
     fprintf(file, "}\n");
